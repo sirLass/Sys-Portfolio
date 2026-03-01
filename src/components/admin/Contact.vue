@@ -1,11 +1,11 @@
 <template>
   <div class="p-6">
     <!-- Success Message -->
-    <div v-if="showSuccess" class="mb-6 flex items-center gap-3 p-4 bg-[#c1f0d0] border border-[#008060] rounded-lg">
-      <svg class="w-5 h-5 text-[#008060]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+    <div v-if="showSuccess" class="mb-6 flex items-center gap-3 p-4 bg-[var(--admin-primary-light)] border border-[var(--admin-primary)] rounded-lg">
+      <svg class="w-5 h-5 text-[var(--admin-primary)]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
       </svg>
-      <p class="text-sm font-medium text-[#004c3f]">Changes saved successfully!</p>
+      <p class="text-sm font-medium text-[var(--admin-secondary)]">Changes saved successfully!</p>
     </div>
 
     <form @submit.prevent="handleSave">
@@ -28,7 +28,7 @@
                   id="email"
                   v-model="contactData.email"
                   type="email"
-                  class="w-full pl-10 pr-4 py-2.5 text-sm text-[#1a1b1c] bg-white border border-[#c9cccf] rounded-md focus:outline-none focus:border-[#008060] focus:ring-2 focus:ring-[#008060]/20 transition-all placeholder:text-[#6d7175]"
+                  class="w-full pl-10 pr-4 py-2.5 text-sm text-[#1a1b1c] bg-white border border-[#c9cccf] rounded-md focus:outline-none focus:border-[var(--admin-primary)] focus:ring-2 focus:ring-[var(--admin-primary)]/20 transition-all placeholder:text-[#6d7175]"
                   placeholder="perezbrian091598@gmail.com"
                 />
               </div>
@@ -47,7 +47,7 @@
                   id="github"
                   v-model="contactData.github"
                   type="text"
-                  class="w-full pl-10 pr-4 py-2.5 text-sm text-[#1a1b1c] bg-white border border-[#c9cccf] rounded-md focus:outline-none focus:border-[#008060] focus:ring-2 focus:ring-[#008060]/20 transition-all placeholder:text-[#6d7175]"
+                  class="w-full pl-10 pr-4 py-2.5 text-sm text-[#1a1b1c] bg-white border border-[#c9cccf] rounded-md focus:outline-none focus:border-[var(--admin-primary)] focus:ring-2 focus:ring-[var(--admin-primary)]/20 transition-all placeholder:text-[#6d7175]"
                   placeholder="https://github.com/SirP-rezDev"
                 />
               </div>
@@ -67,11 +67,12 @@
                   id="location"
                   v-model="contactData.location"
                   type="text"
-                  class="w-full pl-10 pr-4 py-2.5 text-sm text-[#1a1b1c] bg-white border border-[#c9cccf] rounded-md focus:outline-none focus:border-[#008060] focus:ring-2 focus:ring-[#008060]/20 transition-all placeholder:text-[#6d7175]"
+                  class="w-full pl-10 pr-4 py-2.5 text-sm text-[#1a1b1c] bg-white border border-[#c9cccf] rounded-md focus:outline-none focus:border-[var(--admin-primary)] focus:ring-2 focus:ring-[var(--admin-primary)]/20 transition-all placeholder:text-[#6d7175]"
                   placeholder="Quezon Province, Philippines"
                 />
               </div>
             </div>
+          </div>
         </div>
 
         <!-- Social Media Section -->
@@ -81,7 +82,7 @@
             <button
               type="button"
               @click="isAddingSocial = true"
-              class="inline-flex items-center gap-2 px-4 py-2 text-sm font-medium text-[#008060] bg-[#c1f0d0] rounded-md hover:bg-[#008060] hover:text-white transition-all transition-colors duration-200"
+              class="inline-flex items-center gap-2 px-4 py-2 text-sm font-medium text-[var(--admin-primary)] bg-[var(--admin-primary-light)] rounded-md hover:bg-[var(--admin-primary)] hover:text-white transition-all transition-colors duration-200"
             >
               <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
@@ -109,7 +110,7 @@
                   <input
                     v-model="socialSearchQuery"
                     type="text"
-                    class="w-full pl-10 pr-4 py-2.5 text-sm text-[#1a1b1c] bg-white border border-[#c9cccf] rounded-md focus:outline-none focus:border-[#008060]"
+                    class="w-full pl-10 pr-4 py-2.5 text-sm text-[#1a1b1c] bg-white border border-[#c9cccf] rounded-md focus:outline-none focus:border-[var(--admin-primary)]"
                     placeholder="e.g. Facebook, Instagram..."
                   />
                   <!-- Suggestions Dropdown -->
@@ -132,14 +133,14 @@
                 <input
                   v-model="socialUrl"
                   type="text"
-                  class="w-full px-4 py-2.5 text-sm text-[#1a1b1c] bg-white border border-[#c9cccf] rounded-md focus:outline-none focus:border-[#008060]"
+                  class="w-full px-4 py-2.5 text-sm text-[#1a1b1c] bg-white border border-[#c9cccf] rounded-md focus:outline-none focus:border-[var(--admin-primary)]"
                   placeholder="https://facebook.com/your-profile"
                 />
               </div>
             </div>
             <div class="mt-4 flex justify-end gap-2">
               <button @click="resetSocialInput" class="px-3 py-1.5 text-xs font-medium text-[#6d7175] hover:text-[#1a1b1c]">Cancel</button>
-              <button @click="addSocial" class="px-4 py-1.5 text-xs font-medium text-white bg-[#008060] rounded-md hover:bg-[#004c3f]">Add to List</button>
+              <button @click="addSocial" class="px-4 py-1.5 text-xs font-medium text-white bg-[var(--admin-primary)] rounded-md hover:bg-[var(--admin-secondary)]">Add to List</button>
             </div>
           </div>
 
@@ -190,14 +191,14 @@
         <button
           type="button"
           @click="resetData"
-          class="px-4 py-2 text-sm font-medium text-[#1a1b1c] hover:text-[#008060] transition-colors"
+          class="px-4 py-2 text-sm font-medium text-[#1a1b1c] hover:text-[var(--admin-primary)] transition-colors"
         >
           Reset
         </button>
         <button
           type="submit"
           :disabled="saving"
-          class="inline-flex items-center gap-2 px-6 py-2.5 text-sm font-medium text-white bg-[#008060] rounded-md hover:bg-[#004c3f] transition-all shadow-sm disabled:opacity-50 disabled:cursor-not-allowed"
+          class="inline-flex items-center gap-2 px-6 py-2.5 text-sm font-medium text-white bg-[var(--admin-primary)] rounded-md hover:bg-[var(--admin-secondary)] transition-all shadow-sm disabled:opacity-50 disabled:cursor-not-allowed"
         >
           <svg v-if="saving" class="animate-spin w-4 h-4" fill="none" viewBox="0 0 24 24">
             <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>

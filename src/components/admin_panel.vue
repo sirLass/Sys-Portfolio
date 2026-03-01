@@ -1,18 +1,19 @@
 <template>
-  <div class="h-screen flex overflow-hidden bg-[#f6f6f7]">
+  <div class="h-screen flex overflow-hidden bg-[#f6f6f7] theme-container" :style="adminThemeVariables">
     <!-- Shopify-style Dark Navy Sidebar -->
     <aside
       :class="[
-        'bg-[#1a1b26] transition-all duration-300 ease-in-out h-screen flex-shrink-0 flex flex-col',
+        'transition-all duration-300 ease-in-out h-screen flex-shrink-0 flex flex-col',
         isCollapsed ? 'w-[60px]' : 'w-[240px]'
       ]"
+      style="background-color: var(--admin-sidebar-bg)"
       role="navigation"
       aria-label="Sidebar"
     >
       <!-- Sidebar Header -->
       <div class="h-[60px] flex items-center px-4 border-b border-white/10">
         <div class="flex items-center gap-3 min-w-0">
-          <div class="flex items-center justify-center w-8 h-8 rounded-lg bg-[#008060] text-white font-semibold flex-shrink-0">
+          <div class="flex items-center justify-center w-8 h-8 rounded-lg bg-[var(--admin-primary)] text-white font-semibold flex-shrink-0">
             <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z" />
             </svg>
@@ -30,8 +31,8 @@
               :class="[
                 'w-full flex items-center px-3 py-2.5 rounded-md transition-all duration-200 text-sm font-medium',
                 activeSection === item.name
-                  ? 'bg-white/10 text-white'
-                  : 'text-gray-400 hover:text-white hover:bg-white/5'
+                  ? 'bg-[var(--admin-nav-active)] text-white'
+                  : 'text-gray-400 hover:text-white hover:bg-[var(--admin-nav-hover)]'
               ]"
               :title="isCollapsed ? item.label : ''"
             >
@@ -39,7 +40,7 @@
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" :d="item.iconPath" />
               </svg>
               <span v-if="!isCollapsed" class="ml-3">{{ item.label }}</span>
-              <span v-if="activeSection === item.name && !isCollapsed" class="ml-auto w-1.5 h-1.5 rounded-full bg-[#008060]"></span>
+              <span v-if="activeSection === item.name && !isCollapsed" class="ml-auto w-1.5 h-1.5 rounded-full bg-[var(--admin-primary)]"></span>
             </button>
           </li>
         </ul>
@@ -49,7 +50,7 @@
       <div class="p-2 border-t border-white/10">
         <button
           @click="toggleSidebar"
-          class="w-full flex items-center justify-center p-2 rounded-md text-gray-400 hover:text-white hover:bg-white/5 transition-all duration-200"
+          class="w-full flex items-center justify-center p-2 rounded-md text-gray-400 hover:text-white hover:bg-[var(--admin-nav-hover)] transition-all duration-200"
           :title="isCollapsed ? 'Expand sidebar' : 'Collapse sidebar'"
         >
           <svg
@@ -110,7 +111,7 @@
               v-model="searchQuery"
               type="search"
               :placeholder="`Search ${currentItem.label.toLowerCase()}...`"
-              class="w-64 pl-9 pr-4 py-2 text-sm bg-[#f6f6f7] border border-[#c9cccf] rounded-md focus:outline-none focus:border-[#008060] focus:ring-2 focus:ring-[#008060]/20 transition-all placeholder:text-[#6d7175]"
+              class="w-64 pl-9 pr-4 py-2 text-sm bg-[#f6f6f7] border border-[#c9cccf] rounded-md focus:outline-none focus:border-[var(--admin-primary)] focus:ring-2 focus:ring-[var(--admin-primary)]/20 transition-all placeholder:text-[#6d7175]"
               aria-label="Search"
             />
           </div>
@@ -133,7 +134,7 @@
               @click="showUserMenu = !showUserMenu"
               class="flex items-center gap-2 p-1.5 rounded-md hover:bg-[#f6f6f7] transition-all"
             >
-              <div class="w-8 h-8 rounded-full bg-[#008060] text-white flex items-center justify-center text-sm font-medium">
+              <div class="w-8 h-8 rounded-full bg-[var(--admin-primary)] text-white flex items-center justify-center text-sm font-medium">
                 {{ userInitials }}
               </div>
               <span v-if="!isCollapsed" class="text-sm font-medium text-[#1a1b1c] hidden sm:block">{{ username }}</span>
@@ -198,12 +199,12 @@
         :key="toast.id"
         class="flex items-center gap-3 px-4 py-3 bg-white rounded-lg shadow-lg border-l-4 min-w-[300px]"
         :class="{
-          'border-[#008060]': toast.type === 'success',
+          'border-[var(--admin-primary)]': toast.type === 'success',
           'border-[#d72c0d]': toast.type === 'error',
           'border-[#2c6ecb]': toast.type === 'info'
         }"
       >
-        <svg v-if="toast.type === 'success'" class="w-5 h-5 text-[#008060]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <svg v-if="toast.type === 'success'" class="w-5 h-5 text-[var(--admin-primary)]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
         </svg>
         <svg v-else-if="toast.type === 'error'" class="w-5 h-5 text-[#d72c0d]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -222,6 +223,7 @@
 <script setup>
 import { ref, computed, watch, onMounted, onUnmounted, provide } from 'vue'
 import { useRouter } from 'vue-router'
+import { supabase } from '../supabase'
 import AdminHome from './admin/Home.vue'
 import AdminAbout from './admin/About.vue'
 import AdminSkills from './admin/Skills.vue'
@@ -238,6 +240,64 @@ const sectionRef = ref(null)
 const showUserMenu = ref(false)
 const userMenuRef = ref(null)
 const toasts = ref([])
+const currentPalette = ref({
+  primary: '#008060',
+  secondary: '#004c3f',
+  accent: '#95bf47'
+})
+const hexToRgb = (hex) => {
+  if (!hex) return '0 0 0'
+  const result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex)
+  return result ? `${parseInt(result[1], 16)} ${parseInt(result[2], 16)} ${parseInt(result[3], 16)}` : '0 0 0'
+}
+
+const adminThemeVariables = computed(() => {
+  const p = currentPalette.value.primary
+  const s = currentPalette.value.secondary
+  const a = currentPalette.value.accent
+  
+  return {
+    '--admin-primary': p,
+    '--admin-secondary': s,
+    '--admin-accent': a,
+    '--admin-primary-rgb': hexToRgb(p),
+    '--admin-secondary-rgb': hexToRgb(s),
+    '--admin-accent-rgb': hexToRgb(a),
+    '--admin-primary-light': `color-mix(in srgb, ${p}, transparent 90%)`,
+    '--admin-secondary-light': `color-mix(in srgb, ${s}, transparent 90%)`,
+    '--admin-accent-light': `color-mix(in srgb, ${a}, transparent 90%)`,
+    '--admin-sidebar-bg': `color-mix(in srgb, ${s}, black 60%)`,
+    '--admin-nav-hover': `color-mix(in srgb, white, transparent 94%)`,
+    '--admin-nav-active': `color-mix(in srgb, white, transparent 90%)`
+  }
+})
+
+const fetchTheme = async () => {
+  if (!supabase) return
+  try {
+    const { data, error } = await supabase
+      .from('personal_info')
+      .select('palette')
+      .order('updated_at', { ascending: false })
+      .limit(1)
+      .maybeSingle()
+    
+    if (data && data.palette) {
+      const p = typeof data.palette === 'string' ? JSON.parse(data.palette) : data.palette
+      currentPalette.value = p
+    }
+  } catch (e) {
+    console.error('Error fetching theme:', e)
+  }
+}
+
+const updateTheme = (newPalette) => {
+  if (newPalette) {
+    currentPalette.value = newPalette
+  }
+}
+
+provide('updateTheme', updateTheme)
 
 // Get username from localStorage
 const username = ref(localStorage.getItem('username') || 'Admin')
@@ -309,7 +369,10 @@ const handleClickOutside=(event)=>{
   }
 }
 
-onMounted(()=>document.addEventListener('click',handleClickOutside))
+onMounted(() => {
+  document.addEventListener('click', handleClickOutside)
+  fetchTheme()
+})
 onUnmounted(()=>document.removeEventListener('click',handleClickOutside))
 
 watch(searchQuery,(q)=>{

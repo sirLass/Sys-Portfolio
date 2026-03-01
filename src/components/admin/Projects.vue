@@ -1,11 +1,11 @@
 <template>
   <div class="p-6">
     <!-- Success Message -->
-    <div v-if="showSuccess" class="mb-6 flex items-center gap-3 p-4 bg-[#c1f0d0] border border-[#008060] rounded-lg">
-      <svg class="w-5 h-5 text-[#008060]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+    <div v-if="showSuccess" class="mb-6 flex items-center gap-3 p-4 bg-[var(--admin-primary-light)] border border-[var(--admin-primary)] rounded-lg">
+      <svg class="w-5 h-5 text-[var(--admin-primary)]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
       </svg>
-      <p class="text-sm font-medium text-[#004c3f]">Changes saved successfully!</p>
+      <p class="text-sm font-medium text-[var(--admin-secondary)]">Changes saved successfully!</p>
     </div>
 
     <div class="space-y-8">
@@ -18,7 +18,7 @@
             <button
               type="button"
               @click="openAddModal"
-              class="inline-flex items-center gap-2 px-4 py-2 text-sm font-medium text-[#008060] bg-[#c1f0d0] rounded-md hover:bg-[#008060] hover:text-white transition-all transition-colors duration-200"
+              class="inline-flex items-center gap-2 px-4 py-2 text-sm font-medium text-[var(--admin-primary)] bg-[var(--admin-primary-light)] rounded-md hover:bg-[var(--admin-primary)] hover:text-white transition-all transition-colors duration-200"
             >
               <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
@@ -77,7 +77,7 @@
                   <td class="px-4 py-4">
                     <span 
                       class="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-medium"
-                      :class="project.link && project.link !== '#' ? 'bg-[#c1f0d0] text-[#004c3f]' : 'bg-[#ffea8a] text-[#1a1b1c]'"
+                      :class="project.link && project.link !== '#' ? 'bg-[var(--admin-primary-light)] text-[var(--admin-primary)]' : 'bg-[#ffea8a] text-[#1a1b1c]'"
                     >
                       {{ project.link && project.link !== '#' ? 'Live' : 'In Dev' }}
                     </span>
@@ -87,7 +87,7 @@
                       <button
                         type="button"
                         @click="editProject(index)"
-                        class="p-1.5 text-[#6d7175] hover:text-[#008060] hover:bg-[#c1f0d0] rounded transition-all"
+                        class="p-1.5 text-[#6d7175] hover:text-[var(--admin-primary)] hover:bg-[var(--admin-primary-light)] rounded transition-all"
                         title="Edit"
                       >
                         <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -114,8 +114,6 @@
         </div>
       </div>
 
-    </div>
-
     <!-- Add Project Modal -->
     <div v-if="isAddingProject" class="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4 backdrop-blur-sm">
       <div class="bg-white rounded-lg shadow-xl max-w-2xl w-full max-h-[90vh] overflow-y-auto animate-in fade-in zoom-in duration-200">
@@ -135,7 +133,7 @@
               <input
                 v-model="newProject.title"
                 type="text"
-                class="w-full px-4 py-2.5 text-sm text-[#1a1b1c] bg-white border border-[#c9cccf] rounded-md focus:outline-none focus:border-[#008060] focus:ring-2 focus:ring-[#008060]/20 transition-all font-outfit"
+                class="w-full px-4 py-2.5 text-sm text-[#1a1b1c] bg-white border border-[#c9cccf] rounded-md focus:outline-none focus:border-[var(--admin-primary)] focus:ring-2 focus:ring-[var(--admin-primary)]/20 transition-all font-outfit"
                 placeholder="Project Title"
               />
             </div>
@@ -144,7 +142,7 @@
               <input
                 v-model="newProject.category"
                 type="text"
-                class="w-full px-4 py-2.5 text-sm text-[#1a1b1c] bg-white border border-[#c9cccf] rounded-md focus:outline-none focus:border-[#008060] focus:ring-2 focus:ring-[#008060]/20 transition-all font-outfit"
+                class="w-full px-4 py-2.5 text-sm text-[#1a1b1c] bg-white border border-[#c9cccf] rounded-md focus:outline-none focus:border-[var(--admin-primary)] focus:ring-2 focus:ring-[var(--admin-primary)]/20 transition-all font-outfit"
                 placeholder="Web App, Web System, etc."
               />
             </div>
@@ -155,7 +153,7 @@
             <textarea
               v-model="newProject.description"
               rows="3"
-              class="w-full px-4 py-2.5 text-sm text-[#1a1b1c] bg-white border border-[#c9cccf] rounded-md focus:outline-none focus:border-[#008060] focus:ring-2 focus:ring-[#008060]/20 transition-all resize-y font-outfit"
+              class="w-full px-4 py-2.5 text-sm text-[#1a1b1c] bg-white border border-[#c9cccf] rounded-md focus:outline-none focus:border-[var(--admin-primary)] focus:ring-2 focus:ring-[var(--admin-primary)]/20 transition-all resize-y font-outfit"
               placeholder="Project description..."
             ></textarea>
           </div>
@@ -165,7 +163,7 @@
               <label class="block text-sm font-medium text-[#1a1b1c]">Project Link</label>
               <span 
                 class="inline-flex items-center px-2 py-0.5 rounded text-[10px] font-bold uppercase tracking-wider transition-all"
-                :class="newProject.link && newProject.link !== '#' ? 'bg-[#c1f0d0] text-[#004c3f]' : 'bg-[#ffea8a] text-[#1a1b1c]'"
+                :class="newProject.link && newProject.link !== '#' ? 'bg-[var(--admin-primary-light)] text-[var(--admin-primary)]' : 'bg-[#ffea8a] text-[#1a1b1c]'"
               >
                 {{ newProject.link && newProject.link !== '#' ? 'Live' : 'In Dev' }}
               </span>
@@ -173,7 +171,7 @@
             <input
               v-model="newProject.link"
               type="text"
-              class="w-full px-4 py-2.5 text-sm text-[#1a1b1c] bg-white border border-[#c9cccf] rounded-md focus:outline-none focus:border-[#008060] focus:ring-2 focus:ring-[#008060]/20 transition-all font-outfit"
+              class="w-full px-4 py-2.5 text-sm text-[#1a1b1c] bg-white border border-[#c9cccf] rounded-md focus:outline-none focus:border-[var(--admin-primary)] focus:ring-2 focus:ring-[var(--admin-primary)]/20 transition-all font-outfit"
               placeholder="https://... or # for in development"
             />
             <p class="mt-1 text-xs text-[#6d7175]">Leave empty or use # to set status as "In Dev"</p>
@@ -186,7 +184,7 @@
                 <input
                   v-model="techSearchQuery"
                   type="text"
-                  class="w-full px-4 py-2.5 text-sm text-[#1a1b1c] bg-white border border-[#c9cccf] rounded-md focus:outline-none focus:border-[#008060] focus:ring-2 focus:ring-[#008060]/20 transition-all font-outfit"
+                  class="w-full px-4 py-2.5 text-sm text-[#1a1b1c] bg-white border border-[#c9cccf] rounded-md focus:outline-none focus:border-[var(--admin-primary)] focus:ring-2 focus:ring-[var(--admin-primary)]/20 transition-all font-outfit"
                   placeholder="Search or add technology (e.g. Next.js, Django)"
                   @keyup.enter="handleTechAdd('new')"
                 />
@@ -260,7 +258,7 @@
                 <button 
                   type="button"
                   @click="triggerGalleryUpload('new')"
-                  class="aspect-video rounded-lg border-2 border-dashed border-[#c9cccf] hover:border-[#008060] hover:bg-[#f6f6f7] transition-all flex flex-col items-center justify-center gap-1 text-[#6d7175] hover:text-[#008060]"
+                  class="aspect-video rounded-lg border-2 border-dashed border-[#c9cccf] hover:border-[var(--admin-primary)] hover:bg-[#f6f6f7] transition-all flex flex-col items-center justify-center gap-1 text-[#6d7175] hover:text-[var(--admin-primary)]"
                 >
                   <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
@@ -285,14 +283,14 @@
           <button
             type="button"
             @click="isAddingProject = false"
-            class="px-4 py-2 text-sm font-medium text-[#1a1b1c] hover:text-[#008060] transition-colors"
+            class="px-4 py-2 text-sm font-medium text-[#1a1b1c] hover:text-[var(--admin-primary)] transition-colors"
           >
             Cancel
           </button>
           <button
             type="button"
             @click="confirmAddProject"
-            class="px-6 py-2.5 text-sm font-medium text-white bg-[#008060] rounded-md hover:bg-[#004c3f] transition-all shadow-sm"
+            class="px-6 py-2.5 text-sm font-medium text-white bg-[var(--admin-primary)] rounded-md hover:bg-[var(--admin-secondary)] transition-all shadow-sm"
           >
             Create Project
           </button>
@@ -319,7 +317,7 @@
               <input
                 v-model="projectsData.projects[editingProject].title"
                 type="text"
-                class="w-full px-4 py-2.5 text-sm text-[#1a1b1c] bg-white border border-[#c9cccf] rounded-md focus:outline-none focus:border-[#008060] focus:ring-2 focus:ring-[#008060]/20 transition-all font-outfit"
+                class="w-full px-4 py-2.5 text-sm text-[#1a1b1c] bg-white border border-[#c9cccf] rounded-md focus:outline-none focus:border-[var(--admin-primary)] focus:ring-2 focus:ring-[var(--admin-primary)]/20 transition-all font-outfit"
                 placeholder="Project Title"
               />
             </div>
@@ -328,7 +326,7 @@
               <input
                 v-model="projectsData.projects[editingProject].category"
                 type="text"
-                class="w-full px-4 py-2.5 text-sm text-[#1a1b1c] bg-white border border-[#c9cccf] rounded-md focus:outline-none focus:border-[#008060] focus:ring-2 focus:ring-[#008060]/20 transition-all font-outfit"
+                class="w-full px-4 py-2.5 text-sm text-[#1a1b1c] bg-white border border-[#c9cccf] rounded-md focus:outline-none focus:border-[var(--admin-primary)] focus:ring-2 focus:ring-[var(--admin-primary)]/20 transition-all font-outfit"
                 placeholder="Web App, Web System, etc."
               />
             </div>
@@ -339,7 +337,7 @@
             <textarea
               v-model="projectsData.projects[editingProject].description"
               rows="3"
-              class="w-full px-4 py-2.5 text-sm text-[#1a1b1c] bg-white border border-[#c9cccf] rounded-md focus:outline-none focus:border-[#008060] focus:ring-2 focus:ring-[#008060]/20 transition-all resize-y font-outfit"
+              class="w-full px-4 py-2.5 text-sm text-[#1a1b1c] bg-white border border-[#c9cccf] rounded-md focus:outline-none focus:border-[var(--admin-primary)] focus:ring-2 focus:ring-[var(--admin-primary)]/20 transition-all resize-y font-outfit"
               placeholder="Project description..."
             ></textarea>
           </div>
@@ -349,7 +347,7 @@
               <label class="block text-sm font-medium text-[#1a1b1c]">Project Link</label>
               <span 
                 class="inline-flex items-center px-2 py-0.5 rounded text-[10px] font-bold uppercase tracking-wider transition-all"
-                :class="projectsData.projects[editingProject].link && projectsData.projects[editingProject].link !== '#' ? 'bg-[#c1f0d0] text-[#004c3f]' : 'bg-[#ffea8a] text-[#1a1b1c]'"
+                :class="projectsData.projects[editingProject].link && projectsData.projects[editingProject].link !== '#' ? 'bg-[var(--admin-primary-light)] text-[var(--admin-primary)]' : 'bg-[#ffea8a] text-[#1a1b1c]'"
               >
                 {{ projectsData.projects[editingProject].link && projectsData.projects[editingProject].link !== '#' ? 'Live' : 'In Dev' }}
               </span>
@@ -357,7 +355,7 @@
             <input
               v-model="projectsData.projects[editingProject].link"
               type="text"
-              class="w-full px-4 py-2.5 text-sm text-[#1a1b1c] bg-white border border-[#c9cccf] rounded-md focus:outline-none focus:border-[#008060] focus:ring-2 focus:ring-[#008060]/20 transition-all font-outfit"
+              class="w-full px-4 py-2.5 text-sm text-[#1a1b1c] bg-white border border-[#c9cccf] rounded-md focus:outline-none focus:border-[var(--admin-primary)] focus:ring-2 focus:ring-[var(--admin-primary)]/20 transition-all font-outfit"
               placeholder="https://... or # for in development"
             />
             <p class="mt-1 text-xs text-[#6d7175]">Leave empty or use # to set status as "In Dev"</p>
@@ -370,7 +368,7 @@
                 <input
                   v-model="techSearchQuery"
                   type="text"
-                  class="w-full px-4 py-2.5 text-sm text-[#1a1b1c] bg-white border border-[#c9cccf] rounded-md focus:outline-none focus:border-[#008060] focus:ring-2 focus:ring-[#008060]/20 transition-all font-outfit"
+                  class="w-full px-4 py-2.5 text-sm text-[#1a1b1c] bg-white border border-[#c9cccf] rounded-md focus:outline-none focus:border-[var(--admin-primary)] focus:ring-2 focus:ring-[var(--admin-primary)]/20 transition-all font-outfit"
                   placeholder="Search or add technology"
                   @keyup.enter="handleTechAdd('edit')"
                 />
@@ -435,7 +433,7 @@
                 <button 
                   type="button"
                   @click="triggerGalleryUpload('edit')"
-                  class="aspect-video rounded-lg border-2 border-dashed border-[#c9cccf] hover:border-[#008060] hover:bg-[#f6f6f7] transition-all flex flex-col items-center justify-center gap-1 text-[#6d7175] hover:text-[#008060]"
+                  class="aspect-video rounded-lg border-2 border-dashed border-[#c9cccf] hover:border-[var(--admin-primary)] hover:bg-[#f6f6f7] transition-all flex flex-col items-center justify-center gap-1 text-[#6d7175] hover:text-[var(--admin-primary)]"
                 >
                   <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
@@ -459,14 +457,14 @@
           <button
             type="button"
             @click="editingProject = null"
-            class="px-4 py-2 text-sm font-medium text-[#1a1b1c] hover:text-[#008060] transition-colors"
+            class="px-4 py-2 text-sm font-medium text-[#1a1b1c] hover:text-[var(--admin-primary)] transition-colors"
           >
             Cancel
           </button>
           <button
             type="button"
             @click="handleEditDone"
-            class="px-6 py-2.5 text-sm font-medium text-white bg-[#008060] rounded-md hover:bg-[#004c3f] transition-all shadow-sm"
+            class="px-6 py-2.5 text-sm font-medium text-white bg-[var(--admin-primary)] rounded-md hover:bg-[var(--admin-secondary)] transition-all shadow-sm"
           >
             Done
           </button>

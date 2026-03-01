@@ -1,11 +1,11 @@
 <template>
   <div class="p-6">
     <!-- Success Message -->
-    <div v-if="showSuccess" class="mb-6 flex items-center gap-3 p-4 bg-[#c1f0d0] border border-[#008060] rounded-lg">
-      <svg class="w-5 h-5 text-[#008060]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+    <div v-if="showSuccess" class="mb-6 flex items-center gap-3 p-4 bg-[var(--admin-primary-light)] border border-[var(--admin-primary)] rounded-lg">
+      <svg class="w-5 h-5 text-[var(--admin-primary)]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
       </svg>
-      <p class="text-sm font-medium text-[#004c3f]">Changes saved successfully!</p>
+      <p class="text-sm font-medium text-[var(--admin-secondary)]">Changes saved successfully!</p>
     </div>
 
     <!-- Database Warning -->
@@ -26,7 +26,7 @@
           :class="[
             'py-2 px-1 border-b-2 font-medium text-sm transition-colors',
             activeTab === tab.name
-              ? 'border-[#008060] text-[#008060]'
+              ? 'border-[var(--admin-primary)] text-[var(--admin-primary)]'
               : 'border-transparent text-[#6d7175] hover:text-[#1a1b1c] hover:border-[#b5babf]'
           ]"
         >
@@ -48,7 +48,7 @@
               id="paragraph1"
               v-model="aboutData.paragraph1"
               rows="4"
-              class="w-full px-4 py-2.5 text-sm text-[#1a1b1c] bg-white border border-[#c9cccf] rounded-md focus:outline-none focus:border-[#008060] focus:ring-2 focus:ring-[#008060]/20 transition-all placeholder:text-[#6d7175] resize-y"
+              class="w-full px-4 py-2.5 text-sm text-[#1a1b1c] bg-white border border-[#c9cccf] rounded-md focus:outline-none focus:border-[var(--admin-primary)] focus:ring-2 focus:ring-[var(--admin-primary)]/20 transition-all placeholder:text-[#6d7175] resize-y"
               placeholder="As a passionate designer and full stack developer..."
             ></textarea>
           </div>
@@ -60,7 +60,7 @@
               id="paragraph2"
               v-model="aboutData.paragraph2"
               rows="4"
-              class="w-full px-4 py-2.5 text-sm text-[#1a1b1c] bg-white border border-[#c9cccf] rounded-md focus:outline-none focus:border-[#008060] focus:ring-2 focus:ring-[#008060]/20 transition-all placeholder:text-[#6d7175] resize-y"
+              class="w-full px-4 py-2.5 text-sm text-[#1a1b1c] bg-white border border-[#c9cccf] rounded-md focus:outline-none focus:border-[var(--admin-primary)] focus:ring-2 focus:ring-[var(--admin-primary)]/20 transition-all placeholder:text-[#6d7175] resize-y"
               placeholder="My approach focuses on logical problem-solving..."
             ></textarea>
           </div>
@@ -78,7 +78,7 @@
               id="name"
               v-model="aboutData.name"
               type="text"
-              class="w-full px-4 py-2.5 text-sm text-[#1a1b1c] bg-white border border-[#c9cccf] rounded-md focus:outline-none focus:border-[#008060] focus:ring-2 focus:ring-[#008060]/20 transition-all placeholder:text-[#6d7175]"
+              class="w-full px-4 py-2.5 text-sm text-[#1a1b1c] bg-white border border-[#c9cccf] rounded-md focus:outline-none focus:border-[var(--admin-primary)] focus:ring-2 focus:ring-[var(--admin-primary)]/20 transition-all placeholder:text-[#6d7175]"
               placeholder="Brian Perez"
             />
           </div>
@@ -90,7 +90,7 @@
               id="email"
               v-model="aboutData.email"
               type="email"
-              class="w-full px-4 py-2.5 text-sm text-[#1a1b1c] bg-white border border-[#c9cccf] rounded-md focus:outline-none focus:border-[#008060] focus:ring-2 focus:ring-[#008060]/20 transition-all placeholder:text-[#6d7175]"
+              class="w-full px-4 py-2.5 text-sm text-[#1a1b1c] bg-white border border-[#c9cccf] rounded-md focus:outline-none focus:border-[var(--admin-primary)] focus:ring-2 focus:ring-[var(--admin-primary)]/20 transition-all placeholder:text-[#6d7175]"
               placeholder="perezbrian091598@gmail.com"
             />
           </div>
@@ -102,7 +102,7 @@
               id="location"
               v-model="aboutData.location"
               type="text"
-              class="w-full px-4 py-2.5 text-sm text-[#1a1b1c] bg-white border border-[#c9cccf] rounded-md focus:outline-none focus:border-[#008060] focus:ring-2 focus:ring-[#008060]/20 transition-all placeholder:text-[#6d7175]"
+              class="w-full px-4 py-2.5 text-sm text-[#1a1b1c] bg-white border border-[#c9cccf] rounded-md focus:outline-none focus:border-[var(--admin-primary)] focus:ring-2 focus:ring-[var(--admin-primary)]/20 transition-all placeholder:text-[#6d7175]"
               placeholder="Quezon Province, Philippines"
             />
           </div>
@@ -113,7 +113,7 @@
             <select
               id="status"
               v-model="aboutData.status"
-              class="w-full px-4 py-2.5 text-sm text-[#1a1b1c] bg-white border border-[#c9cccf] rounded-md focus:outline-none focus:border-[#008060] focus:ring-2 focus:ring-[#008060]/20 transition-all cursor-pointer"
+              class="w-full px-4 py-2.5 text-sm text-[#1a1b1c] bg-white border border-[#c9cccf] rounded-md focus:outline-none focus:border-[var(--admin-primary)] focus:ring-2 focus:ring-[var(--admin-primary)]/20 transition-all cursor-pointer"
             >
               <option value="On-site">On-site</option>
               <option value="Remote">Remote</option>
@@ -131,7 +131,7 @@
           <div class="bg-white p-8 rounded-2xl border border-[#e3e5e7] shadow-sm flex flex-col items-center">
             <h4 class="text-sm font-bold text-[#1a1b1c] mb-6 self-start">Profile Image</h4>
             <div 
-              class="relative group cursor-pointer w-48 h-48 rounded-2xl overflow-hidden border-2 border-[#c9cccf] bg-[#f6f6f7] transition-all hover:border-[#008060]"
+              class="relative group cursor-pointer w-48 h-48 rounded-2xl overflow-hidden border-2 border-[#c9cccf] bg-[#f6f6f7] transition-all hover:border-[var(--admin-primary)]"
               @click="triggerFileInput"
             >
               <img 
@@ -141,7 +141,7 @@
                 @error="handleImageError"
               />
               <div class="absolute inset-0 bg-black/40 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
-                <div class="p-3 bg-white rounded-full text-[#008060] shadow-lg">
+                <div class="p-3 bg-white rounded-full text-[var(--admin-primary)] shadow-lg">
                   <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 9a2 2 0 012-2h.93a2 2 0 001.664-.89l.812-1.22A2 2 0 0110.07 4h3.86a2 2 0 011.664.89l.812 1.22A2 2 0 0018.07 7H19a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V9z" />
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 13a3 3 0 11-6 0 3 3 0 016 0z" />
@@ -163,10 +163,10 @@
           <div class="bg-white p-8 rounded-2xl border border-[#e3e5e7] shadow-sm flex flex-col">
             <h4 class="text-sm font-bold text-[#1a1b1c] mb-6">CV / Resume</h4>
             <div 
-              class="flex-1 border-2 border-dashed border-[#c9cccf] rounded-2xl flex flex-col items-center justify-center p-6 transition-all hover:border-[#008060] hover:bg-[#008060]/5 group cursor-pointer"
+              class="flex-1 border-2 border-dashed border-[#c9cccf] rounded-2xl flex flex-col items-center justify-center p-6 transition-all hover:border-[var(--admin-primary)] hover:bg-[var(--admin-primary)]/5 group cursor-pointer"
               @click="handleCvBoxClick"
             >
-              <div class="w-16 h-16 rounded-full bg-[#f6f6f7] flex items-center justify-center text-[#6d7175] group-hover:bg-[#008060]/10 group-hover:text-[#008060] mb-4 transition-colors">
+              <div class="w-16 h-16 rounded-full bg-[#f6f6f7] flex items-center justify-center text-[#6d7175] group-hover:bg-[var(--admin-primary)]/10 group-hover:text-[var(--admin-primary)] mb-4 transition-colors">
                 <svg v-if="!aboutData.cvLink" class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 21h10a2 2 0 002-2V9.414a1 1 0 00-.293-.707l-5.414-5.414A1 1 0 0012.586 3H7a2 2 0 00-2 2v14a2 2 0 002 2z" />
                 </svg>
@@ -186,7 +186,7 @@
               <button 
                 type="button"
                 @click.stop="triggerCvFileInput"
-                class="flex-1 px-4 py-2 text-xs font-bold text-[#008060] bg-[#c1f0d0]/30 rounded-lg hover:bg-[#c1f0d0]/50 transition-colors"
+                class="flex-1 px-4 py-2 text-xs font-bold text-[var(--admin-primary)] bg-[var(--admin-primary)]/10 rounded-lg hover:bg-[var(--admin-primary)]/20 transition-colors"
                 title="Update File"
               >
                 {{ aboutData.cvLink ? 'Change File' : 'Upload CV' }}
@@ -219,7 +219,7 @@
             </div>
             <button 
               @click="showPdfModal = false"
-              class="px-6 py-2 bg-[#008060] text-white rounded-lg hover:bg-[#004c3f] transition-all text-sm font-bold shadow-sm"
+              class="px-6 py-2 bg-[var(--admin-primary)] text-white rounded-lg hover:bg-[var(--admin-secondary)] transition-all text-sm font-bold shadow-sm"
             >
               Close Preview
             </button>
@@ -246,14 +246,14 @@
         <button
           type="button"
           @click="resetData"
-          class="px-4 py-2 text-sm font-medium text-[#1a1b1c] hover:text-[#008060] transition-colors"
+          class="px-4 py-2 text-sm font-medium text-[#1a1b1c] hover:text-[var(--admin-primary)] transition-colors"
         >
           Reset
         </button>
         <button
           type="submit"
           :disabled="saving"
-          class="inline-flex items-center gap-2 px-6 py-2.5 text-sm font-medium text-white bg-[#008060] rounded-md hover:bg-[#004c3f] transition-all shadow-sm disabled:opacity-50 disabled:cursor-not-allowed"
+          class="inline-flex items-center gap-2 px-6 py-2.5 text-sm font-medium text-white bg-[var(--admin-primary)] rounded-md hover:bg-[var(--admin-secondary)] transition-all shadow-sm disabled:opacity-50 disabled:cursor-not-allowed"
         >
           <svg v-if="saving" class="animate-spin w-4 h-4" fill="none" viewBox="0 0 24 24">
             <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>

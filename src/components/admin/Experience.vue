@@ -1,11 +1,11 @@
 <template>
   <div class="p-6">
     <!-- Success Message -->
-    <div v-if="showSuccess" class="mb-6 flex items-center gap-3 p-4 bg-[#c1f0d0] border border-[#008060] rounded-lg">
-      <svg class="w-5 h-5 text-[#008060]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+    <div v-if="showSuccess" class="mb-6 flex items-center gap-3 p-4 bg-[var(--admin-primary-light)] border border-[var(--admin-primary)] rounded-lg">
+      <svg class="w-5 h-5 text-[var(--admin-primary)]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
       </svg>
-      <p class="text-sm font-medium text-[#004c3f]">Changes saved successfully!</p>
+      <p class="text-sm font-medium text-[var(--admin-secondary)]">Changes saved successfully!</p>
     </div>
 
     <form @submit.prevent="handleSave">
@@ -17,7 +17,7 @@
           :class="[
             'px-4 py-2 text-sm font-medium transition-all relative',
             activeTab === 'header' 
-              ? 'text-[#008060] border-b-2 border-[#008060]' 
+              ? 'text-[var(--admin-primary)] border-b-2 border-[var(--admin-primary)]' 
               : 'text-[#6d7175] hover:text-[#1a1b1c] hover:bg-[#f6f6f7]'
           ]"
         >
@@ -29,7 +29,7 @@
           :class="[
             'px-4 py-2 text-sm font-medium transition-all relative',
             activeTab === 'timeline' 
-              ? 'text-[#008060] border-b-2 border-[#008060]' 
+              ? 'text-[var(--admin-primary)] border-b-2 border-[var(--admin-primary)]' 
               : 'text-[#6d7175] hover:text-[#1a1b1c] hover:bg-[#f6f6f7]'
           ]"
         >
@@ -47,7 +47,7 @@
             id="description"
             v-model="experienceData.description"
             rows="3"
-            class="w-full px-4 py-2.5 text-sm text-[#1a1b1c] bg-white border border-[#c9cccf] rounded-md focus:outline-none focus:border-[#008060] focus:ring-2 focus:ring-[#008060]/20 transition-all placeholder:text-[#6d7175] resize-y"
+            class="w-full px-4 py-2.5 text-sm text-[#1a1b1c] bg-white border border-[#c9cccf] rounded-md focus:outline-none focus:border-[var(--admin-primary)] focus:ring-2 focus:ring-[var(--admin-primary)]/20 transition-all placeholder:text-[#6d7175] resize-y"
             placeholder="Describe your experience section..."
           ></textarea>
         </div>
@@ -62,7 +62,7 @@
             <button
               type="button"
               @click="openModal()"
-              class="inline-flex items-center gap-2 px-4 py-2 text-sm font-medium text-white bg-[#008060] rounded-md hover:bg-[#004c3f] transition-all shadow-sm"
+              class="inline-flex items-center gap-2 px-4 py-2 text-sm font-medium text-white bg-[var(--admin-primary)] rounded-md hover:bg-[var(--admin-secondary)] transition-all shadow-sm"
             >
               <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
@@ -148,14 +148,14 @@
         <button
           type="button"
           @click="resetData"
-          class="px-4 py-2 text-sm font-medium text-[#1a1b1c] hover:text-[#008060] transition-colors"
+          class="px-4 py-2 text-sm font-medium text-[#1a1b1c] hover:text-[var(--admin-primary)] transition-colors"
         >
           Reset
         </button>
         <button
           type="submit"
           :disabled="saving"
-          class="inline-flex items-center gap-2 px-6 py-2.5 text-sm font-medium text-white bg-[#008060] rounded-md hover:bg-[#004c3f] transition-all shadow-sm disabled:opacity-50 disabled:cursor-not-allowed"
+          class="inline-flex items-center gap-2 px-6 py-2.5 text-sm font-medium text-white bg-[var(--admin-primary)] rounded-md hover:bg-[var(--admin-secondary)] transition-all shadow-sm disabled:opacity-50 disabled:cursor-not-allowed"
         >
           <svg v-if="saving" class="animate-spin w-4 h-4" fill="none" viewBox="0 0 24 24">
             <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
@@ -172,7 +172,7 @@
         <!-- Modal Header -->
         <div class="px-6 py-4 border-b border-[#c9cccf] bg-[#f6f6f7] flex items-center justify-between">
           <div class="flex items-center gap-3">
-            <div class="w-10 h-10 rounded-full bg-[#008060] text-white flex items-center justify-center font-semibold text-lg">
+            <div class="w-10 h-10 rounded-full bg-[var(--admin-primary)] text-white flex items-center justify-center font-semibold text-lg">
               {{ editingIndex !== null ? editingIndex + 1 : experienceData.experiences.length + 1 }}
             </div>
             <h3 class="text-lg font-semibold text-[#1a1b1c]">
@@ -195,7 +195,7 @@
               <div class="flex justify-center">
                 <select 
                   v-model="currentExperience.category"
-                  class="w-full max-w-xs px-4 py-2.5 text-center text-sm bg-white border border-[#c9cccf] rounded-md focus:outline-none focus:border-[#008060] focus:ring-2 focus:ring-[#008060]/20 transition-all"
+                  class="w-full max-w-xs px-4 py-2.5 text-center text-sm bg-white border border-[#c9cccf] rounded-md focus:outline-none focus:border-[var(--admin-primary)] focus:ring-2 focus:ring-[var(--admin-primary)]/20 transition-all"
                 >
                   <option value="Degree">Degree</option>
                   <option value="Professional">Professional</option>
@@ -209,7 +209,7 @@
                 <input
                   v-model="currentExperience.dateRange"
                   type="text"
-                  class="w-full px-4 py-2.5 text-sm bg-white border border-[#c9cccf] rounded-md focus:outline-none focus:border-[#008060] focus:ring-2 focus:ring-[#008060]/20 transition-all"
+                  class="w-full px-4 py-2.5 text-sm bg-white border border-[#c9cccf] rounded-md focus:outline-none focus:border-[var(--admin-primary)] focus:ring-2 focus:ring-[var(--admin-primary)]/20 transition-all"
                   placeholder="e.g., 2025 - Present"
                 />
               </div>
@@ -218,7 +218,7 @@
                 <input
                   v-model="currentExperience.title"
                   type="text"
-                  class="w-full px-4 py-2.5 text-sm bg-white border border-[#c9cccf] rounded-md focus:outline-none focus:border-[#008060] focus:ring-2 focus:ring-[#008060]/20 transition-all"
+                  class="w-full px-4 py-2.5 text-sm bg-white border border-[#c9cccf] rounded-md focus:outline-none focus:border-[var(--admin-primary)] focus:ring-2 focus:ring-[var(--admin-primary)]/20 transition-all"
                   placeholder="e.g., Senior Developer"
                 />
               </div>
@@ -229,7 +229,7 @@
               <input
                 v-model="currentExperience.subtitle"
                 type="text"
-                class="w-full px-4 py-2.5 text-sm bg-white border border-[#c9cccf] rounded-md focus:outline-none focus:border-[#008060] focus:ring-2 focus:ring-[#008060]/20 transition-all"
+                class="w-full px-4 py-2.5 text-sm bg-white border border-[#c9cccf] rounded-md focus:outline-none focus:border-[var(--admin-primary)] focus:ring-2 focus:ring-[var(--admin-primary)]/20 transition-all"
                 placeholder="e.g., Company Name"
               />
             </div>
@@ -239,7 +239,7 @@
               <textarea
                 v-model="currentExperience.description"
                 rows="3"
-                class="w-full px-4 py-2.5 text-sm bg-white border border-[#c9cccf] rounded-md focus:outline-none focus:border-[#008060] focus:ring-2 focus:ring-[#008060]/20 transition-all resize-y"
+                class="w-full px-4 py-2.5 text-sm bg-white border border-[#c9cccf] rounded-md focus:outline-none focus:border-[var(--admin-primary)] focus:ring-2 focus:ring-[var(--admin-primary)]/20 transition-all resize-y"
                 placeholder="Brief description of your role or studies..."
               ></textarea>
             </div>
@@ -248,11 +248,11 @@
               <label class="block text-sm font-medium text-[#1a1b1c] text-center">Bullet Points</label>
               <div class="space-y-3">
                 <div v-for="(point, pIdx) in currentExperience.bulletPoints" :key="pIdx" class="flex items-center gap-4">
-                  <div class="w-2 h-2 rounded-full bg-[#008060] flex-shrink-0"></div>
+                  <div class="w-2 h-2 rounded-full bg-[var(--admin-primary)] flex-shrink-0"></div>
                   <input
                     v-model="currentExperience.bulletPoints[pIdx]"
                     type="text"
-                    class="flex-1 px-4 py-2 text-sm bg-white border border-[#c9cccf] rounded-md focus:outline-none focus:border-[#008060] focus:ring-2 focus:ring-[#008060]/20 transition-all"
+                    class="flex-1 px-4 py-2 text-sm bg-white border border-[#c9cccf] rounded-md focus:outline-none focus:border-[var(--admin-primary)] focus:ring-2 focus:ring-[var(--admin-primary)]/20 transition-all"
                     :placeholder="`Point ${pIdx + 1}`"
                   />
                   <button 
@@ -270,7 +270,7 @@
                   <button 
                     type="button" 
                     @click="addModalBulletPoint"
-                    class="inline-flex items-center gap-2 text-sm font-medium text-[#008060] hover:text-[#004c3f] transition-colors p-2"
+                    class="inline-flex items-center gap-2 text-sm font-medium text-[var(--admin-primary)] hover:text-[var(--admin-secondary)] transition-colors p-2"
                   >
                     <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
@@ -293,7 +293,7 @@
           </button>
           <button
             @click="saveTimelineItem"
-            class="px-8 py-2.5 text-sm font-medium text-white bg-[#008060] rounded-md hover:bg-[#004c3f] transition-all shadow-sm"
+            class="px-8 py-2.5 text-sm font-medium text-white bg-[var(--admin-primary)] rounded-md hover:bg-[var(--admin-secondary)] transition-all shadow-sm"
           >
             {{ editingIndex !== null ? 'Update Timeline' : 'Add to Timeline' }}
           </button>

@@ -2,20 +2,60 @@
     <section id="Projects" class="py-24 bg-white">
         <div class="max-w-7xl mx-auto px-6">
             <!-- Section Header -->
-            <div class="text-center mb-16">
-                <p class="text-primary-600 font-semibold text-lg mb-4">{{ projectsData.sectionLabel }}</p>
-                <h2 class="text-4xl lg:text-5xl font-bold text-gray-900 mb-6">{{ projectsData.mainHeading }}</h2>
-                <p class="text-xl text-gray-600 max-w-3xl mx-auto leading-relaxed">
-                    {{ projectsData.description }}
-                </p>
-                <div class="w-24 h-1 bg-primary-600 mx-auto rounded-full mt-6"></div>
+            <div class="flex flex-col md:flex-row md:items-end justify-between gap-8 mb-16">
+                <div class="text-left max-w-2xl">
+                    <p class="text-primary-600 font-semibold text-lg mb-4">{{ projectsData.sectionLabel }}</p>
+                    <h2 class="text-4xl lg:text-5xl font-bold text-gray-900 mb-6">{{ projectsData.mainHeading }}</h2>
+                    <p class="text-xl text-gray-600 leading-relaxed">
+                        {{ projectsData.description }}
+                    </p>
+                </div>
+                
+                <div class="flex items-center gap-3">
+                    <button 
+                        @click="scrollPrev"
+                        class="p-4 rounded-2xl bg-white border border-gray-200 text-gray-400 hover:text-primary-600 hover:bg-primary-50 hover:border-primary-100 transition-all shadow-sm active:scale-95"
+                        title="Previous Project"
+                    >
+                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
+                        </svg>
+                    </button>
+                    <button 
+                        @click="scrollNext"
+                        class="p-4 rounded-2xl bg-white border border-gray-200 text-gray-400 hover:text-primary-600 hover:bg-primary-50 hover:border-primary-100 transition-all shadow-sm active:scale-95"
+                        title="Next Project"
+                    >
+                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+                        </svg>
+                    </button>
+                    <div class="h-10 w-px bg-gray-200 mx-2"></div>
+                    <button 
+                        @click="toggleAutoSlide"
+                        :class="[
+                            'flex items-center gap-2 px-6 py-3 rounded-2xl text-xs font-bold uppercase tracking-widest transition-all shadow-sm active:scale-95',
+                            isAutoSlide 
+                                ? 'bg-primary-600 text-white shadow-lg shadow-primary-200' 
+                                : 'bg-white text-gray-500 border border-gray-200'
+                        ]"
+                    >
+                        <div v-if="isAutoSlide" class="w-1.5 h-1.5 bg-white rounded-full animate-ping"></div>
+                        {{ isAutoSlide ? 'Auto: ON' : 'Auto: OFF' }}
+                    </button>
+                </div>
             </div>
             
-            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+            <div 
+                ref="projectsScrollRef"
+                class="flex gap-8 overflow-x-auto scrollbar-hide pb-8 snap-x snap-mandatory px-4 -mx-4"
+                @mouseenter="stopAutoSlide"
+                @mouseleave="resumeAutoSlideIfOn"
+            >
                 <div
                     v-for="(project, index) in projectsData.projects"
                     :key="index"
-                    class="group bg-white rounded-2xl shadow-lg overflow-hidden card-hover border border-gray-100"
+                    class="min-w-[320px] md:min-w-[400px] lg:min-w-[450px] flex-shrink-0 snap-center group bg-white rounded-3xl shadow-xl overflow-hidden border border-gray-100 h-full flex flex-col"
                 >
                     <div
                         class="relative h-64 overflow-hidden"
@@ -67,8 +107,66 @@
 </template>
 
 <script setup>
-import { ref, onMounted } from 'vue'
+import { ref, onMounted, onUnmounted } from 'vue'
 import { supabase } from '../supabase'
+
+const isAutoSlide = ref(true)
+const projectsScrollRef = ref(null)
+let autoSlideInterval = null
+
+const toggleAutoSlide = () => {
+    isAutoSlide.value = !isAutoSlide.value
+    if (isAutoSlide.value) {
+        startAutoSlide()
+    } else {
+        stopAutoSlide()
+    }
+}
+
+const startAutoSlide = () => {
+    stopAutoSlide()
+    autoSlideInterval = setInterval(() => {
+        scrollNext()
+    }, 5000)
+}
+
+const stopAutoSlide = () => {
+    if (autoSlideInterval) {
+        clearInterval(autoSlideInterval)
+        autoSlideInterval = null
+    }
+}
+
+const resumeAutoSlideIfOn = () => {
+    if (isAutoSlide.value) {
+        startAutoSlide()
+    }
+}
+
+const scrollNext = () => {
+    if (!projectsScrollRef.value) return
+    const container = projectsScrollRef.value
+    const itemWidth = container.querySelector('.snap-center').clientWidth + 32 // item width + gap
+    const maxScroll = container.scrollWidth - container.clientWidth
+    
+    if (container.scrollLeft >= maxScroll - 10) {
+        container.scrollTo({ left: 0, behavior: 'smooth' })
+    } else {
+        container.scrollBy({ left: itemWidth, behavior: 'smooth' })
+    }
+}
+
+const scrollPrev = () => {
+    if (!projectsScrollRef.value) return
+    const container = projectsScrollRef.value
+    const itemWidth = container.querySelector('.snap-center').clientWidth + 32
+    
+    if (container.scrollLeft <= 10) {
+        container.scrollTo({ left: container.scrollWidth, behavior: 'smooth' })
+    } else {
+        container.scrollBy({ left: -itemWidth, behavior: 'smooth' })
+    }
+}
 
 const projectsData = ref({
   sectionLabel: "My recent work",
@@ -107,8 +205,8 @@ const projectsData = ref({
 
 // Color mapping for Tailwind colors
 const colorMap = {
-  'primary-400': '#60a5fa',
-  'primary-600': '#2563eb',
+  'primary-400': 'var(--primary-400)',
+  'primary-600': 'var(--primary-600)',
   'green-400': '#4ade80',
   'blue-500': '#3b82f6',
   'purple-400': '#a78bfa',
@@ -139,7 +237,6 @@ onMounted(async () => {
           description: data.description || projectsData.value.description,
           projects: data.projects || projectsData.value.projects
         }
-        return
       }
     } catch (e) {
       console.error('Error fetching projects from Supabase:', e)
@@ -155,5 +252,33 @@ onMounted(async () => {
       console.error('Error loading projects data from localStorage:', e)
     }
   }
+
+  if (isAutoSlide.value) {
+    startAutoSlide()
+  }
+})
+
+onUnmounted(() => {
+    stopAutoSlide()
 })
 </script>
+
+<style scoped>
+.scrollbar-hide::-webkit-scrollbar {
+  display: none;
+}
+.scrollbar-hide {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+.snap-center {
+  scroll-snap-align: center;
+}
+
+@media (min-width: 768px) {
+    .snap-center {
+        scroll-snap-align: start;
+    }
+}
+</style>

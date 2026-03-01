@@ -11,7 +11,7 @@
           :class="[
             'px-4 py-2 rounded-md text-sm font-medium transition-all',
             activeView === view.id
-              ? 'bg-blue-600 text-white shadow-md'
+              ? 'bg-[var(--admin-primary)] text-white shadow-md'
               : 'text-gray-600 hover:text-gray-900'
           ]"
         >
@@ -37,7 +37,7 @@
               :class="[
                 'px-4 py-2 text-sm font-medium rounded-lg transition-all',
                 cloudFilter === f.toLowerCase() 
-                  ? 'bg-white text-blue-600 shadow-sm border border-blue-100' 
+                  ? 'bg-white text-[var(--admin-primary)] shadow-sm border border-[var(--admin-primary-light)]' 
                   : 'text-gray-500 hover:text-gray-900'
               ]"
             >
@@ -46,7 +46,7 @@
             <div class="w-px h-6 bg-gray-200 mx-1"></div>
             <button 
               @click="shuffleCloud"
-              class="p-2 text-gray-500 hover:text-blue-600 hover:bg-white hover:shadow-sm rounded-lg transition-all"
+              class="p-2 text-gray-500 hover:text-[var(--admin-primary)] hover:bg-white hover:shadow-sm rounded-lg transition-all"
               title="Shuffle Cloud"
             >
               <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -138,7 +138,7 @@
           <div class="flex items-center gap-4">
             <button 
               @click.stop="addSkill('design')"
-              class="inline-flex items-center gap-2 px-4 py-2 text-sm font-medium text-blue-600 bg-blue-50 hover:bg-blue-100 rounded-lg transition-colors"
+              class="inline-flex items-center gap-2 px-4 py-2 text-sm font-medium text-[var(--admin-primary)] bg-[var(--admin-primary-light)] hover:opacity-80 rounded-lg transition-colors"
             >
               <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
@@ -167,7 +167,7 @@
                 <div class="absolute top-2 right-2 flex items-center gap-1 opacity-0 group-hover:opacity-100 transition-all z-10">
                   <button 
                     @click.stop="editSkill('design', index)"
-                    class="p-1.5 text-blue-400 hover:text-blue-600 hover:bg-blue-50 rounded-md transition-colors"
+                    class="p-1.5 text-blue-400 hover:text-[var(--admin-primary)] hover:bg-[var(--admin-primary-light)] rounded-md transition-colors"
                     title="Edit name"
                   >
                     <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -187,7 +187,7 @@
 
                 <div class="p-6">
                   <div class="flex items-start justify-between mb-2">
-                    <h3 class="text-lg font-semibold text-gray-900 group-hover:text-blue-600 transition-colors pr-8">
+                    <h3 class="text-lg font-semibold text-gray-900 group-hover:text-[var(--admin-primary)] transition-colors pr-8">
                       {{ skill.name || `Design Skill ${index + 1}` }}
                     </h3>
                     <span :class="getLevelBadgeClass(skill.level)">
@@ -254,7 +254,7 @@
           <div class="flex items-center gap-4">
             <button 
               @click.stop="addSkill('development')"
-              class="inline-flex items-center gap-2 px-4 py-2 text-sm font-medium text-blue-600 bg-blue-50 hover:bg-blue-100 rounded-lg transition-colors"
+              class="inline-flex items-center gap-2 px-4 py-2 text-sm font-medium text-[var(--admin-primary)] bg-[var(--admin-primary-light)] hover:opacity-80 rounded-lg transition-colors"
             >
               <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
@@ -283,7 +283,7 @@
                 <div class="absolute top-2 right-2 flex items-center gap-1 opacity-0 group-hover:opacity-100 transition-all z-10">
                   <button 
                     @click.stop="editSkill('development', index)"
-                    class="p-1.5 text-blue-400 hover:text-blue-600 hover:bg-blue-50 rounded-md transition-colors"
+                    class="p-1.5 text-blue-400 hover:text-[var(--admin-primary)] hover:bg-[var(--admin-primary-light)] rounded-md transition-colors"
                     title="Edit name"
                   >
                     <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -303,7 +303,7 @@
 
                 <div class="p-6">
                   <div class="flex items-start justify-between mb-2">
-                    <h3 class="text-lg font-semibold text-gray-900 group-hover:text-blue-600 transition-colors pr-8">
+                    <h3 class="text-lg font-semibold text-gray-900 group-hover:text-[var(--admin-primary)] transition-colors pr-8">
                       {{ skill.name || `Development Skill ${index + 1}` }}
                     </h3>
                     <span :class="getLevelBadgeClass(skill.level)">
@@ -370,7 +370,7 @@
           <div class="flex items-center gap-2">
             <button 
               @click.stop="isAddingTool = true"
-              class="inline-flex items-center gap-2 px-4 py-2 text-sm font-medium text-blue-600 bg-blue-50 hover:bg-blue-100 rounded-lg transition-colors"
+              class="inline-flex items-center gap-2 px-4 py-2 text-sm font-medium text-[var(--admin-primary)] bg-[var(--admin-primary-light)] hover:opacity-80 rounded-lg transition-colors"
             >
               <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
@@ -393,7 +393,7 @@
               <div
                 v-for="(tool, index) in skillsData.tools"
                 :key="index"
-                class="group flex items-center gap-2 bg-white rounded-full border border-gray-200 pl-4 pr-2 py-2 hover:border-blue-300 hover:shadow-sm transition-all"
+                class="group flex items-center gap-2 bg-white rounded-full border border-gray-200 pl-4 pr-2 py-2 hover:border-[var(--admin-primary)] hover:shadow-sm transition-all"
               >
                 <span class="text-sm font-medium text-gray-700">{{ tool }}</span>
                 <button 
@@ -416,7 +416,7 @@
       <button
         @click="handleSave"
         :disabled="saving"
-        class="flex items-center gap-3 px-8 py-4 bg-blue-600 hover:bg-blue-700 text-white rounded-full shadow-2xl hover:shadow-blue-500/40 transition-all active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed group"
+        class="flex items-center gap-3 px-8 py-4 bg-[var(--admin-primary)] hover:bg-[var(--admin-secondary)] text-white rounded-full shadow-2xl hover:shadow-[var(--admin-primary)]/40 transition-all active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed group"
       >
         <svg v-if="saving" class="animate-spin w-5 h-5" fill="none" viewBox="0 0 24 24">
           <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
@@ -452,7 +452,7 @@
             <input 
               v-model="editForm.name"
               type="text"
-              class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 outline-none"
+              class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[var(--admin-primary)] outline-none"
             >
           </div>
         </div>
@@ -466,7 +466,7 @@
           </button>
           <button 
             @click="saveEdit"
-            class="px-6 py-2 text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 rounded-lg transition-colors"
+            class="px-6 py-2 text-sm font-medium text-white bg-[var(--admin-primary)] hover:bg-[var(--admin-secondary)] rounded-lg transition-colors"
           >
             Apply Changes
           </button>
@@ -496,7 +496,7 @@
               @keyup.enter="addTool"
               type="text" 
               placeholder="e.g. Photoshop, Docker, Figma"
-              class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 outline-none transition-all pr-12"
+              class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-[var(--admin-primary)] outline-none transition-all pr-12"
               autofocus
             >
             <div v-if="newToolName" class="absolute right-3 top-1/2 -translate-y-1/2">
@@ -521,13 +521,13 @@
                   v-for="tool in suggestedTools"
                   :key="tool.name"
                   @click="selectSuggestedTool(tool)"
-                  class="flex items-center gap-3 p-2.5 rounded-xl border border-gray-100 hover:border-blue-200 hover:bg-blue-50/50 transition-all text-left group"
+                  class="flex items-center gap-3 p-2.5 rounded-xl border border-gray-100 hover:border-[var(--admin-primary)] hover:bg-[var(--admin-primary-light)] transition-all text-left group"
                 >
-                  <div class="w-8 h-8 rounded-lg bg-gray-50 flex items-center justify-center overflow-hidden border border-gray-100 group-hover:border-blue-100">
+                  <div class="w-8 h-8 rounded-lg bg-gray-50 flex items-center justify-center overflow-hidden border border-gray-100 group-hover:border-[var(--admin-primary)]/10">
                     <img :src="`https://skillicons.dev/icons?i=${tool.icon}`" class="w-6 h-6 object-contain" :alt="tool.name">
                   </div>
-                  <span class="text-sm font-medium text-gray-700 group-hover:text-blue-700">{{ tool.name }}</span>
-                  <svg class="w-4 h-4 ml-auto text-gray-300 group-hover:text-blue-400 opacity-0 group-hover:opacity-100 transition-all" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <span class="text-sm font-medium text-gray-700 group-hover:text-[var(--admin-secondary)]">{{ tool.name }}</span>
+                  <svg class="w-4 h-4 ml-auto text-gray-300 group-hover:text-[var(--admin-primary-light)] opacity-0 group-hover:opacity-100 transition-all" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
                   </svg>
                 </button>
@@ -551,7 +551,7 @@
           </button>
           <button 
             @click="addTool"
-            class="px-6 py-2 text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 rounded-lg transition-colors shadow-sm"
+            class="px-6 py-2 text-sm font-medium text-white bg-[var(--admin-primary)] hover:bg-[var(--admin-secondary)] rounded-lg transition-colors shadow-sm"
           >
             Add
           </button>
@@ -579,7 +579,7 @@
             v-model="newSkillForm.name"
             type="text"
             placeholder="e.g. Graphic Design, Vue.js"
-            class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 outline-none transition-all"
+            class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-[var(--admin-primary)] outline-none transition-all"
             autofocus
           >
           <p class="mt-2 text-xs text-gray-500 italic">You can set the proficiency level after creating</p>
@@ -593,7 +593,7 @@
           </button>
           <button 
             @click="confirmAddSkill"
-            class="px-6 py-2 text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 rounded-lg transition-colors shadow-sm"
+            class="px-6 py-2 text-sm font-medium text-white bg-[var(--admin-primary)] hover:bg-[var(--admin-secondary)] rounded-lg transition-colors shadow-sm"
           >
             Create Skill
           </button>
