@@ -2,12 +2,25 @@
   <header
     class="sticky top-0 z-50 bg-white/95 backdrop-blur-sm border-b border-gray-200 transition-all duration-300"
   >
-    <div class="max-w-7xl mx-auto px-6 h-20 flex justify-between items-center">
-      <div class="flex items-center space-x-3">
-        <router-link to="/login" class="flex flex-col cursor-pointer hover:opacity-80 transition-opacity duration-300">
-          <img src="/logo.png" alt="Logo" class="w-36 h-auto mt-1" />
-        </router-link>
+    <div class="max-w-7xl mx-auto px-6 h-20 flex justify-between items-center relative">
+      <div class="flex items-center h-20 overflow-hidden">
+        <div 
+          @click="handleLogoClick"
+          class="flex items-center h-full cursor-pointer transition-all duration-300 group"
+        >
+          <img :src="logoUrl" alt="Logo" class="h-full w-auto object-contain py-2 transform transition-transform duration-300 group-hover:scale-110 group-hover:-translate-y-1" />
+        </div>
       </div>
+
+      <!-- Secret Message Tooltip (Outside overflow container) -->
+      <transition name="fade">
+        <div 
+          v-if="showMessage" 
+          class="absolute top-full left-6 mt-2 bg-gray-900 text-white text-xs py-1 px-3 rounded-full shadow-lg whitespace-nowrap z-50 font-medium border border-white/10"
+        >
+          {{ currentMessage }}
+        </div>
+      </transition>
 
       <nav class="hidden lg:flex items-center space-x-8">
         <a href="#hero" class="text-gray-700 hover:text-primary-600 font-medium transition-colors duration-300">Home</a>
@@ -42,7 +55,40 @@
 </template>
 
 <script setup>
-import { onMounted, onBeforeUnmount } from 'vue'
+import { ref, onMounted, onBeforeUnmount } from 'vue'
+import { useRouter } from 'vue-router'
+import logoUrl from '../assets/sirlass_logo.png'
+
+const router = useRouter()
+const clickCount = ref(0)
+const showMessage = ref(false)
+const currentMessage = ref('')
+let messageTimeout = null
+
+const handleLogoClick = () => {
+  clickCount.value++
+  
+  if (clickCount.value === 1) {
+    const greetings = ['Hello', 'Hi there']
+    currentMessage.value = greetings[Math.floor(Math.random() * greetings.length)]
+  } else if (clickCount.value === 2) {
+    currentMessage.value = 'Stop It'
+  } else if (clickCount.value === 3) {
+    currentMessage.value = 'Okay, you got me'
+    setTimeout(() => {
+      router.push('/login')
+      // Reset after redirect
+      clickCount.value = 0
+    }, 1000)
+  }
+
+  // Show tooltip message
+  showMessage.value = true
+  if (messageTimeout) clearTimeout(messageTimeout)
+  messageTimeout = setTimeout(() => {
+    showMessage.value = false
+  }, 2000)
+}
 
 const toggleMobileMenu = () => {
   const menu = document.getElementById('mobile-menu')
@@ -84,3 +130,16 @@ onBeforeUnmount(() => {
   window.removeEventListener('scroll', handleScroll)
 })
 </script>
+
+<style scoped>
+.fade-enter-active,
+.fade-leave-active {
+  transition: opacity 0.3s ease, transform 0.3s ease;
+}
+
+.fade-enter-from,
+.fade-leave-to {
+  opacity: 0;
+  transform: translate(-50%, 10px);
+}
+</style>

@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SL Logo Animation</title>
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&display=swap');
+        
+        :root {
+            --logo-color: #2d1b4e;
+            --bg-color: #faf8f5;
+        }
+        
+        body {
+            background-color: var(--bg-color);
+            font-family: 'Playfair Display', serif;
+        }
+        
+        .logo-container {
+            position: relative;
+            width: 300px;
+            height: 300px;
+        }
+        
+        .letter-s {
+            position: absolute;
+            font-size: 220px;
+            font-weight: 700;
+            color: var(--logo-color);
+            left: 20px;
+            top: 50%;
+            transform: translateY(-50%);
+            opacity: 0;
+            animation: slideInS 1.2s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+            z-index: 2;
+        }
+        
+        .letter-l {
+            position: absolute;
+            font-size: 220px;
+            font-weight: 700;
+            color: var(--logo-color);
+            right: 20px;
+            top: 50%;
+            transform: translateY(-50%);
+            opacity: 0;
+            animation: slideInL 1.2s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+            animation-delay: 0.3s;
+            z-index: 1;
+        }
+        
+        @keyframes slideInS {
+            0% {
+                opacity: 0;
+                transform: translateY(-50%) translateX(-80px) rotate(-15deg) scale(0.8);
+            }
+            100% {
+                opacity: 1;
+                transform: translateY(-50%) translateX(0) rotate(0deg) scale(1);
+            }
+        }
+        
+        @keyframes slideInL {
+            0% {
+                opacity: 0;
+                transform: translateY(-50%) translateX(80px) rotate(15deg) scale(0.8);
+            }
+            100% {
+                opacity: 1;
+                transform: translateY(-50%) translateX(0) rotate(0deg) scale(1);
+            }
+        }
+        
+        .glow-effect {
+            position: absolute;
+            inset: -20px;
+            background: radial-gradient(circle, rgba(45, 27, 78, 0.1) 0%, transparent 70%);
+            opacity: 0;
+            animation: fadeInGlow 1.5s ease-out forwards;
+            animation-delay: 0.8s;
+            pointer-events: none;
+        }
+        
+        @keyframes fadeInGlow {
+            0% {
+                opacity: 0;
+                transform: scale(0.8);
+            }
+            100% {
+                opacity: 1;
+                transform: scale(1);
+            }
+        }
+        
+        .floating {
+            animation: float 6s ease-in-out infinite;
+            animation-delay: 1.5s;
+        }
+        
+        @keyframes float {
+            0%, 100% {
+                transform: translateY(0px);
+            }
+            50% {
+                transform: translateY(-10px);
+            }
+        }
+        
+        .subtitle {
+            opacity: 0;
+            animation: fadeInUp 1s ease-out forwards;
+            animation-delay: 1.2s;
+        }
+        
+        @keyframes fadeInUp {
+            0% {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            100% {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        /* Hover interaction */
+        .logo-wrapper:hover .letter-s {
+            transform: translateY(-50%) translateX(-10px);
+            transition: transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+        }
+        
+        .logo-wrapper:hover .letter-l {
+            transform: translateY(-50%) translateX(10px);
+            transition: transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+        }
+    </style>
+</head>
+<body class="min-h-screen flex flex-col items-center justify-center overflow-hidden">
+    
+    <div class="logo-wrapper cursor-pointer">
+        <div class="logo-container floating">
+            <div class="glow-effect"></div>
+            <div class="letter-s">S</div>
+            <div class="letter-l">L</div>
+        </div>
+    </div>
+    
+    <div class="subtitle mt-8 text-center">
+        <h1 class="text-3xl font-bold tracking-widest uppercase" style="color: #2d1b4e; font-family: 'Playfair Display', serif;">
+            Studio Luxe
+        </h1>
+        <p class="mt-2 text-sm tracking-wider opacity-60" style="color: #2d1b4e;">
+            Design & Branding
+        </p>
+    </div>
+    
+    <script>
+        // Add click interaction for replay animation
+        document.querySelector('.logo-wrapper').addEventListener('click', function() {
+            const letters = document.querySelectorAll('.letter-s, .letter-l');
+            const glow = document.querySelector('.glow-effect');
+            const subtitle = document.querySelector('.subtitle');
+            
+            // Reset animations
+            letters.forEach(letter => {
+                letter.style.animation = 'none';
+                letter.offsetHeight; // Trigger reflow
+            });
+            glow.style.animation = 'none';
+            glow.offsetHeight;
+            subtitle.style.animation = 'none';
+            subtitle.offsetHeight;
+            
+            // Restart animations
+            setTimeout(() => {
+                document.querySelector('.letter-s').style.animation = 'slideInS 1.2s cubic-bezier(0.34, 1.56, 0.64, 1) forwards';
+                document.querySelector('.letter-l').style.animation = 'slideInL 1.2s cubic-bezier(0.34, 1.56, 0.64, 1) forwards';
+                glow.style.animation = 'fadeInGlow 1.5s ease-out forwards';
+                glow.style.animationDelay = '0.8s';
+                subtitle.style.animation = 'fadeInUp 1s ease-out forwards';
+                subtitle.style.animationDelay = '1.2s';
+            }, 10);
+        });
+        
+        // Add subtle parallax effect on mouse move
+        document.addEventListener('mousemove', (e) => {
+            const x = (window.innerWidth / 2 - e.pageX) / 50;
+            const y = (window.innerHeight / 2 - e.pageY) / 50;
+            
+            const s = document.querySelector('.letter-s');
+            const l = document.querySelector('.letter-l');
+            
+            if (s && l) {
+                s.style.transform = `translateY(-50%) translateX(${x * 0.5}px)`;
+                l.style.transform = `translateY(-50%) translateX(${-x * 0.5}px)`;
+            }
+        });
+    </script>
+    
+</body>
+</html>

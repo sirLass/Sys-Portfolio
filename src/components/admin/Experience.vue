@@ -40,16 +40,46 @@
       <div class="space-y-8">
         <!-- Experience Header Tab -->
         <div v-show="activeTab === 'header'">
-          <label for="description" class="block text-sm font-medium text-[#1a1b1c] mb-2">
-            Experience Header
-          </label>
-          <textarea
-            id="description"
-            v-model="experienceData.description"
-            rows="3"
-            class="w-full px-4 py-2.5 text-sm text-[#1a1b1c] bg-white border border-[#c9cccf] rounded-md focus:outline-none focus:border-[var(--admin-primary)] focus:ring-2 focus:ring-[var(--admin-primary)]/20 transition-all placeholder:text-[#6d7175] resize-y"
-            placeholder="Describe your experience section..."
-          ></textarea>
+          <div class="space-y-6">
+            <div>
+              <label for="sectionLabel" class="block text-sm font-medium text-[#1a1b1c] mb-2">
+                Section Label
+              </label>
+              <input
+                id="sectionLabel"
+                v-model="experienceData.sectionLabel"
+                type="text"
+                class="w-full px-4 py-2.5 text-sm text-[#1a1b1c] bg-white border border-[#c9cccf] rounded-md focus:outline-none focus:border-[var(--admin-primary)] focus:ring-2 focus:ring-[var(--admin-primary)]/20 transition-all placeholder:text-[#6d7175]"
+                placeholder="e.g., My journey so far"
+              />
+            </div>
+
+            <div>
+              <label for="mainHeading" class="block text-sm font-medium text-[#1a1b1c] mb-2">
+                Main Heading
+              </label>
+              <input
+                id="mainHeading"
+                v-model="experienceData.mainHeading"
+                type="text"
+                class="w-full px-4 py-2.5 text-sm text-[#1a1b1c] bg-white border border-[#c9cccf] rounded-md focus:outline-none focus:border-[var(--admin-primary)] focus:ring-2 focus:ring-[var(--admin-primary)]/20 transition-all placeholder:text-[#6d7175]"
+                placeholder="e.g., Experience"
+              />
+            </div>
+
+            <div>
+              <label for="description" class="block text-sm font-medium text-[#1a1b1c] mb-2">
+                Description
+              </label>
+              <textarea
+                id="description"
+                v-model="experienceData.description"
+                rows="4"
+                class="w-full px-4 py-2.5 text-sm text-[#1a1b1c] bg-white border border-[#c9cccf] rounded-md focus:outline-none focus:border-[var(--admin-primary)] focus:ring-2 focus:ring-[var(--admin-primary)]/20 transition-all placeholder:text-[#6d7175] resize-y"
+                placeholder="Describe your experience section..."
+              ></textarea>
+            </div>
+          </div>
         </div>
 
         <!-- Experience Timeline Tab -->
@@ -312,6 +342,8 @@ const experienceId = ref(null)
 const activeTab = ref('header')
 
 const experienceData = ref({
+  sectionLabel: 'My journey so far',
+  mainHeading: 'Experience',
   description: '',
   experiences: []
 })
@@ -358,6 +390,8 @@ const loadFromDatabase = async () => {
     if (data) {
       experienceId.value = data.id
       experienceData.value = {
+        sectionLabel: data.section_label || 'My journey so far',
+        mainHeading: data.main_heading || 'Experience',
         description: data.description || '',
         experiences: data.experiences || []
       }
@@ -381,6 +415,8 @@ const loadFromStorage = () => {
   } else {
     // Set default values if nothing is saved
     experienceData.value = {
+      sectionLabel: "My journey so far",
+      mainHeading: "Experience",
       description: "I'm currently a 4th-year college student with a strong foundation in both frontend and backend development. While I don't have formal industry experience yet, I have built a solid skill set through academic projects and personal learning.",
       experiences: [
         {
@@ -475,6 +511,8 @@ const handleSave = async () => {
 
   try {
     const dbData = {
+      section_label: experienceData.value.sectionLabel,
+      main_heading: experienceData.value.mainHeading,
       description: experienceData.value.description,
       experiences: experienceData.value.experiences,
       updated_at: new Date().toISOString()

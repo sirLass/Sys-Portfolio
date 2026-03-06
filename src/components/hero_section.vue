@@ -5,7 +5,7 @@
     <!-- Cover Image Banner -->
     <div class="absolute top-0 left-0 w-full h-64 md:h-96 z-0" style="-webkit-mask-image: linear-gradient(to bottom, black 30%, transparent 100%); mask-image: linear-gradient(to bottom, black 30%, transparent 100%);">
       <div v-if="isLoading" class="w-full h-full bg-gray-200 animate-pulse"></div>
-      <img v-else-if="heroData.coverImage" :src="heroData.coverImage" alt="Cover Image" class="w-full h-full object-cover opacity-40 mix-blend-overlay" />
+      <img v-else-if="heroData?.coverImage" :src="heroData.coverImage" alt="Cover Image" class="w-full h-full object-cover opacity-40 mix-blend-overlay" />
       <div class="absolute inset-0 bg-gradient-to-b from-transparent to-primary-50/80"></div>
     </div>
 
@@ -19,7 +19,45 @@
     </div>
 
     <div class="relative z-10 max-w-7xl mx-auto px-6 py-20">
-      <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+      <!-- Loading State - Skeleton UI -->
+      <div v-if="isLoading" class="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+        <div class="text-center lg:text-left space-y-6">
+          <div class="h-6 w-32 bg-gray-200 rounded animate-pulse mx-auto lg:mx-0"></div>
+          <div class="h-16 w-64 bg-gray-200 rounded animate-pulse mx-auto lg:mx-0"></div>
+          <div class="h-8 w-48 bg-gray-200 rounded animate-pulse mx-auto lg:mx-0"></div>
+          <div class="space-y-3">
+            <div class="h-4 w-full bg-gray-200 rounded animate-pulse"></div>
+            <div class="h-4 w-5/6 bg-gray-200 rounded animate-pulse"></div>
+            <div class="h-4 w-4/6 bg-gray-200 rounded animate-pulse"></div>
+          </div>
+          <div class="flex gap-4 justify-center lg:justify-start pt-4">
+            <div class="h-14 w-40 bg-gray-200 rounded-full animate-pulse"></div>
+            <div class="h-14 w-40 bg-gray-200 rounded-full animate-pulse"></div>
+          </div>
+          <div class="flex items-center justify-center lg:justify-start gap-8 pt-8 border-t border-gray-200">
+            <div class="h-12 w-20 bg-gray-200 rounded animate-pulse"></div>
+            <div class="h-12 w-20 bg-gray-200 rounded animate-pulse"></div>
+            <div class="h-8 w-32 bg-gray-200 rounded animate-pulse"></div>
+          </div>
+        </div>
+        <div class="flex justify-center lg:justify-end">
+          <div class="w-80 h-80 lg:w-96 lg:h-96 bg-gray-200 rounded-full animate-pulse"></div>
+        </div>
+      </div>
+
+      <!-- Error State -->
+      <div v-else-if="hasError || !heroData" class="text-center py-16">
+        <div class="text-gray-400 mb-4">
+          <svg class="w-16 h-16 mx-auto" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+          </svg>
+        </div>
+        <h3 class="text-xl font-semibold text-gray-600 mb-2">Failed to load data</h3>
+        <p class="text-gray-400">Please check your database connection or try again later.</p>
+      </div>
+
+      <!-- Loaded Data -->
+      <div v-else class="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
         <div class="text-center lg:text-left">
           <div class="mb-8">
             <p class="text-primary-600 font-semibold text-lg mb-4 flex items-center justify-center lg:justify-start">
@@ -101,7 +139,7 @@
                   class="w-64 h-64 lg:w-80 lg:h-80 bg-gradient-to-br from-gray-100 to-gray-200 rounded-full flex items-center justify-center overflow-hidden"
                 >
                   <div v-if="isLoading" class="w-full h-full bg-gray-300 animate-pulse"></div>
-                  <img v-else-if="heroData.image" :src="heroData.image" :alt="heroData.name || 'Your Photo'" class="w-full h-full object-cover rounded-full" />
+                  <img v-else-if="heroData?.image" :src="heroData.image" :alt="heroData.name || 'Your Photo'" class="w-full h-full object-cover rounded-full" />
                 </div>
               </div>
               <div class="absolute -top-4 -right-4 w-16 h-16 bg-primary-100 rounded-full flex items-center justify-center shadow-lg">
@@ -127,24 +165,17 @@ import { ref, onMounted } from 'vue'
 import { supabase } from '../supabase'
 
 const isLoading = ref(true)
-const heroData = ref({
-  greeting: "Hello, I'm",
-  name: 'Brian Perez',
-  title: 'Aspiring Full Stack Developer',
-  description: 'As a Aspiring Developer and UI/UX Designer, I craft solutions that are not only visually appealing but also intuitive and efficient — combining thoughtful design with clean, scalable code.',
-  image: '',
-  coverImage: '',
-  projectsCount: 12,
-  githubReposCount: 49,
-  socials: {
-    facebook: '#',
-    twitter: '#',
-    instagram: '#'
-  }
-})
+const hasError = ref(false)
+const heroData = ref(null)
 
 onMounted(async () => {
-  if (!supabase) return
+  console.log('Supabase client:', supabase)
+  if (!supabase) {
+    console.error('Supabase not initialized - check .env.local credentials')
+    hasError.value = true
+    isLoading.value = false
+    return
+  }
   try {
     const { data, error } = await supabase
       .from('personal_info')
@@ -153,19 +184,28 @@ onMounted(async () => {
       .limit(1)
       .maybeSingle()
 
+    console.log('Hero query result:', { data, error })
+
     if (error) throw error
     if (data) {
       heroData.value = {
-        ...heroData.value,
-        name: data.name ?? heroData.value.name,
-        title: data.title ?? heroData.value.title,
-        description: data.description ?? heroData.value.description,
+        greeting: "Hello, I'm",
+        name: data.name || '',
+        title: data.title || '',
+        description: data.description || '',
         image: data.image || '',
-        coverImage: data.cover_image || ''
+        coverImage: data.cover_image || '',
+        projectsCount: 0,
+        githubReposCount: 0,
+        socials: { facebook: '#', twitter: '#', instagram: '#' }
       }
+    } else {
+      console.error('No data found in personal_info table')
+      hasError.value = true
     }
   } catch (e) {
     console.error('Error loading personal_info:', e)
+    hasError.value = true
   } finally {
     isLoading.value = false
   }

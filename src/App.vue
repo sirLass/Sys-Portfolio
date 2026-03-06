@@ -1,6 +1,7 @@
 <script setup>
 import { ref, onMounted, computed, provide } from 'vue'
 import { supabase } from './supabase'
+import LoadingScreen from './components/LoadingScreen.vue'
 
 const currentPalette = ref({
   primary: '#008060',
@@ -71,6 +72,7 @@ onMounted(fetchTheme)
 </script>
 
 <template>
+  <LoadingScreen :style="themeVariables" />
   <div :style="themeVariables" class="min-h-screen">
     <router-view />
   </div>
