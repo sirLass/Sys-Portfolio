@@ -263,12 +263,55 @@
         </button>
       </div>
     </form>
+
+    <!-- Image Cropper Modal -->
+    <div v-if="showCropperModal" class="fixed inset-0 z-[70] flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm">
+      <div class="bg-white rounded-2xl shadow-2xl w-full max-w-2xl overflow-hidden animate-in fade-in zoom-in duration-200">
+        <div class="p-4 border-b border-gray-100 flex items-center justify-between">
+          <h3 class="text-lg font-bold text-gray-900">Crop Profile Image</h3>
+          <button @click="cancelCrop" class="text-gray-400 hover:text-gray-600">
+            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+            </svg>
+          </button>
+        </div>
+        
+        <div class="p-6 bg-gray-50">
+          <div class="relative max-h-[400px] overflow-hidden rounded-xl bg-gray-200">
+            <img 
+              ref="cropperImage" 
+              :src="selectedFile" 
+              class="max-w-full block"
+              alt="Image to crop"
+            />
+          </div>
+          <p class="mt-3 text-xs text-gray-500 text-center">Drag to move, scroll to zoom, or resize the crop area</p>
+        </div>
+        
+        <div class="p-4 bg-gray-50 flex justify-end gap-3">
+          <button 
+            @click="cancelCrop"
+            class="px-4 py-2 text-sm font-medium text-gray-600 hover:text-gray-800"
+          >
+            Cancel
+          </button>
+          <button 
+            @click="applyCrop"
+            class="px-6 py-2 text-sm font-medium text-white bg-[var(--admin-primary)] hover:bg-[var(--admin-secondary)] rounded-lg transition-colors shadow-sm"
+          >
+            Apply Crop
+          </button>
+        </div>
+      </div>
+    </div>
   </div>
 </template>
 
 <script setup>
-import { ref, onMounted, inject } from 'vue'
+import { ref, onMounted, inject, nextTick } from 'vue'
 import { supabase, isSupabaseConfigured } from '../../supabase'
+import Cropper from 'cropperjs'
+import 'cropperjs/dist/cropper.css'
 
 const addToast = inject('addToast')
 
@@ -295,9 +338,13 @@ const aboutData = ref({
 const saving = ref(false)
 const showSuccess = ref(false)
 const showPdfModal = ref(false)
+const showCropperModal = ref(false)
 const fileInput = ref(null)
 const cvFileInput = ref(null)
+const cropperImage = ref(null)
 const aboutId = ref(null)
+let cropper = null
+const selectedFile = ref(null)
 
 // --- Lifecycle ---
 onMounted(() => {
@@ -347,12 +394,62 @@ const handleFileSelect = (event) => {
 
   const reader = new FileReader()
   reader.onload = (e) => {
-    aboutData.value.image = e.target.result
+    selectedFile.value = e.target.result
+    showCropperModal.value = true
+    nextTick(() => initCropper())
   }
   reader.onerror = () => {
     alert('Error reading file. Please try again.')
   }
   reader.readAsDataURL(file)
+}
+
+const initCropper = () => {
+  if (!cropperImage.value) return
+  
+  cropper = new Cropper(cropperImage.value, {
+    aspectRatio: 1,
+    viewMode: 1,
+    dragMode: 'move',
+    autoCropArea: 0.8,
+    restore: false,
+    guides: true,
+    center: true,
+    highlight: false,
+    cropBoxMovable: true,
+    cropBoxResizable: true,
+    toggleDragModeOnDblclick: false,
+  })
+}
+
+const destroyCropper = () => {
+  if (cropper) {
+    cropper.destroy()
+    cropper = null
+  }
+}
+
+const applyCrop = () => {
+  if (!cropper) return
+  
+  const canvas = cropper.getCroppedCanvas({
+    width: 400,
+    height: 400,
+    fillColor: '#fff',
+    imageSmoothingEnabled: true,
+    imageSmoothingQuality: 'high',
+  })
+  
+  aboutData.value.image = canvas.toDataURL('image/jpeg', 0.9)
+  destroyCropper()
+  showCropperModal.value = false
+  selectedFile.value = null
+}
+
+const cancelCrop = () => {
+  destroyCropper()
+  showCropperModal.value = false
+  selectedFile.value = null
 }
 
 const handleCvFileSelect = (event) => {

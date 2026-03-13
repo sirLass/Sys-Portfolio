@@ -139,12 +139,14 @@
             </div>
             <div>
               <label class="block text-sm font-medium text-[#1a1b1c] mb-2">Category</label>
-              <input
+              <select
                 v-model="newProject.category"
-                type="text"
-                class="w-full px-4 py-2.5 text-sm text-[#1a1b1c] bg-white border border-[#c9cccf] rounded-md focus:outline-none focus:border-[var(--admin-primary)] focus:ring-2 focus:ring-[var(--admin-primary)]/20 transition-all font-outfit"
-                placeholder="Web App, Web System, etc."
-              />
+                class="w-full px-4 py-2.5 text-sm text-[#1a1b1c] bg-white border border-[#c9cccf] rounded-md focus:outline-none focus:border-[var(--admin-primary)] focus:ring-2 focus:ring-[var(--admin-primary)]/20 transition-all font-outfit cursor-pointer"
+              >
+                <option value="" disabled>Select category</option>
+                <option value="Web App">Web App</option>
+                <option value="Web System">Web System</option>
+              </select>
             </div>
           </div>
 
@@ -323,12 +325,14 @@
             </div>
             <div>
               <label class="block text-sm font-medium text-[#1a1b1c] mb-2">Category</label>
-              <input
+              <select
                 v-model="projectsData.projects[editingProject].category"
-                type="text"
-                class="w-full px-4 py-2.5 text-sm text-[#1a1b1c] bg-white border border-[#c9cccf] rounded-md focus:outline-none focus:border-[var(--admin-primary)] focus:ring-2 focus:ring-[var(--admin-primary)]/20 transition-all font-outfit"
-                placeholder="Web App, Web System, etc."
-              />
+                class="w-full px-4 py-2.5 text-sm text-[#1a1b1c] bg-white border border-[#c9cccf] rounded-md focus:outline-none focus:border-[var(--admin-primary)] focus:ring-2 focus:ring-[var(--admin-primary)]/20 transition-all font-outfit cursor-pointer"
+              >
+                <option value="" disabled>Select category</option>
+                <option value="Web App">Web App</option>
+                <option value="Web System">Web System</option>
+              </select>
             </div>
           </div>
 

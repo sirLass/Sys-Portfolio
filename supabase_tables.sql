@@ -61,6 +61,7 @@ CREATE TABLE IF NOT EXISTS experience_section (
   section_label text,
   main_heading text,
   description text,
+  active_filter text DEFAULT 'all',
   experiences jsonb
 );
 
@@ -72,10 +73,13 @@ CREATE TABLE IF NOT EXISTS contact_section (
   section_label text,
   main_heading text,
   description text,
-  email text,
-  github text,
+  email text, -- Legacy single email (for backward compatibility)
+  github text, -- Legacy single github (for backward compatibility)
+  emails jsonb DEFAULT '[]'::jsonb, -- Array of email addresses
+  githubs jsonb DEFAULT '[]'::jsonb, -- Array of GitHub URLs
   location text,
-  form_heading text
+  form_heading text,
+  socials jsonb DEFAULT '[]'::jsonb
 );
 
 -- ============================================
@@ -146,8 +150,14 @@ CREATE POLICY "Allow all operations" ON contact_section
   FOR ALL USING (true) WITH CHECK (true);
 
 -- ============================================
--- INSERT SAMPLE DATA (Optional - for testing)
+-- MIGRATIONS FOR EXISTING DATABASES
 -- ============================================
+
+-- Add emails and githubs columns to contact_section (for existing databases)
+ALTER TABLE contact_section 
+ADD COLUMN IF NOT EXISTS emails jsonb DEFAULT '[]'::jsonb,
+ADD COLUMN IF NOT EXISTS githubs jsonb DEFAULT '[]'::jsonb,
+ADD COLUMN IF NOT EXISTS socials jsonb DEFAULT '[]'::jsonb;
 
 -- Insert sample hero data
 INSERT INTO personal_info (name, title, description, image, cover_image)

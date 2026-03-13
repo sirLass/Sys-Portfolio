@@ -754,7 +754,9 @@ const COMMON_TOOLS = [
   { name: 'Behance', icon: 'behance' },
   { name: 'Framer', icon: 'framer' },
   { name: 'Slack', icon: 'slack' },
-  { name: 'Discord', icon: 'discord' }
+  { name: 'Discord', icon: 'discord' },
+  { name: 'Cursor', icon: 'cursor' },
+  { name: 'Windsurf', icon: 'windsurf' }
 ]
 
 const suggestedTools = computed(() => {
@@ -1275,7 +1277,9 @@ const getToolIcon = (toolName) => {
     'edge': 'edge',
     'opera': 'opera',
     'arc': 'arc',
-    'vivaldi': 'vivaldi'
+    'vivaldi': 'vivaldi',
+    'cursor': 'cursor',
+    'windsurf': 'windsurf'
   }
   
   const normalized = toolName?.toLowerCase() || ''

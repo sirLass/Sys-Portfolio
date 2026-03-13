@@ -84,6 +84,45 @@
 
         <!-- Experience Timeline Tab -->
         <div v-show="activeTab === 'timeline'" class="pt-2">
+          <!-- Filter Toggle Buttons -->
+          <div class="flex items-center justify-center mb-6">
+            <div class="inline-flex bg-gray-100 rounded-full p-1">
+              <button
+                @click="activeFilter = 'all'"
+                :class="[
+                  'px-6 py-2 rounded-full text-sm font-medium transition-all duration-300',
+                  activeFilter === 'all'
+                    ? 'bg-white text-[var(--admin-primary)] shadow-sm'
+                    : 'text-gray-600 hover:text-gray-900'
+                ]"
+              >
+                All
+              </button>
+              <button
+                @click="activeFilter = 'educational'"
+                :class="[
+                  'px-6 py-2 rounded-full text-sm font-medium transition-all duration-300',
+                  activeFilter === 'educational'
+                    ? 'bg-white text-[var(--admin-primary)] shadow-sm'
+                    : 'text-gray-600 hover:text-gray-900'
+                ]"
+              >
+                Educational
+              </button>
+              <button
+                @click="activeFilter = 'professional'"
+                :class="[
+                  'px-6 py-2 rounded-full text-sm font-medium transition-all duration-300',
+                  activeFilter === 'professional'
+                    ? 'bg-white text-[var(--admin-primary)] shadow-sm'
+                    : 'text-gray-600 hover:text-gray-900'
+                ]"
+              >
+                Professional
+              </button>
+            </div>
+          </div>
+
           <div class="flex items-center justify-between mb-6">
             <div>
               <h3 class="text-base font-semibold text-[#1a1b1c]">Experience Timeline</h3>
@@ -113,13 +152,13 @@
                 </tr>
               </thead>
               <tbody class="divide-y divide-[#c9cccf]">
-                <tr v-if="experienceData.experiences.length === 0">
+                <tr v-if="filteredExperiences.length === 0">
                   <td colspan="4" class="px-6 py-10 text-center text-[#6d7175] italic">
-                    No timeline items added yet. Click "Add Timeline Item" to get started.
+                    No timeline items found for this category.
                   </td>
                 </tr>
                 <tr 
-                  v-for="(experience, index) in experienceData.experiences" 
+                  v-for="(experience, index) in filteredExperiences" 
                   :key="index"
                   class="hover:bg-[#f9f9f9] transition-colors"
                 >
@@ -136,12 +175,12 @@
                     <span 
                       :class="[
                         'inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium',
-                        experience.category === 'Degree' 
+                        experience.type === 'educational' 
                           ? 'bg-blue-100 text-blue-800' 
                           : 'bg-purple-100 text-purple-800'
                       ]"
                     >
-                      {{ experience.category || 'Professional' }}
+                      {{ experience.type === 'educational' ? 'Educational' : 'Professional' }}
                     </span>
                   </td>
                   <td class="px-6 py-4 text-right space-x-2">
@@ -206,7 +245,7 @@
               {{ editingIndex !== null ? editingIndex + 1 : experienceData.experiences.length + 1 }}
             </div>
             <h3 class="text-lg font-semibold text-[#1a1b1c]">
-              {{ editingIndex !== null ? 'Experience ' + (editingIndex + 1) : 'Experience ' + (experienceData.experiences.length + 1) }}
+              {{ editingIndex !== null ? 'Experience ' + (editingIndex + 1) : 'Add Experience Timeline' }}
             </h3>
           </div>
           <button @click="closeModal" class="text-[#6d7175] hover:text-[#1a1b1c] transition-colors">
@@ -224,11 +263,11 @@
               <label class="block text-sm font-medium text-[#1a1b1c] mb-2">Category</label>
               <div class="flex justify-center">
                 <select 
-                  v-model="currentExperience.category"
+                  v-model="currentExperience.type"
                   class="w-full max-w-xs px-4 py-2.5 text-center text-sm bg-white border border-[#c9cccf] rounded-md focus:outline-none focus:border-[var(--admin-primary)] focus:ring-2 focus:ring-[var(--admin-primary)]/20 transition-all"
                 >
-                  <option value="Degree">Degree</option>
-                  <option value="Professional">Professional</option>
+                  <option value="educational">Educational</option>
+                  <option value="professional">Professional</option>
                 </select>
               </div>
             </div>
@@ -334,7 +373,7 @@
 </template>
 
 <script setup>
-import { ref, onMounted, inject } from 'vue'
+import { ref, onMounted, inject, computed, watch } from 'vue'
 import { supabase, isSupabaseConfigured } from '../../supabase'
 
 const addToast = inject('addToast')
@@ -345,6 +384,7 @@ const experienceData = ref({
   sectionLabel: 'My journey so far',
   mainHeading: 'Experience',
   description: '',
+  activeFilter: 'all',
   experiences: []
 })
 
@@ -353,7 +393,7 @@ const currentExperience = ref({
   title: '',
   subtitle: '',
   description: '',
-  category: 'Professional',
+  type: 'professional',
   bulletPoints: ['']
 })
 
@@ -361,6 +401,18 @@ const showModal = ref(false)
 const editingIndex = ref(null)
 const saving = ref(false)
 const showSuccess = ref(false)
+const activeFilter = ref('all') // 'all', 'educational', 'professional'
+
+// Sync activeFilter with experienceData
+watch(activeFilter, (newValue) => {
+  experienceData.value.activeFilter = newValue
+})
+
+const filteredExperiences = computed(() => {
+  if (!experienceData.value.experiences) return []
+  if (activeFilter.value === 'all') return experienceData.value.experiences
+  return experienceData.value.experiences.filter(exp => exp.type === activeFilter.value)
+})
 
 // Load data from localStorage on mount
 onMounted(() => {
@@ -393,8 +445,11 @@ const loadFromDatabase = async () => {
         sectionLabel: data.section_label || 'My journey so far',
         mainHeading: data.main_heading || 'Experience',
         description: data.description || '',
+        activeFilter: data.active_filter || 'all',
         experiences: data.experiences || []
       }
+      // Sync activeFilter from loaded data
+      activeFilter.value = data.active_filter || 'all'
     } else {
       loadFromStorage()
     }
@@ -418,12 +473,13 @@ const loadFromStorage = () => {
       sectionLabel: "My journey so far",
       mainHeading: "Experience",
       description: "I'm currently a 4th-year college student with a strong foundation in both frontend and backend development. While I don't have formal industry experience yet, I have built a solid skill set through academic projects and personal learning.",
+      activeFilter: 'all',
       experiences: [
         {
           dateRange: '2025 - Present',
           title: '4th Year College Student',
           subtitle: 'Capstone Project 2',
-          category: 'Degree',
+          type: 'educational',
           description: 'Introduction of developing a web app with enrollment system, building the enrollment portal through web.',
           bulletPoints: [
             'Managed online enrollment for 20+ applicants through the LMSTC Web Application',
@@ -434,7 +490,7 @@ const loadFromStorage = () => {
           dateRange: '2024 - 2025',
           title: '3rd Year College Student',
           subtitle: 'Frontend Development',
-          category: 'Degree',
+          type: 'educational',
           description: 'Developed frontend logic while applying user interface (UI) design concepts and principles to create visually appealing, user-friendly, and responsive interfaces.',
           bulletPoints: [
             'Built responsive user interfaces using React.js',
@@ -459,7 +515,7 @@ const openModal = (index = null) => {
       title: '',
       subtitle: '',
       description: '',
-      category: 'Professional',
+      type: 'professional',
       bulletPoints: ['']
     }
   }
@@ -514,6 +570,7 @@ const handleSave = async () => {
       section_label: experienceData.value.sectionLabel,
       main_heading: experienceData.value.mainHeading,
       description: experienceData.value.description,
+      active_filter: experienceData.value.activeFilter,
       experiences: experienceData.value.experiences,
       updated_at: new Date().toISOString()
     }

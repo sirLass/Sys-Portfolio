@@ -197,6 +197,7 @@ onMounted(async () => {
           description: data.description || '',
           experiences: data.experiences || []
         }
+        activeFilter.value = data.active_filter || 'all'
         isLoading.value = false
         return
       }
@@ -215,6 +216,7 @@ onMounted(async () => {
         description: parsed.description || '',
         experiences: parsed.experiences || []
       }
+      activeFilter.value = parsed.activeFilter || 'all'
     } catch (e) {
       console.error('Error loading experience data from localStorage:', e)
       hasError.value = true
