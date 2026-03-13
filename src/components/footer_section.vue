@@ -135,6 +135,6 @@
 
 <script>
     export default {
-        name: 'footer'
+        name: 'FooterSection'
     }
 </script>

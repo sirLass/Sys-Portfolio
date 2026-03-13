@@ -5,7 +5,7 @@
     <!-- Cover Image Banner -->
     <div class="absolute top-0 left-0 w-full h-64 md:h-96 z-0" style="-webkit-mask-image: linear-gradient(to bottom, black 30%, transparent 100%); mask-image: linear-gradient(to bottom, black 30%, transparent 100%);">
       <div v-if="isLoading" class="w-full h-full bg-gray-200 animate-pulse"></div>
-      <img v-else-if="heroData?.coverImage" :src="heroData.coverImage" alt="Cover Image" class="w-full h-full object-cover opacity-40 mix-blend-overlay" />
+      <img v-else-if="heroData?.coverImage" :src="heroData.coverImage" @error="$event.target.style.display='none'" alt="Cover Image" class="w-full h-full object-cover opacity-40 mix-blend-overlay" />
       <div class="absolute inset-0 bg-gradient-to-b from-transparent to-primary-50/80"></div>
     </div>
 
@@ -139,7 +139,7 @@
                   class="w-64 h-64 lg:w-80 lg:h-80 bg-gradient-to-br from-gray-100 to-gray-200 rounded-full flex items-center justify-center overflow-hidden"
                 >
                   <div v-if="isLoading" class="w-full h-full bg-gray-300 animate-pulse"></div>
-                  <img v-else-if="heroData?.image" :src="heroData.image" :alt="heroData.name || 'Your Photo'" class="w-full h-full object-cover rounded-full" />
+                  <img v-else-if="heroData?.image" :src="heroData.image" @error="$event.target.style.display='none'" :alt="heroData.name || 'Your Photo'" class="w-full h-full object-cover rounded-full" />
                 </div>
               </div>
               <div class="absolute -top-4 -right-4 w-16 h-16 bg-primary-100 rounded-full flex items-center justify-center shadow-lg">

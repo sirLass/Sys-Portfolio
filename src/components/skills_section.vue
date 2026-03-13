@@ -342,10 +342,46 @@ onMounted(async () => {
       }
     } catch (e) {
       console.error('Error loading skills data from localStorage:', e)
-      hasError.value = true
+      // Use fallback data on error
+      skillsData.value = {
+        sectionLabel: 'What I bring to the table',
+        mainHeading: 'My Skills',
+        description: 'A blend of creative design and technical development expertise.',
+        designSkills: [
+          { name: 'UI/UX Design', level: 'Advanced' },
+          { name: 'Visual Design', level: 'Intermediate' },
+          { name: 'Prototyping', level: 'Advanced' },
+          { name: 'Wireframing', level: 'Expert' }
+        ],
+        developmentSkills: [
+          { name: 'HTML/CSS', level: 'Professional' },
+          { name: 'JavaScript', level: 'Advanced' },
+          { name: 'Vue.js', level: 'Advanced' },
+          { name: 'Node.js', level: 'Intermediate' }
+        ],
+        tools: ['VS Code', 'GitHub', 'Figma', 'Adobe XD']
+      }
     }
   } else {
-    hasError.value = true
+    // Fallback data when no database or localStorage data exists
+    skillsData.value = {
+      sectionLabel: 'What I bring to the table',
+      mainHeading: 'My Skills',
+      description: 'A blend of creative design and technical development expertise.',
+      designSkills: [
+        { name: 'UI/UX Design', level: 'Advanced' },
+        { name: 'Visual Design', level: 'Intermediate' },
+        { name: 'Prototyping', level: 'Advanced' },
+        { name: 'Wireframing', level: 'Expert' }
+      ],
+      developmentSkills: [
+        { name: 'HTML/CSS', level: 'Professional' },
+        { name: 'JavaScript', level: 'Advanced' },
+        { name: 'Vue.js', level: 'Advanced' },
+        { name: 'Node.js', level: 'Intermediate' }
+      ],
+      tools: ['VS Code', 'GitHub', 'Figma', 'Adobe XD']
+    }
   }
   isLoading.value = false
 })

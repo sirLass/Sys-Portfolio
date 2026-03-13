@@ -200,11 +200,29 @@ onMounted(async () => {
       console.log('Contact data loaded:', contactData.value)
     } else {
       console.error('No data found in contact_section table')
-      hasError.value = true
+      // Use fallback data instead of error
+      contactData.value = {
+        sectionLabel: "Let's work together",
+        mainHeading: 'Get In Touch',
+        description: "I'm always open to discussing new projects, creative ideas or opportunities to be part of your visions.",
+        email: 'perezbrian091598@gmail.com',
+        github: 'https://github.com/SirP-rezDev',
+        location: 'Quezon Province, Philippines',
+        formHeading: 'Send a Message'
+      }
     }
   } catch (e) {
     console.error('Error loading contact_section:', e)
-    hasError.value = true
+    // Use fallback data on error
+    contactData.value = {
+      sectionLabel: "Let's work together",
+      mainHeading: 'Get In Touch',
+      description: "I'm always open to discussing new projects, creative ideas or opportunities to be part of your visions.",
+      email: 'perezbrian091598@gmail.com',
+      github: 'https://github.com/SirP-rezDev',
+      location: 'Quezon Province, Philippines',
+      formHeading: 'Send a Message'
+    }
   } finally {
     isLoading.value = false
   }
