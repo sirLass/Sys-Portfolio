@@ -187,9 +187,19 @@
 
                 <div class="p-6">
                   <div class="flex items-start justify-between mb-2">
-                    <h3 class="text-lg font-semibold text-gray-900 group-hover:text-[var(--admin-primary)] transition-colors pr-8">
-                      {{ skill.name || `Design Skill ${index + 1}` }}
-                    </h3>
+                    <div class="flex items-center gap-3 pr-8">
+                      <div class="w-10 h-10 rounded-lg bg-gray-50 flex items-center justify-center overflow-hidden border border-gray-100 flex-shrink-0">
+                        <img 
+                          :src="`https://skillicons.dev/icons?i=${getDesignSkillIcon(skill.name)}`" 
+                          class="w-6 h-6 object-contain"
+                          :alt="skill.name"
+                          @error="$event.target.style.display='none'"
+                        >
+                      </div>
+                      <h3 class="text-lg font-semibold text-gray-900 group-hover:text-[var(--admin-primary)] transition-colors">
+                        {{ skill.name || `Design Skill ${index + 1}` }}
+                      </h3>
+                    </div>
                     <span :class="getLevelBadgeClass(skill.level)">
                       {{ skill.level }}
                     </span>
@@ -303,9 +313,19 @@
 
                 <div class="p-6">
                   <div class="flex items-start justify-between mb-2">
-                    <h3 class="text-lg font-semibold text-gray-900 group-hover:text-[var(--admin-primary)] transition-colors pr-8">
-                      {{ skill.name || `Development Skill ${index + 1}` }}
-                    </h3>
+                    <div class="flex items-center gap-3 pr-8">
+                      <div class="w-10 h-10 rounded-lg bg-gray-50 flex items-center justify-center overflow-hidden border border-gray-100 flex-shrink-0">
+                        <img 
+                          :src="`https://skillicons.dev/icons?i=${getDevSkillIcon(skill.name)}`" 
+                          class="w-6 h-6 object-contain"
+                          :alt="skill.name"
+                          @error="$event.target.style.display='none'"
+                        >
+                      </div>
+                      <h3 class="text-lg font-semibold text-gray-900 group-hover:text-[var(--admin-primary)] transition-colors">
+                        {{ skill.name || `Development Skill ${index + 1}` }}
+                      </h3>
+                    </div>
                     <span :class="getLevelBadgeClass(skill.level)">
                       {{ skill.level }}
                     </span>
@@ -393,8 +413,16 @@
               <div
                 v-for="(tool, index) in skillsData.tools"
                 :key="index"
-                class="group flex items-center gap-2 bg-white rounded-full border border-gray-200 pl-4 pr-2 py-2 hover:border-[var(--admin-primary)] hover:shadow-sm transition-all"
+                class="group flex items-center gap-2 bg-white rounded-full border border-gray-200 pl-2 pr-2 py-2 hover:border-[var(--admin-primary)] hover:shadow-sm transition-all"
               >
+                <div class="w-8 h-8 rounded-lg bg-gray-50 flex items-center justify-center overflow-hidden border border-gray-100 flex-shrink-0">
+                  <img 
+                    :src="`https://skillicons.dev/icons?i=${getToolIcon(tool)}`" 
+                    class="w-5 h-5 object-contain"
+                    :alt="tool"
+                    @error="$event.target.style.display='none'"
+                  >
+                </div>
                 <span class="text-sm font-medium text-gray-700">{{ tool }}</span>
                 <button 
                   @click="removeTool(index)"
@@ -575,13 +603,24 @@
         </div>
         <div class="p-6">
           <label class="block text-sm font-medium text-gray-700 mb-1">Skill Name</label>
-          <input 
-            v-model="newSkillForm.name"
-            type="text"
-            placeholder="e.g. Graphic Design, Vue.js"
-            class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-[var(--admin-primary)] outline-none transition-all"
-            autofocus
-          >
+          <div class="relative">
+            <input 
+              v-model="newSkillForm.name"
+              type="text"
+              :placeholder="newSkillForm.type === 'design' ? 'e.g. Figma, UI Design' : 'e.g. Python, React, Node.js'"
+              class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-[var(--admin-primary)] outline-none transition-all pr-12"
+              autofocus
+            >
+            <div v-if="newSkillForm.name" class="absolute right-3 top-1/2 -translate-y-1/2">
+              <div class="w-8 h-8 rounded-lg bg-gray-50 flex items-center justify-center overflow-hidden border border-gray-100">
+                <img 
+                  :src="`https://skillicons.dev/icons?i=${getSkillIconForNewSkill()}`" 
+                  class="w-5 h-5 object-contain"
+                  @error="$event.target.style.display='none'"
+                >
+              </div>
+            </div>
+          </div>
           <p class="mt-2 text-xs text-gray-500 italic">You can set the proficiency level after creating</p>
         </div>
         <div class="p-6 bg-gray-50 flex justify-end gap-3">
@@ -738,6 +777,22 @@ const addSkill = (type) => {
 
 const confirmAddSkill = () => {
   if (!newSkillForm.value.name.trim()) return
+  
+  // Validate design skills
+  if (newSkillForm.value.type === 'design') {
+    if (!isValidDesignSkill(newSkillForm.value.name)) {
+      if (addToast) addToast(`"${newSkillForm.value.name}" is not a valid design skill. Please use design-related tools or concepts.`, 'error')
+      return
+    }
+  }
+  
+  // Validate development skills
+  if (newSkillForm.value.type === 'development') {
+    if (!isValidDevelopmentSkill(newSkillForm.value.name)) {
+      if (addToast) addToast(`"${newSkillForm.value.name}" is not a valid development skill. Please use programming languages, frameworks, or development tools.`, 'error')
+      return
+    }
+  }
   
   const skill = { 
     name: newSkillForm.value.name, 
@@ -910,6 +965,67 @@ const getSkillSizeClass = (level) => {
   return sizeMap[level] || sizeMap['Beginner']
 }
 
+const getSkillIconForNewSkill = () => {
+  const skillName = newSkillForm.value.name
+  if (!skillName) return ''
+  
+  if (newSkillForm.value.type === 'design') {
+    return getDesignSkillIcon(skillName)
+  } else {
+    return getDevSkillIcon(skillName)
+  }
+}
+
+const getDesignSkillIcon = (skillName) => {
+  const iconMap = {
+    // Design Tools
+    'figma': 'figma',
+    'adobe xd': 'xd',
+    'sketch': 'sketch',
+    'invision': 'invision',
+    'framer': 'framer',
+    'photoshop': 'ps',
+    'illustrator': 'ai',
+    'indesign': 'id',
+    'after effects': 'ae',
+    'premiere pro': 'pr',
+    'lightroom': 'lr',
+    'blender': 'blender',
+    'sketchup': 'sketchup',
+    'autocad': 'autocad',
+    'adobe': 'adobe',
+    'canva': 'canva',
+    'xd': 'xd',
+    'ps': 'ps',
+    'ai': 'ai',
+    'ae': 'ae',
+    'pr': 'pr',
+    // Fallback for common design terms
+    'ui': 'figma',
+    'ux': 'figma',
+    'design': 'figma',
+    'prototype': 'figma',
+    'wireframe': 'figma',
+    'mockup': 'figma',
+    'typography': 'ai',
+    'illustration': 'ai',
+    'branding': 'ai',
+    'logo': 'ai'
+  }
+  
+  const normalized = skillName?.toLowerCase() || ''
+  
+  // Direct match
+  if (iconMap[normalized]) return iconMap[normalized]
+  
+  // Check if skill name contains any of the keys
+  for (const [key, icon] of Object.entries(iconMap)) {
+    if (normalized.includes(key)) return icon
+  }
+  
+  return 'figma' // default fallback
+}
+
 const getSkillColorClass = (level) => {
   const colorMap = {
     'None': 'bg-red-50 text-red-300 border border-red-100 italic',
@@ -922,7 +1038,359 @@ const getSkillColorClass = (level) => {
   return colorMap[level] || colorMap['Beginner']
 }
 
-// --- Lifecycle ---
+const getDevSkillIcon = (skillName) => {
+  const iconMap = {
+    // Frontend
+    'html': 'html',
+    'css': 'css',
+    'javascript': 'js',
+    'js': 'js',
+    'typescript': 'ts',
+    'ts': 'ts',
+    'react': 'react',
+    'vue': 'vue',
+    'vue.js': 'vue',
+    'angular': 'angular',
+    'svelte': 'svelte',
+    'next.js': 'nextjs',
+    'nextjs': 'nextjs',
+    'nuxt': 'nuxt',
+    'nuxt.js': 'nuxt',
+    'gatsby': 'gatsby',
+    'astro': 'astro',
+    'remix': 'remix',
+    'tailwind css': 'tailwind',
+    'tailwind': 'tailwind',
+    'bootstrap': 'bootstrap',
+    'sass': 'sass',
+    'scss': 'sass',
+    'webpack': 'webpack',
+    'vite': 'vite',
+    'rollup': 'rollup',
+    'babel': 'babel',
+    'eslint': 'eslint',
+    'prettier': 'prettier',
+    // Backend
+    'node.js': 'nodejs',
+    'nodejs': 'nodejs',
+    'express': 'express',
+    'python': 'python',
+    'django': 'django',
+    'flask': 'flask',
+    'fastapi': 'fastapi',
+    'php': 'php',
+    'laravel': 'laravel',
+    'symfony': 'symfony',
+    'ruby': 'ruby',
+    'ruby on rails': 'rails',
+    'java': 'java',
+    'spring': 'spring',
+    'spring boot': 'spring',
+    'c#': 'cs',
+    'csharp': 'cs',
+    '.net': 'dotnet',
+    'asp.net': 'dotnet',
+    'go': 'go',
+    'golang': 'go',
+    'rust': 'rust',
+    'c++': 'cpp',
+    'cpp': 'cpp',
+    'c': 'c',
+    // Databases
+    'sql': 'mysql',
+    'mysql': 'mysql',
+    'postgresql': 'postgres',
+    'postgres': 'postgres',
+    'sqlite': 'sqlite',
+    'mongodb': 'mongodb',
+    'mongoose': 'mongodb',
+    'redis': 'redis',
+    'prisma': 'prisma',
+    'graphql': 'graphql',
+    'apollo': 'apollo',
+    // DevOps & Cloud
+    'git': 'git',
+    'github': 'github',
+    'gitlab': 'gitlab',
+    'bitbucket': 'bitbucket',
+    'docker': 'docker',
+    'kubernetes': 'kubernetes',
+    'k8s': 'kubernetes',
+    'aws': 'aws',
+    'amazon web services': 'aws',
+    'azure': 'azure',
+    'google cloud': 'gcp',
+    'gcp': 'gcp',
+    'heroku': 'heroku',
+    'netlify': 'netlify',
+    'vercel': 'vercel',
+    'digitalocean': 'digitalocean',
+    'linode': 'linux',
+    'nginx': 'nginx',
+    'apache': 'apache',
+    'linux': 'linux',
+    'ubuntu': 'ubuntu',
+    'bash': 'bash',
+    'jenkins': 'jenkins',
+    'github actions': 'githubactions',
+    'terraform': 'terraform',
+    'ansible': 'ansible',
+    // Mobile
+    'react native': 'react',
+    'flutter': 'flutter',
+    'dart': 'dart',
+    'swift': 'swift',
+    'ios': 'apple',
+    'kotlin': 'kotlin',
+    'android': 'androidstudio',
+    // Testing
+    'jest': 'jest',
+    'mocha': 'mocha',
+    'cypress': 'cypress',
+    'playwright': 'playwright',
+    'selenium': 'selenium',
+    'vitest': 'vitest',
+    'jasmine': 'jasmine',
+    // Other
+    'firebase': 'firebase',
+    'supabase': 'supabase',
+    'three.js': 'threejs',
+    'threejs': 'threejs',
+    'webgl': 'webgl',
+    'electron': 'electron',
+    'tauri': 'tauri'
+  }
+  
+  const normalized = skillName?.toLowerCase() || ''
+  
+  if (iconMap[normalized]) return iconMap[normalized]
+  
+  for (const [key, icon] of Object.entries(iconMap)) {
+    if (normalized.includes(key)) return icon
+  }
+  
+  return 'code' // default fallback
+}
+
+const getToolIcon = (toolName) => {
+  const iconMap = {
+    'figma': 'figma',
+    'adobe xd': 'xd',
+    'xd': 'xd',
+    'sketch': 'sketch',
+    'photoshop': 'ps',
+    'ps': 'ps',
+    'illustrator': 'ai',
+    'ai': 'ai',
+    'indesign': 'id',
+    'id': 'id',
+    'after effects': 'ae',
+    'ae': 'ae',
+    'premiere pro': 'pr',
+    'pr': 'pr',
+    'lightroom': 'lr',
+    'blender': 'blender',
+    'canva': 'canva',
+    'invision': 'invision',
+    'framer': 'framer',
+    'principle': 'principle',
+    'axure': 'axure',
+    'balsamiq': 'balsamiq',
+    'marvel': 'marvel',
+    'proto.io': 'protoio',
+    'zeplin': 'zeplin',
+    'abstract': 'abstract',
+    'loom': 'loom',
+    'miro': 'miro',
+    'notion': 'notion',
+    'trello': 'trello',
+    'asana': 'asana',
+    'jira': 'jira',
+    'linear': 'linear',
+    'clickup': 'clickup',
+    'monday': 'monday',
+    'slack': 'slack',
+    'discord': 'discord',
+    'teams': 'teams',
+    'zoom': 'zoom',
+    'meet': 'meet',
+    'skype': 'skype',
+    'webex': 'webex',
+    'vs code': 'vscode',
+    'vscode': 'vscode',
+    'visual studio': 'visualstudio',
+    'intellij': 'intellij',
+    'pycharm': 'pycharm',
+    'webstorm': 'webstorm',
+    'phpstorm': 'phpstorm',
+    'rubymine': 'rubymine',
+    'clion': 'clion',
+    'datagrip': 'datagrip',
+    'rider': 'rider',
+    'fleet': 'fleet',
+    'eclipse': 'eclipse',
+    'netbeans': 'netbeans',
+    'atom': 'atom',
+    'sublime': 'sublime',
+    'sublime text': 'sublime',
+    'vim': 'vim',
+    'neovim': 'neovim',
+    'nvim': 'neovim',
+    'emacs': 'emacs',
+    'nano': 'nano',
+    'postman': 'postman',
+    'insomnia': 'insomnia',
+    'hoppscotch': 'hoppscotch',
+    'git': 'git',
+    'github': 'github',
+    'gitlab': 'gitlab',
+    'bitbucket': 'bitbucket',
+    'source tree': 'sourcetree',
+    'sourcetree': 'sourcetree',
+    'github desktop': 'github',
+    'fork': 'git',
+    'tower': 'git',
+    'docker': 'docker',
+    'docker desktop': 'docker',
+    'kubernetes': 'kubernetes',
+    'k8s': 'kubernetes',
+    'rancher': 'rancher',
+    'portainer': 'portainer',
+    'lens': 'kubernetes',
+    'helm': 'helm',
+    'tableplus': 'tableplus',
+    'sequel pro': 'sequelpro',
+    'sequel': 'sequelpro',
+    'pgadmin': 'postgres',
+    'mysql workbench': 'mysql',
+    'robo 3t': 'mongodb',
+    'studio 3t': 'mongodb',
+    'compass': 'mongodb',
+    'dbeaver': 'dbeaver',
+    'navicat': 'navicat',
+    'brave': 'brave',
+    'chrome': 'chrome',
+    'firefox': 'firefox',
+    'safari': 'safari',
+    'edge': 'edge',
+    'opera': 'opera',
+    'arc': 'arc',
+    'vivaldi': 'vivaldi'
+  }
+  
+  const normalized = toolName?.toLowerCase() || ''
+  
+  if (iconMap[normalized]) return iconMap[normalized]
+  
+  for (const [key, icon] of Object.entries(iconMap)) {
+    if (normalized.includes(key)) return icon
+  }
+  
+  return 'devicon' // default fallback
+}
+
+// --- Valid Development Skills List ---
+const VALID_DEVELOPMENT_SKILLS = [
+  // Frontend
+  'html', 'css', 'javascript', 'typescript', 'js', 'ts', 'jsx', 'tsx',
+  'react', 'vue', 'vue.js', 'angular', 'svelte', 'solidjs', 'preact',
+  'next.js', 'nextjs', 'nuxt', 'nuxt.js', 'gatsby', 'astro', 'remix',
+  'tailwind css', 'tailwind', 'bootstrap', 'bulma', 'chakra ui', 'material ui', 'mui',
+  'styled components', 'emotion', 'sass', 'scss', 'less', 'postcss',
+  'webpack', 'vite', 'rollup', 'parcel', 'esbuild', 'swc',
+  'babel', 'eslint', 'prettier', 'webpack', 'gulp', 'grunt',
+  // Backend
+  'node.js', 'nodejs', 'express', 'fastify', 'koa', 'nest.js', 'nestjs',
+  'python', 'django', 'flask', 'fastapi', 'tornado',
+  'php', 'laravel', 'symfony', 'codeigniter', 'cakephp',
+  'ruby', 'ruby on rails', 'sinatra',
+  'java', 'spring', 'spring boot', 'jakarta ee', 'hibernate',
+  'c#', 'csharp', '.net', 'asp.net', 'asp.net core', 'entity framework',
+  'go', 'golang', 'gin', 'echo', 'fiber',
+  'rust', 'actix', 'rocket', 'axum',
+  'elixir', 'phoenix',
+  'c++', 'cpp', 'c', 'qt', 'cmake', 'make',
+  // Databases
+  'sql', 'mysql', 'postgresql', 'postgres', 'sqlite', 'mongodb', 'mongoose',
+  'redis', 'elasticsearch', 'cassandra', 'dynamodb', 'firebase', 'supabase',
+  'prisma', 'sequelize', 'typeorm', 'sqlalchemy', 'hibernate', 'jpa',
+  'graphql', 'apollo', 'trpc', 'rest api', 'restful', 'soap', 'json', 'xml',
+  // DevOps & Cloud
+  'git', 'github', 'gitlab', 'bitbucket', 'svn', 'mercurial',
+  'docker', 'kubernetes', 'k8s', 'helm', 'terraform', 'ansible', 'puppet', 'chef',
+  'aws', 'amazon web services', 'ec2', 's3', 'lambda', 'rds', 'cloudfront',
+  'azure', 'google cloud', 'gcp', 'heroku', 'netlify', 'vercel', 'digitalocean', 'linode',
+  'ci/cd', 'jenkins', 'github actions', 'gitlab ci', 'circleci', 'travis ci',
+  'nginx', 'apache', 'caddy', 'haproxy',
+  'linux', 'ubuntu', 'centos', 'debian', 'redhat', 'bash', 'shell scripting',
+  // Mobile
+  'react native', 'flutter', 'dart', 'swift', 'ios', 'objective-c',
+  'kotlin', 'android', 'java android', 'cordova', 'ionic', 'capacitor',
+  'xamarin', 'unity', 'unreal engine', 'game development',
+  // Testing
+  'jest', 'mocha', 'chai', 'cypress', 'playwright', 'selenium', 'puppeteer',
+  'vitest', 'jasmine', 'karma', 'testing library', 'react testing library',
+  'unit testing', 'integration testing', 'e2e testing', 'tdd', 'bdd',
+  // Other
+  'json', 'yaml', 'toml', 'xml', 'regex', 'api design', 'microservices',
+  'oauth', 'jwt', 'authentication', 'authorization', 'security', 'cryptography',
+  'performance optimization', 'seo', 'web accessibility', 'a11y', 'web standards',
+  'pwa', 'progressive web apps', 'web assembly', 'wasm', 'webgl', 'three.js',
+  'webrtc', 'websockets', 'serverless', 'edge computing', 'cdn'
+]
+
+const isValidDevelopmentSkill = (skillName) => {
+  const normalized = skillName.toLowerCase().trim()
+  return VALID_DEVELOPMENT_SKILLS.some(validSkill => 
+    normalized === validSkill || 
+    normalized.includes(validSkill) ||
+    validSkill.includes(normalized)
+  )
+}
+
+// --- Valid Design Skills List ---
+const VALID_DESIGN_SKILLS = [
+  // Design Tools
+  'figma', 'adobe xd', 'sketch', 'invision', 'framer', 'principle', 'proto.io', 'balsamiq',
+  'axure', 'marvel', 'origami studio', 'flinto', 'kite comet', 'mockplus', 'moqups',
+  // Adobe Creative Suite
+  'photoshop', 'illustrator', 'indesign', 'after effects', 'premiere pro', 'lightroom',
+  'bridge', 'media encoder', 'audition', 'animate', 'dimension', 'xd',
+  // 3D & Motion
+  'blender', 'cinema 4d', 'maya', '3ds max', 'zbrush', 'substance painter', 'substance designer',
+  'houdini', 'octane', 'redshift', 'arnold', 'v-ray', 'lumion', 'twinmotion', 'sketchup',
+  'rhino', 'grasshopper', 'fusion 360', 'solidworks', 'autocad', 'revit', 'archicad',
+  // Video & Motion
+  'final cut pro', 'davinci resolve', 'motion', 'davinci', 'nuke', 'fusion', 'natron',
+  // Design Concepts
+  'ui design', 'ux design', 'ui/ux design', 'user interface design', 'user experience design',
+  'interaction design', 'ixd', 'visual design', 'graphic design', 'brand design',
+  'identity design', 'logo design', 'print design', 'editorial design', 'typography',
+  'color theory', 'composition', 'layout design', 'grid systems', 'design systems',
+  'component libraries', 'atomic design', 'design thinking', 'user research', 'usability testing',
+  'wireframing', 'prototyping', 'mockups', 'storyboarding', 'journey mapping',
+  'persona creation', 'information architecture', 'ia', 'content strategy',
+  'responsive design', 'mobile design', 'web design', 'app design', 'dashboard design',
+  'data visualization', 'infographics', 'icon design', 'illustration', 'digital illustration',
+  'vector illustration', 'raster graphics', 'motion graphics', 'animation', 'micro-interactions',
+  'accessibility design', 'a11y', 'inclusive design', 'design critique', 'design reviews',
+  'heuristic evaluation', 'cognitive walkthrough', 'card sorting', 'tree testing',
+  'a/b testing', 'conversion rate optimization', 'cro', 'landing page design',
+  'marketing design', 'social media design', 'email design', 'banner design',
+  'packaging design', 'product design', 'industrial design', 'fashion design',
+  'interior design', 'architectural visualization', 'archviz', 'environment design',
+  'character design', 'concept art', 'game design', 'level design', 'world building',
+  'narrative design', 'sound design', 'audio design', 'music production'
+]
+
+const isValidDesignSkill = (skillName) => {
+  const normalized = skillName.toLowerCase().trim()
+  return VALID_DESIGN_SKILLS.some(validSkill => 
+    normalized === validSkill || 
+    normalized.includes(validSkill) ||
+    validSkill.includes(normalized)
+  )
+}
 onMounted(() => {
   loadFromDatabase()
 })
