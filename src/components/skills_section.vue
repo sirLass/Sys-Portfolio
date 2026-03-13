@@ -306,7 +306,7 @@ onMounted(async () => {
   if (supabase) {
     try {
       const { data, error } = await supabase
-        .from('skills_section')
+        .from('skills')
         .select('*')
         .limit(1)
         .maybeSingle()

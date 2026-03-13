@@ -94,7 +94,8 @@
                 
                 <div 
                     ref="projectsScrollRef"
-                    class="flex gap-8 overflow-x-auto scrollbar-hide pb-8 snap-x snap-mandatory px-4 -mx-4"
+                    class="flex items-start gap-8 overflow-x-auto scrollbar-hide snap-x snap-mandatory px-4 -mx-4 pb-4"
+                    style="scrollbar-width: none; -ms-overflow-style: none;"
                     @mouseenter="stopAutoSlide"
                     @mouseleave="resumeAutoSlideIfOn"
                     v-if="projectsData.projects?.length > 0"
@@ -102,10 +103,10 @@
                     <div
                         v-for="(project, index) in projectsData.projects"
                         :key="index"
-                        class="min-w-[320px] md:min-w-[400px] lg:min-w-[450px] flex-shrink-0 snap-center group bg-white rounded-3xl shadow-xl overflow-hidden border border-gray-100 h-full flex flex-col"
+                        class="min-w-[280px] sm:min-w-[320px] md:min-w-[400px] lg:min-w-[450px] h-[420px] sm:h-[480px] flex-shrink-0 snap-center group bg-white rounded-3xl shadow-xl overflow-hidden border border-gray-100"
                     >
                         <div
-                            class="relative h-64 overflow-hidden"
+                            class="relative h-48 sm:h-64 max-h-48 sm:max-h-64 flex-shrink-0 overflow-hidden"
                             :style="getGradientStyle(project.gradientFrom, project.gradientTo)"
                         >
                             <div class="absolute inset-0 bg-black/20 group-hover:bg-black/40 transition-all duration-300"></div>
@@ -120,7 +121,7 @@
                         </div>
                         <div class="p-6">
                             <h3 class="text-xl font-bold text-gray-900 mb-3">{{ project.title }}</h3>
-                            <p class="text-gray-600 mb-4 leading-relaxed">{{ project.description }}</p>
+                            <p class="text-gray-600 mb-4 leading-relaxed">{{ project.description?.slice(0, 60) }}{{ project.description?.length > 60 ? '...' : '' }}</p>
                             <div class="flex flex-wrap gap-2 mb-6">
                                 <span
                                     v-for="(tech, techIndex) in project.technologies"
@@ -257,7 +258,7 @@ onMounted(async () => {
 
   try {
     const { data, error } = await supabase
-      .from('projects_section')
+      .from('projects')
       .select('*')
       .limit(1)
       .maybeSingle()
@@ -291,78 +292,10 @@ onMounted(async () => {
       }
     } catch (e) {
       console.error('Error loading projects data from localStorage:', e)
-      // Use fallback data on error
-      projectsData.value = {
-        sectionLabel: 'My recent work',
-        mainHeading: 'Featured Projects',
-        description: 'A collection of projects that showcase my skills in web development and design.',
-        projects: [
-          {
-            title: 'Portfolio Website',
-            description: 'A modern, responsive portfolio website built with Vue.js and Tailwind CSS.',
-            category: 'Web Development',
-            technologies: ['Vue.js', 'Tailwind CSS', 'Supabase'],
-            gradientFrom: 'primary-400',
-            gradientTo: 'primary-600',
-            link: '#'
-          },
-          {
-            title: 'E-Commerce Dashboard',
-            description: 'An admin dashboard for managing products, orders, and customers.',
-            category: 'Full Stack',
-            technologies: ['React', 'Node.js', 'PostgreSQL'],
-            gradientFrom: 'blue-500',
-            gradientTo: 'purple-400',
-            link: null
-          },
-          {
-            title: 'Task Management App',
-            description: 'A collaborative task management tool with real-time updates.',
-            category: 'Web App',
-            technologies: ['Vue.js', 'Firebase', 'Tailwind'],
-            gradientFrom: 'green-400',
-            gradientTo: 'blue-500',
-            link: '#'
-          }
-        ]
-      }
+      hasError.value = true
     }
   } else {
-    // Fallback data when no database or localStorage data exists
-    projectsData.value = {
-      sectionLabel: 'My recent work',
-      mainHeading: 'Featured Projects',
-      description: 'A collection of projects that showcase my skills in web development and design.',
-      projects: [
-        {
-          title: 'Portfolio Website',
-          description: 'A modern, responsive portfolio website built with Vue.js and Tailwind CSS.',
-          category: 'Web Development',
-          technologies: ['Vue.js', 'Tailwind CSS', 'Supabase'],
-          gradientFrom: 'primary-400',
-          gradientTo: 'primary-600',
-          link: '#'
-        },
-        {
-          title: 'E-Commerce Dashboard',
-          description: 'An admin dashboard for managing products, orders, and customers.',
-          category: 'Full Stack',
-          technologies: ['React', 'Node.js', 'PostgreSQL'],
-          gradientFrom: 'blue-500',
-          gradientTo: 'purple-400',
-          link: null
-        },
-        {
-          title: 'Task Management App',
-          description: 'A collaborative task management tool with real-time updates.',
-          category: 'Web App',
-          technologies: ['Vue.js', 'Firebase', 'Tailwind'],
-          gradientFrom: 'green-400',
-          gradientTo: 'blue-500',
-          link: '#'
-        }
-      ]
-    }
+    hasError.value = true
   }
 
   isLoading.value = false

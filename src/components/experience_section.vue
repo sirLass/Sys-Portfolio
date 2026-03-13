@@ -57,20 +57,60 @@
         <div class="text-center mb-16">
           <p class="text-primary-600 font-semibold text-lg mb-4">{{ experienceData.sectionLabel }}</p>
           <h2 class="text-4xl lg:text-5xl font-bold text-gray-900 mb-6">{{ experienceData.mainHeading }}</h2>
-          <p class="text-xl text-gray-600 max-w-3xl mx-auto leading-relaxed">
+          <p class="text-xl text-gray-600 max-w-3xl mx-auto leading-relaxed mb-8">
             {{ experienceData.description }}
           </p>
+          
+          <!-- Filter Toggle Buttons -->
+          <div class="flex items-center justify-center">
+            <div class="inline-flex bg-gray-100 rounded-full p-1">
+              <button
+                @click="activeFilter = 'all'"
+                :class="[
+                  'px-6 py-2 rounded-full text-sm font-medium transition-all duration-300',
+                  activeFilter === 'all'
+                    ? 'bg-white text-primary-600 shadow-sm'
+                    : 'text-gray-600 hover:text-gray-900'
+                ]"
+              >
+                All
+              </button>
+              <button
+                @click="activeFilter = 'educational'"
+                :class="[
+                  'px-6 py-2 rounded-full text-sm font-medium transition-all duration-300',
+                  activeFilter === 'educational'
+                    ? 'bg-white text-primary-600 shadow-sm'
+                    : 'text-gray-600 hover:text-gray-900'
+                ]"
+              >
+                Educational
+              </button>
+              <button
+                @click="activeFilter = 'professional'"
+                :class="[
+                  'px-6 py-2 rounded-full text-sm font-medium transition-all duration-300',
+                  activeFilter === 'professional'
+                    ? 'bg-white text-primary-600 shadow-sm'
+                    : 'text-gray-600 hover:text-gray-900'
+                ]"
+              >
+                Professional
+              </button>
+            </div>
+          </div>
+          
           <div class="w-24 h-1 bg-primary-600 mx-auto rounded-full mt-6"></div>
         </div>
         
-        <div v-if="experienceData.experiences?.length > 0" class="relative max-w-4xl mx-auto">
+        <div v-if="filteredExperiences.length > 0" class="relative max-w-4xl mx-auto">
           <!-- Timeline line -->
           <div class="absolute left-4 lg:left-1/2 transform lg:-translate-x-px top-0 bottom-0 w-0.5 bg-primary-200"></div>
           
           <!-- Experience Items -->
           <div class="space-y-12">
             <div
-              v-for="(exp, index) in experienceData.experiences"
+              v-for="(exp, index) in filteredExperiences"
               :key="index"
               class="relative flex items-center"
               :class="{ 'lg:flex-row-reverse': index % 2 !== 0 }"
@@ -127,12 +167,19 @@
 </template>
 
 <script setup>
-import { ref, onMounted } from 'vue'
+import { ref, onMounted, computed } from 'vue'
 import { supabase } from '../supabase'
 
 const experienceData = ref(null)
 const isLoading = ref(true)
 const hasError = ref(false)
+const activeFilter = ref('all') // 'all', 'educational', 'professional'
+
+const filteredExperiences = computed(() => {
+  if (!experienceData.value?.experiences) return []
+  if (activeFilter.value === 'all') return experienceData.value.experiences
+  return experienceData.value.experiences.filter(exp => exp.type === activeFilter.value)
+})
 
 onMounted(async () => {
   if (supabase) {
@@ -178,3 +225,33 @@ onMounted(async () => {
   isLoading.value = false
 })
 </script>
+
+<style scoped>
+.timeline-dot {
+  width: 16px;
+  height: 16px;
+  background-color: var(--primary-500, #ec4899);
+  border-radius: 50%;
+  border: 3px solid white;
+  box-shadow: 0 0 0 3px var(--primary-200, #fbcfe8);
+  z-index: 10;
+}
+
+/* Prevent horizontal overflow from timeline */
+:global(body) {
+  overflow-x: hidden;
+}
+
+/* Ensure timeline container clips overflow */
+.relative.max-w-4xl {
+  overflow-x: clip;
+}
+
+/* Mobile adjustment for dot */
+@media (max-width: 1023px) {
+  .timeline-dot {
+    left: 16px !important;
+    transform: translateX(-50%) !important;
+  }
+}
+</style>
