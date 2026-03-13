@@ -266,7 +266,7 @@
 
     <!-- Image Cropper Modal -->
     <div v-if="showCropperModal" class="fixed inset-0 z-[70] flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm">
-      <div class="bg-white rounded-2xl shadow-2xl w-full max-w-2xl overflow-hidden animate-in fade-in zoom-in duration-200">
+      <div class="bg-white rounded-2xl shadow-2xl w-full max-w-3xl overflow-hidden animate-in fade-in zoom-in duration-200">
         <div class="p-4 border-b border-gray-100 flex items-center justify-between">
           <h3 class="text-lg font-bold text-gray-900">Crop Profile Image</h3>
           <button @click="cancelCrop" class="text-gray-400 hover:text-gray-600">
@@ -277,15 +277,30 @@
         </div>
         
         <div class="p-6 bg-gray-50">
-          <div class="relative max-h-[400px] overflow-hidden rounded-xl bg-gray-200">
-            <img 
-              ref="cropperImage" 
-              :src="selectedFile" 
-              class="max-w-full block"
-              alt="Image to crop"
-            />
+          <div class="flex flex-col md:flex-row gap-6">
+            <!-- Main Cropper Area -->
+            <div class="flex-1">
+              <div class="relative max-h-[400px] overflow-hidden rounded-xl bg-gray-200">
+                <img 
+                  ref="cropperImage" 
+                  :src="selectedFile" 
+                  class="max-w-full block"
+                  alt="Image to crop"
+                />
+              </div>
+            </div>
+            
+            <!-- Preview Panel -->
+            <div class="w-full md:w-40 flex flex-col items-center justify-center">
+              <p class="text-xs font-medium text-gray-500 mb-3">Preview</p>
+              <div 
+                ref="cropperPreview" 
+                class="w-32 h-32 rounded-xl overflow-hidden border-2 border-gray-300 shadow-sm bg-gray-100"
+              ></div>
+              <p class="mt-3 text-xs text-gray-400 text-center">400 x 400px</p>
+            </div>
           </div>
-          <p class="mt-3 text-xs text-gray-500 text-center">Drag to move, scroll to zoom, or resize the crop area</p>
+          <p class="mt-4 text-xs text-gray-500 text-center">Drag to move, scroll to zoom, or resize the crop area</p>
         </div>
         
         <div class="p-4 bg-gray-50 flex justify-end gap-3">
@@ -342,6 +357,7 @@ const showCropperModal = ref(false)
 const fileInput = ref(null)
 const cvFileInput = ref(null)
 const cropperImage = ref(null)
+const cropperPreview = ref(null)
 const aboutId = ref(null)
 let cropper = null
 const selectedFile = ref(null)
@@ -419,6 +435,7 @@ const initCropper = () => {
     cropBoxMovable: true,
     cropBoxResizable: true,
     toggleDragModeOnDblclick: false,
+    preview: cropperPreview.value,
   })
 }
 

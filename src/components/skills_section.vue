@@ -259,6 +259,7 @@ const getIconSlug = (name) => {
     'UI/UX Design': 'figma',
     'Visual Design': 'ps',
     'Interaction Design': 'framer',
+    'Framer': 'framer',
     'Prototyping': 'xd',
     'User Research': 'notion',
     'Wireframing': 'sketch',
@@ -271,7 +272,9 @@ const getIconSlug = (name) => {
     'Python': 'python',
     'TypeScript': 'ts',
     'Next.js': 'nextjs',
-    'Tailwind CSS': 'tailwind',
+    'Tailwind CSS': 'tailwindcss',
+    'Tailwind': 'tailwindcss',
+    'Laravel': 'laravel',
     'VS Code': 'vscode',
     'GitHub': 'github',
     'Figma': 'figma',
@@ -282,7 +285,43 @@ const getIconSlug = (name) => {
     'Firebase': 'firebase',
     'Postman': 'postman',
     'MongoDB': 'mongodb',
-    'PostgreSQL': 'postgres'
+    'PostgreSQL': 'postgresql',
+    'MySQL': 'mysql',
+    'Git': 'git',
+    'GitLab': 'gitlab',
+    'Bitbucket': 'bitbucket',
+    'AWS': 'aws',
+    'Vercel': 'vercel',
+    'Netlify': 'netlify',
+    'Supabase': 'supabase',
+    'Redis': 'redis',
+    'Prisma': 'prisma',
+    'GraphQL': 'graphql',
+    'REST API': 'postman',
+    'Jest': 'jest',
+    'Vite': 'vite',
+    'Webpack': 'webpack',
+    'NPM': 'npm',
+    'Yarn': 'yarn',
+    'Sass': 'sass',
+    'Less': 'less',
+    'Bootstrap': 'bootstrap',
+    'jQuery': 'jquery',
+    'PHP': 'php',
+    'Java': 'java',
+    'C++': 'cpp',
+    'C#': 'cs',
+    'Go': 'go',
+    'Rust': 'rust',
+    'Swift': 'swift',
+    'Kotlin': 'kotlin',
+    'Flutter': 'flutter',
+    'React Native': 'react',
+    'Electron': 'electron',
+    'Tauri': 'tauri',
+    'Nuxt.js': 'nuxtjs',
+    'Svelte': 'svelte',
+    'Angular': 'angular'
   }
   
   // Try exact match first
@@ -295,9 +334,37 @@ const getIconSlug = (name) => {
   if (lower.includes('python')) return 'python'
   if (lower.includes('node')) return 'nodejs'
   if (lower.includes('css') || lower.includes('html')) return 'html'
-  if (lower.includes('js')) return 'js'
+  if (lower.includes('js') || lower.includes('javascript')) return 'js'
   if (lower.includes('git')) return 'git'
   if (lower.includes('figma')) return 'figma'
+  if (lower.includes('framer')) return 'framer'
+  if (lower.includes('laravel')) return 'laravel'
+  if (lower.includes('tailwind')) return 'tailwindcss'
+  if (lower.includes('mongodb')) return 'mongodb'
+  if (lower.includes('postgres')) return 'postgresql'
+  if (lower.includes('mysql')) return 'mysql'
+  if (lower.includes('docker')) return 'docker'
+  if (lower.includes('firebase')) return 'firebase'
+  if (lower.includes('aws')) return 'aws'
+  if (lower.includes('vercel')) return 'vercel'
+  if (lower.includes('netlify')) return 'netlify'
+  if (lower.includes('supabase')) return 'supabase'
+  if (lower.includes('php')) return 'php'
+  if (lower.includes('java ')) return 'java'
+  if (lower.includes('typescript') || lower.includes('ts')) return 'ts'
+  if (lower.includes('next')) return 'nextjs'
+  if (lower.includes('nuxt')) return 'nuxtjs'
+  if (lower.includes('svelte')) return 'svelte'
+  if (lower.includes('angular')) return 'angular'
+  if (lower.includes('django')) return 'django'
+  if (lower.includes('flask')) return 'flask'
+  if (lower.includes('bootstrap')) return 'bootstrap'
+  if (lower.includes('sass') || lower.includes('scss')) return 'sass'
+  if (lower.includes('graphql')) return 'graphql'
+  if (lower.includes('prisma')) return 'prisma'
+  if (lower.includes('redis')) return 'redis'
+  if (lower.includes('vite')) return 'vite'
+  if (lower.includes('webpack')) return 'webpack'
   
   return 'js' // default fallback
 }

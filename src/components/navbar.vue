@@ -22,13 +22,45 @@
         </div>
       </transition>
 
-      <nav class="hidden lg:flex items-center space-x-8">
-        <a href="#hero" class="text-gray-700 hover:text-primary-600 font-medium transition-colors duration-300">Home</a>
-        <a href="#About" class="text-gray-700 hover:text-primary-600 font-medium transition-colors duration-300">About</a>
-        <a href="#Skills" class="text-gray-700 hover:text-primary-600 font-medium transition-colors duration-300">Skills</a>
-        <a href="#Projects" class="text-gray-700 hover:text-primary-600 font-medium transition-colors duration-300">Projects</a>
-        <a href="#Experience" class="text-gray-700 hover:text-primary-600 font-medium transition-colors duration-300">Experience</a>
-        <a href="#Contact" class="bg-primary-600 text-white px-6 py-2 rounded-full hover:bg-primary-700 transition-colors duration-300">Contact</a>
+      <nav class="hidden lg:flex items-center">
+        <!-- Single Expandable Contact Navigation -->
+        <div class="contact-expandable flex items-center gap-1 group relative">
+          <!-- Hidden nav items that appear on hover - positioned before Contact -->
+          <div class="flex items-center gap-1 overflow-hidden max-w-0 group-hover:max-w-[600px] transition-all duration-700 ease-[cubic-bezier(0.34,1.56,0.64,1)]">
+            <a @click.prevent="smoothScrollTo('#hero')" href="#hero" class="nav-item opacity-0 translate-x-6 scale-95 group-hover:opacity-100 group-hover:translate-x-0 group-hover:scale-100 transition-all duration-500 ease-[cubic-bezier(0.34,1.56,0.64,1)] delay-[0ms] px-3 py-2 text-sm font-medium text-gray-600 hover:text-primary-600 rounded-lg hover:bg-primary-50 whitespace-nowrap cursor-pointer">
+              Home
+            </a>
+            <a @click.prevent="smoothScrollTo('#About')" href="#About" class="nav-item opacity-0 translate-x-6 scale-95 group-hover:opacity-100 group-hover:translate-x-0 group-hover:scale-100 transition-all duration-500 ease-[cubic-bezier(0.34,1.56,0.64,1)] delay-[60ms] px-3 py-2 text-sm font-medium text-gray-600 hover:text-primary-600 rounded-lg hover:bg-primary-50 whitespace-nowrap cursor-pointer">
+              About
+            </a>
+            <a @click.prevent="smoothScrollTo('#Skills')" href="#Skills" class="nav-item opacity-0 translate-x-6 scale-95 group-hover:opacity-100 group-hover:translate-x-0 group-hover:scale-100 transition-all duration-500 ease-[cubic-bezier(0.34,1.56,0.64,1)] delay-[120ms] px-3 py-2 text-sm font-medium text-gray-600 hover:text-primary-600 rounded-lg hover:bg-primary-50 whitespace-nowrap cursor-pointer">
+              Skills
+            </a>
+            <a @click.prevent="smoothScrollTo('#Projects')" href="#Projects" class="nav-item opacity-0 translate-x-6 scale-95 group-hover:opacity-100 group-hover:translate-x-0 group-hover:scale-100 transition-all duration-500 ease-[cubic-bezier(0.34,1.56,0.64,1)] delay-[180ms] px-3 py-2 text-sm font-medium text-gray-600 hover:text-primary-600 rounded-lg hover:bg-primary-50 whitespace-nowrap cursor-pointer">
+              Projects
+            </a>
+            <a @click.prevent="smoothScrollTo('#Experience')" href="#Experience" class="nav-item opacity-0 translate-x-6 scale-95 group-hover:opacity-100 group-hover:translate-x-0 group-hover:scale-100 transition-all duration-500 ease-[cubic-bezier(0.34,1.56,0.64,1)] delay-[240ms] px-3 py-2 text-sm font-medium text-gray-600 hover:text-primary-600 rounded-lg hover:bg-primary-50 whitespace-nowrap cursor-pointer">
+              Experience
+            </a>
+            <div class="w-px h-6 bg-gray-300 mx-1 transition-opacity duration-300 opacity-0 group-hover:opacity-100"></div>
+          </div>
+          
+          <!-- Chevron that changes direction with smooth spring animation -->
+          <span class="chevron-icon text-gray-400 group-hover:text-primary-600 transition-all duration-500 ease-[cubic-bezier(0.34,1.56,0.64,1)] mr-1">
+            <svg class="w-5 h-5 transform transition-transform duration-500 ease-[cubic-bezier(0.34,1.56,0.64,1)] group-hover:-scale-x-100 group-hover:translate-x-[-2px]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+            </svg>
+          </span>
+          
+          <!-- Contact Button with subtle pulse on hover -->
+          <a 
+            @click.prevent="smoothScrollTo('#Contact')"
+            href="#Contact"
+            class="bg-primary-600 text-white px-5 py-2 rounded-full hover:bg-primary-700 hover:shadow-lg hover:shadow-primary-600/30 hover:scale-105 active:scale-95 transition-all duration-500 ease-[cubic-bezier(0.34,1.56,0.64,1)] text-sm font-medium whitespace-nowrap cursor-pointer"
+          >
+            Contact Me
+          </a>
+        </div>
       </nav>
 
       <button
@@ -43,12 +75,12 @@
 
     <div id="mobile-menu" class="lg:hidden hidden bg-white border-t border-gray-200">
       <div class="px-6 py-4 space-y-4">
-        <a href="#hero" class="block text-gray-700 hover:text-primary-600 font-medium transition-colors duration-300">Home</a>
-        <a href="#About" class="block text-gray-700 hover:text-primary-600 font-medium transition-colors duration-300">About</a>
-        <a href="#Skills" class="block text-gray-700 hover:text-primary-600 font-medium transition-colors duration-300">Skills</a>
-        <a href="#Projects" class="block text-gray-700 hover:text-primary-600 font-medium transition-colors duration-300">Projects</a>
-        <a href="#Experience" class="block text-gray-700 hover:text-primary-600 font-medium transition-colors duration-300">Experience</a>
-        <a href="#Contact" class="block bg-primary-600 text-white px-6 py-2 rounded-full hover:bg-primary-700 transition-colors duration-300 text-center">Contact</a>
+        <a @click.prevent="smoothScrollTo('#hero')" href="#hero" class="block text-gray-700 hover:text-primary-600 font-medium transition-colors duration-300 cursor-pointer">Home</a>
+        <a @click.prevent="smoothScrollTo('#About')" href="#About" class="block text-gray-700 hover:text-primary-600 font-medium transition-colors duration-300 cursor-pointer">About</a>
+        <a @click.prevent="smoothScrollTo('#Skills')" href="#Skills" class="block text-gray-700 hover:text-primary-600 font-medium transition-colors duration-300 cursor-pointer">Skills</a>
+        <a @click.prevent="smoothScrollTo('#Projects')" href="#Projects" class="block text-gray-700 hover:text-primary-600 font-medium transition-colors duration-300 cursor-pointer">Projects</a>
+        <a @click.prevent="smoothScrollTo('#Experience')" href="#Experience" class="block text-gray-700 hover:text-primary-600 font-medium transition-colors duration-300 cursor-pointer">Experience</a>
+        <a @click.prevent="smoothScrollTo('#Contact')" href="#Contact" class="block bg-primary-600 text-white px-6 py-2 rounded-full hover:bg-primary-700 transition-colors duration-300 text-center cursor-pointer">Contact Me</a>
       </div>
     </div>
   </header>
@@ -110,6 +142,54 @@ const handleScroll = () => {
     header.classList.remove('shadow-lg')
     header.classList.add('shadow-sm')
   }
+}
+
+// Bouncy smooth scroll function
+const smoothScrollTo = (target) => {
+  const element = document.querySelector(target)
+  if (!element) return
+
+  const headerOffset = 80 // Account for sticky header
+  const elementPosition = element.getBoundingClientRect().top + window.pageYOffset
+  const offsetPosition = elementPosition - headerOffset
+
+  const startPosition = window.pageYOffset
+  const distance = offsetPosition - startPosition
+  const duration = 1200 // Longer duration for bouncy effect
+  let startTime = null
+
+  // Spring bounce easing function
+  const easeOutBounce = (t) => {
+    const n1 = 7.5625
+    const d1 = 2.75
+    if (t < 1 / d1) {
+      return n1 * t * t
+    } else if (t < 2 / d1) {
+      return n1 * (t -= 1.5 / d1) * t + 0.75
+    } else if (t < 2.5 / d1) {
+      return n1 * (t -= 2.25 / d1) * t + 0.9375
+    } else {
+      return n1 * (t -= 2.625 / d1) * t + 0.984375
+    }
+  }
+
+  const animation = (currentTime) => {
+    if (!startTime) startTime = currentTime
+    const timeElapsed = currentTime - startTime
+    const progress = Math.min(timeElapsed / duration, 1)
+    
+    const ease = easeOutBounce(progress)
+    window.scrollTo(0, startPosition + distance * ease)
+
+    if (timeElapsed < duration) {
+      requestAnimationFrame(animation)
+    }
+  }
+
+  requestAnimationFrame(animation)
+  
+  // Close mobile menu if open
+  closeMobileMenu()
 }
 
 onMounted(() => {
