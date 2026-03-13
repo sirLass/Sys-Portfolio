@@ -291,10 +291,78 @@ onMounted(async () => {
       }
     } catch (e) {
       console.error('Error loading projects data from localStorage:', e)
-      hasError.value = true
+      // Use fallback data on error
+      projectsData.value = {
+        sectionLabel: 'My recent work',
+        mainHeading: 'Featured Projects',
+        description: 'A collection of projects that showcase my skills in web development and design.',
+        projects: [
+          {
+            title: 'Portfolio Website',
+            description: 'A modern, responsive portfolio website built with Vue.js and Tailwind CSS.',
+            category: 'Web Development',
+            technologies: ['Vue.js', 'Tailwind CSS', 'Supabase'],
+            gradientFrom: 'primary-400',
+            gradientTo: 'primary-600',
+            link: '#'
+          },
+          {
+            title: 'E-Commerce Dashboard',
+            description: 'An admin dashboard for managing products, orders, and customers.',
+            category: 'Full Stack',
+            technologies: ['React', 'Node.js', 'PostgreSQL'],
+            gradientFrom: 'blue-500',
+            gradientTo: 'purple-400',
+            link: null
+          },
+          {
+            title: 'Task Management App',
+            description: 'A collaborative task management tool with real-time updates.',
+            category: 'Web App',
+            technologies: ['Vue.js', 'Firebase', 'Tailwind'],
+            gradientFrom: 'green-400',
+            gradientTo: 'blue-500',
+            link: '#'
+          }
+        ]
+      }
     }
   } else {
-    hasError.value = true
+    // Fallback data when no database or localStorage data exists
+    projectsData.value = {
+      sectionLabel: 'My recent work',
+      mainHeading: 'Featured Projects',
+      description: 'A collection of projects that showcase my skills in web development and design.',
+      projects: [
+        {
+          title: 'Portfolio Website',
+          description: 'A modern, responsive portfolio website built with Vue.js and Tailwind CSS.',
+          category: 'Web Development',
+          technologies: ['Vue.js', 'Tailwind CSS', 'Supabase'],
+          gradientFrom: 'primary-400',
+          gradientTo: 'primary-600',
+          link: '#'
+        },
+        {
+          title: 'E-Commerce Dashboard',
+          description: 'An admin dashboard for managing products, orders, and customers.',
+          category: 'Full Stack',
+          technologies: ['React', 'Node.js', 'PostgreSQL'],
+          gradientFrom: 'blue-500',
+          gradientTo: 'purple-400',
+          link: null
+        },
+        {
+          title: 'Task Management App',
+          description: 'A collaborative task management tool with real-time updates.',
+          category: 'Web App',
+          technologies: ['Vue.js', 'Firebase', 'Tailwind'],
+          gradientFrom: 'green-400',
+          gradientTo: 'blue-500',
+          link: '#'
+        }
+      ]
+    }
   }
 
   isLoading.value = false
