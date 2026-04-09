@@ -62,106 +62,139 @@
             </div>
 
             <!-- Loaded Data -->
-            <div v-else>
-                <!-- Section Header -->
-                <div class="text-center mb-16">
-                    <p class="text-primary-600 font-semibold text-lg mb-4">{{ contactData.sectionLabel }}</p>
-                    <h2 class="text-4xl lg:text-5xl font-bold text-gray-900 mb-6">Get In <span class="gradient-text">Touch</span></h2>
-                    <p class="text-xl text-gray-600 max-w-3xl mx-auto leading-relaxed">
-                        {{ contactData.description }}
-                    </p>
-                    <div class="w-24 h-1 bg-primary-600 mx-auto rounded-full mt-6"></div>
-                </div>
-                
-                <div class="grid grid-cols-1 lg:grid-cols-2 gap-16">
-                    <!-- Contact Info -->
-                    <div>
-                        <h3 class="text-3xl font-bold text-gray-900 mb-8">Let's Connect</h3>
-                        <div class="space-y-6">
-                            <!-- Email Box -->
-                            <div class="flex items-start p-6 bg-gray-50 rounded-2xl hover:bg-primary-50 transition-all duration-300 card-hover group" v-if="contactData.emails?.length > 0">
-                                <div class="w-16 h-16 bg-primary-100 rounded-xl flex items-center justify-center mr-6 group-hover:bg-primary-200 transition-colors duration-300 flex-shrink-0">
-                                    <svg class="w-8 h-8 text-primary-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path>
-                                    </svg>
+            <div v-else class="animate-in fade-in slide-in-from-bottom-5 duration-700">
+                <div class="grid grid-cols-1 lg:grid-cols-12 gap-16 lg:gap-24">
+                    
+                    <!-- LEFT COLUMN: Intent & Context -->
+                    <div class="lg:col-span-5 flex flex-col justify-between">
+                        <div>
+                            <header class="mb-16">
+                                <div class="flex items-center gap-4 mb-6">
+                                    <span class="w-12 h-[2px] bg-primary-500"></span>
+                                    <h4 class="text-[12px] font-black text-primary-500 uppercase tracking-[0.5em]">{{ contactData.sectionLabel }}</h4>
                                 </div>
-                                <div class="flex-1">
-                                    <h4 class="text-xl font-semibold text-gray-900 mb-3">Email</h4>
-                                    <div class="space-y-2">
-                                        <a v-for="(email, index) in contactData.emails" :key="index"
-                                           :href="`mailto:${email}`" 
-                                           class="block text-primary-600 hover:text-primary-700 transition-colors duration-300">
-                                            {{ email }}
-                                        </a>
+                                <h2 class="text-5xl md:text-7xl font-black text-gray-900 leading-[1.05] tracking-tighter mb-8 italic uppercase">
+                                    Let's <span class="text-primary-600">Connect</span>
+                                </h2>
+                                <p class="text-xl text-gray-500 font-medium leading-relaxed max-w-md">
+                                    {{ contactData.description }}
+                                </p>
+                            </header>
+
+                            <!-- Modern Info Grid -->
+                            <div class="space-y-4">
+                                <!-- Email Nodes -->
+                                <a 
+                                    v-for="(email, index) in contactData.emails" 
+                                    :key="`email-${index}`"
+                                    :href="`mailto:${email}`"
+                                    class="group flex items-center p-6 bg-gray-50/50 hover:bg-white border border-transparent hover:border-gray-100 hover:shadow-2xl rounded-[2rem] transition-all duration-500"
+                                >
+                                    <div class="w-14 h-14 bg-white rounded-2xl flex items-center justify-center shadow-sm group-hover:bg-primary-50 transition-colors duration-500">
+                                        <svg class="w-6 h-6 text-gray-400 group-hover:text-primary-500 transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path>
+                                        </svg>
                                     </div>
-                                </div>
-                            </div>
-                            
-                            <!-- GitHub Box -->
-                            <div class="flex items-start p-6 bg-gray-50 rounded-2xl hover:bg-primary-50 transition-all duration-300 card-hover group" v-if="contactData.githubs?.length > 0">
-                                <div class="w-16 h-16 bg-primary-100 rounded-xl flex items-center justify-center mr-6 group-hover:bg-primary-200 transition-colors duration-300 flex-shrink-0">
-                                    <svg class="w-8 h-8 text-primary-600" fill="currentColor" viewBox="0 0 24 24">
-                                        <path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"></path>
-                                    </svg>
-                                </div>
-                                <div class="flex-1">
-                                    <h4 class="text-xl font-semibold text-gray-900 mb-3">GitHub</h4>
-                                    <div class="space-y-2">
-                                        <a v-for="(github, index) in contactData.githubs" :key="index"
-                                           :href="github" 
-                                           target="_blank"
-                                           class="block text-primary-600 hover:text-primary-700 transition-colors duration-300">
-                                            {{ github.replace('https://', '') }}
-                                        </a>
+                                    <div class="ml-6">
+                                        <p class="text-[10px] font-black text-gray-400 uppercase tracking-[0.3em] mb-1">Direct Line</p>
+                                        <p class="text-gray-900 font-black tracking-tight">{{ email }}</p>
                                     </div>
-                                </div>
-                            </div>
-                            
-                            <!-- Location -->
-                            <div class="flex items-center p-6 bg-gray-50 rounded-2xl hover:bg-primary-50 transition-all duration-300 card-hover group" v-if="contactData.location">
-                                <div class="w-16 h-16 bg-primary-100 rounded-xl flex items-center justify-center mr-6 group-hover:bg-primary-200 transition-colors duration-300">
-                                    <svg class="w-8 h-8 text-primary-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"></path>
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"></path>
+                                    <svg class="w-5 h-5 ml-auto text-gray-300 transform translate-x-4 opacity-0 group-hover:translate-x-0 group-hover:opacity-100 transition-all" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M17 8l4 4m0 0l-4 4m4-4H3" />
                                     </svg>
-                                </div>
-                                <div>
-                                    <h4 class="text-xl font-semibold text-gray-900 mb-2">Location</h4>
-                                    <p class="text-gray-600">{{ contactData.location }}</p>
+                                </a>
+
+                                <!-- GitHub Nodes -->
+                                <a 
+                                    v-for="(github, index) in contactData.githubs" 
+                                    :key="`gh-${index}`"
+                                    :href="github"
+                                    target="_blank"
+                                    class="group flex items-center p-6 bg-gray-50/50 hover:bg-white border border-transparent hover:border-gray-100 hover:shadow-2xl rounded-[2rem] transition-all duration-500"
+                                >
+                                    <div class="w-14 h-14 bg-white rounded-2xl flex items-center justify-center shadow-sm group-hover:bg-primary-50 transition-colors duration-500">
+                                        <svg class="w-6 h-6 text-gray-400 group-hover:text-primary-500 transition-colors" fill="currentColor" viewBox="0 0 24 24">
+                                            <path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"></path>
+                                        </svg>
+                                    </div>
+                                    <div class="ml-6">
+                                        <p class="text-[10px] font-black text-gray-400 uppercase tracking-[0.3em] mb-1">Open Source</p>
+                                        <p class="text-gray-900 font-black tracking-tight">{{ github.replace('https://github.com/', '') }}</p>
+                                    </div>
+                                    <svg class="w-5 h-5 ml-auto text-gray-300 transform translate-x-4 opacity-0 group-hover:translate-x-0 group-hover:opacity-100 transition-all" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M17 8l4 4m0 0l-4 4m4-4H3" />
+                                    </svg>
+                                </a>
+
+                                <!-- Location Node -->
+                                <div class="flex items-center p-6 bg-transparent rounded-[2rem]">
+                                    <div class="w-14 h-14 bg-gray-100/50 rounded-2xl flex items-center justify-center">
+                                        <svg class="w-6 h-6 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"></path>
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"></path>
+                                        </svg>
+                                    </div>
+                                    <div class="ml-6">
+                                        <p class="text-[10px] font-black text-gray-400 uppercase tracking-[0.3em] mb-1">HQ</p>
+                                        <p class="text-gray-600 font-bold tracking-tight">{{ contactData.location }}</p>
+                                    </div>
                                 </div>
                             </div>
                         </div>
+
+                        <!-- Availability Indicator -->
+                        <div class="mt-16 sm:mt-0 flex items-center gap-6 p-8 bg-primary-600 rounded-[2.5rem] shadow-2xl shadow-primary-500/20">
+                            <div class="relative flex h-4 w-4">
+                                <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-white opacity-75"></span>
+                                <span class="relative inline-flex rounded-full h-4 w-4 bg-white/40 border-2 border-white"></span>
+                            </div>
+                            <div>
+                                <p class="text-[10px] font-black text-primary-100 uppercase tracking-[0.2em] mb-1">Availability</p>
+                                <p class="text-white font-black tracking-tight">Open for global opportunities</p>
+                            </div>
+                        </div>
                     </div>
-                    
-                    <!-- Contact Form -->
-                    <div class="bg-gray-50 p-8 rounded-2xl">
-                        <h3 class="text-3xl font-bold text-gray-900 mb-8">{{ contactData.formHeading }}</h3>
-                        <form class="space-y-6">
-                            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                                <div>
-                                    <label for="name" class="block text-sm font-semibold text-gray-700 mb-3">Name</label>
-                                    <input type="text" id="name" class="w-full px-4 py-4 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent transition-all duration-300 bg-white">
+
+                    <!-- RIGHT COLUMN: Interaction Node -->
+                    <div class="lg:col-span-7">
+                        <div class="bg-gray-50 p-10 md:p-14 rounded-[3rem] border border-gray-100 shadow-sm relative overflow-hidden group">
+                            <!-- Background Decor -->
+                            <div class="absolute -top-24 -right-24 w-64 h-64 bg-primary-100/30 rounded-full blur-[80px] group-hover:bg-primary-200/40 transition-colors duration-1000"></div>
+                            
+                            <h3 class="text-3xl font-black text-gray-900 tracking-tighter uppercase italic mb-12">
+                                {{ contactData.formHeading }}
+                            </h3>
+
+                            <form class="space-y-8 relative z-10">
+                                <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                                    <div class="space-y-3">
+                                        <label class="text-[11px] font-black text-gray-400 uppercase tracking-[0.3em] ml-2">Name</label>
+                                        <input type="text" class="w-full px-6 py-5 bg-white border-transparent focus:border-primary-500 rounded-2xl focus:outline-none focus:ring-4 focus:ring-primary-500/5 transition-all duration-300 font-bold text-gray-900" placeholder="John Doe">
+                                    </div>
+                                    <div class="space-y-3">
+                                        <label class="text-[11px] font-black text-gray-400 uppercase tracking-[0.3em] ml-2">Email address</label>
+                                        <input type="email" class="w-full px-6 py-5 bg-white border-transparent focus:border-primary-500 rounded-2xl focus:outline-none focus:ring-4 focus:ring-primary-500/5 transition-all duration-300 font-bold text-gray-900" placeholder="johndoe@gmail.com">
+                                    </div>
                                 </div>
-                                <div>
-                                    <label for="email" class="block text-sm font-semibold text-gray-700 mb-3">Email</label>
-                                    <input type="email" id="email" class="w-full px-4 py-4 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent transition-all duration-300 bg-white">
+                                <div class="space-y-3">
+                                    <label class="text-[11px] font-black text-gray-400 uppercase tracking-[0.3em] ml-2">Subject</label>
+                                    <input type="text" class="w-full px-6 py-5 bg-white border-transparent focus:border-primary-500 rounded-2xl focus:outline-none focus:ring-4 focus:ring-primary-500/5 transition-all duration-300 font-bold text-gray-900" placeholder="Project Inquiry / Hiring">
                                 </div>
-                            </div>
-                            <div>
-                                <label for="subject" class="block text-sm font-semibold text-gray-700 mb-3">Subject</label>
-                                <input type="text" id="subject" class="w-full px-4 py-4 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent transition-all duration-300 bg-white">
-                            </div>
-                            <div>
-                                <label for="message" class="block text-sm font-semibold text-gray-700 mb-3">Message</label>
-                                <textarea id="message" rows="6" class="w-full px-4 py-4 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent transition-all duration-300 resize-none bg-white"></textarea>
-                            </div>
-                            <button type="submit" class="w-full bg-primary-600 hover:bg-primary-700 text-white px-8 py-4 rounded-xl transition-all duration-300 font-semibold shadow-lg hover:shadow-xl transform hover:-translate-y-1 flex items-center justify-center group">
-                                <span class="mr-2">Send Message</span>
-                                <svg class="w-5 h-5 group-hover:translate-x-1 transition-transform duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8"></path>
-                                </svg>
-                            </button>
-                        </form>
+                                <div class="space-y-3">
+                                    <label class="text-[11px] font-black text-gray-400 uppercase tracking-[0.3em] ml-2">Your Message</label>
+                                    <textarea rows="5" class="w-full px-6 py-5 bg-white border-transparent focus:border-primary-500 rounded-2xl focus:outline-none focus:ring-4 focus:ring-primary-500/5 transition-all duration-300 resize-none font-bold text-gray-900" placeholder="Tell me about your vision..."></textarea>
+                                </div>
+                                
+                                <button type="submit" class="w-full bg-gray-900 hover:bg-black text-white px-10 py-6 rounded-2xl transition-all duration-300 font-black shadow-2xl hover:shadow-primary-500/10 transform active:scale-[0.98] flex items-center justify-center group overflow-hidden relative">
+                                    <span class="relative z-10 flex items-center gap-4 text-[11px] uppercase tracking-[0.3em]">
+                                        Dispatch Message
+                                        <svg class="w-5 h-5 text-primary-400 group-hover:translate-x-2 transition-transform duration-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M17 8l4 4m0 0l-4 4m4-4H3" />
+                                        </svg>
+                                    </span>
+                                </button>
+                            </form>
+                        </div>
                     </div>
                 </div>
             </div>

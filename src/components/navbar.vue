@@ -1,14 +1,14 @@
 <template>
   <header
-    class="sticky top-0 z-50 bg-white/95 backdrop-blur-sm border-b border-gray-200 transition-all duration-300"
+    class="sticky top-0 z-50 bg-[#FAF9F6]/95 backdrop-blur-sm border-b border-gray-100 transition-all duration-300"
   >
     <div class="max-w-7xl mx-auto px-6 h-20 flex justify-between items-center relative">
-      <div class="flex items-center h-20 overflow-hidden">
+      <div class="flex items-center">
         <div 
           @click="handleLogoClick"
-          class="flex items-center h-full cursor-pointer transition-all duration-300 group"
+          class="flex items-center cursor-pointer transition-all duration-300 group"
         >
-          <img :src="logoUrl" alt="Logo" class="h-full w-auto object-contain py-2 transform transition-transform duration-300 group-hover:scale-110 group-hover:-translate-y-1" />
+          <img :src="logoUrl" alt="Logo" class="max-h-12 w-auto transform transition-transform duration-300 group-hover:scale-105" />
         </div>
       </div>
 
@@ -73,7 +73,7 @@
       </button>
     </div>
 
-    <div id="mobile-menu" class="lg:hidden hidden bg-white border-t border-gray-200">
+    <div id="mobile-menu" class="lg:hidden hidden bg-[#FAF9F6] border-t border-gray-100">
       <div class="px-6 py-4 space-y-4">
         <a @click.prevent="smoothScrollTo('#hero')" href="#hero" class="block text-gray-700 hover:text-primary-600 font-medium transition-colors duration-300 cursor-pointer">Home</a>
         <a @click.prevent="smoothScrollTo('#About')" href="#About" class="block text-gray-700 hover:text-primary-600 font-medium transition-colors duration-300 cursor-pointer">About</a>

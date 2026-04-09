@@ -19,14 +19,9 @@
               <div class="h-8 w-32 bg-gray-200 rounded animate-pulse"></div>
             </div>
             <div class="space-y-4 h-[320px]">
-              <div v-for="i in 4" :key="i" class="flex items-center justify-between p-3 rounded-xl">
-                <div class="flex items-center gap-3">
-                  <div class="w-10 h-10 bg-gray-200 rounded-lg animate-pulse"></div>
-                  <div class="h-4 w-24 bg-gray-200 rounded animate-pulse"></div>
-                </div>
-                <div class="flex gap-1">
-                  <div v-for="j in 5" :key="j" class="w-4 h-4 bg-gray-200 rounded animate-pulse"></div>
-                </div>
+              <div v-for="i in 4" :key="i" class="flex flex-col items-center p-3 rounded-xl gap-2">
+                <div class="w-10 h-10 bg-gray-200 rounded-lg animate-pulse"></div>
+                <div class="h-4 w-20 bg-gray-200 rounded animate-pulse"></div>
               </div>
             </div>
           </div>
@@ -37,14 +32,9 @@
               <div class="h-8 w-40 bg-gray-200 rounded animate-pulse"></div>
             </div>
             <div class="space-y-4 h-[320px]">
-              <div v-for="i in 4" :key="i" class="flex items-center justify-between p-3 rounded-xl">
-                <div class="flex items-center gap-3">
-                  <div class="w-10 h-10 bg-gray-200 rounded-lg animate-pulse"></div>
-                  <div class="h-4 w-28 bg-gray-200 rounded animate-pulse"></div>
-                </div>
-                <div class="flex gap-1">
-                  <div v-for="j in 5" :key="j" class="w-4 h-4 bg-gray-200 rounded animate-pulse"></div>
-                </div>
+              <div v-for="i in 4" :key="i" class="flex flex-col items-center p-3 rounded-xl gap-2">
+                <div class="w-10 h-10 bg-gray-200 rounded-lg animate-pulse"></div>
+                <div class="h-4 w-24 bg-gray-200 rounded animate-pulse"></div>
               </div>
             </div>
           </div>
@@ -103,32 +93,18 @@
             <div class="relative h-[320px] overflow-hidden">
               <div class="space-y-4 animate-slide-up pause-on-hover">
                 <!-- Original List -->
-                <div v-for="(skill, index) in skillsData.designSkills" :key="`design-1-${index}`" class="flex items-center justify-between p-3 rounded-xl hover:bg-gray-50 transition-colors border border-transparent hover:border-gray-100 group">
-                  <div class="flex items-center gap-3">
-                    <div class="w-10 h-10 rounded-lg bg-gray-50 flex items-center justify-center p-1.5 border border-gray-100 group-hover:border-primary-100 group-hover:bg-white transition-all shadow-sm">
-                      <img :src="`https://skillicons.dev/icons?i=${getIconSlug(skill.name)}`" class="w-full h-full object-contain" :alt="skill.name">
-                    </div>
-                    <span class="font-medium text-gray-700 group-hover:text-primary-600 transition-colors uppercase text-sm tracking-wide">{{ skill.name }}</span>
+                <div v-for="(skill, index) in skillsData.designSkills" :key="`design-1-${index}`" class="flex flex-col items-center gap-3 p-4 rounded-xl hover:bg-gray-50 transition-all border border-transparent hover:border-gray-100 group text-center">
+                  <div class="w-12 h-12 rounded-lg bg-gray-50 flex items-center justify-center p-2 border border-gray-100 group-hover:border-primary-100 group-hover:bg-white transition-all shadow-sm group-hover:scale-110">
+                    <img :src="getSkillIcon(skill.name)" class="w-full h-full object-contain" :alt="skill.name">
                   </div>
-                  <div class="flex items-center gap-1">
-                    <svg v-for="i in 5" :key="i" class="w-4 h-4 transition-all duration-300" :class="i <= getStarCount(skill.level || percentageToLevel(skill.percentage)) ? 'text-yellow-400 fill-current' : 'text-gray-200'" viewBox="0 0 20 20">
-                      <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
-                    </svg>
-                  </div>
+                  <span class="font-bold text-gray-700 group-hover:text-primary-600 transition-colors uppercase text-xs tracking-widest">{{ skill.name }}</span>
                 </div>
                 <!-- Duplicate for Loop -->
-                <div v-for="(skill, index) in skillsData.designSkills" :key="`design-2-${index}`" class="flex items-center justify-between p-3 rounded-xl hover:bg-gray-50 transition-colors border border-transparent hover:border-gray-100 group">
-                  <div class="flex items-center gap-3">
-                    <div class="w-10 h-10 rounded-lg bg-gray-50 flex items-center justify-center p-1.5 border border-gray-100 group-hover:border-primary-100 group-hover:bg-white transition-all shadow-sm">
-                      <img :src="`https://skillicons.dev/icons?i=${getIconSlug(skill.name)}`" class="w-full h-full object-contain" :alt="skill.name">
-                    </div>
-                    <span class="font-medium text-gray-700 group-hover:text-primary-600 transition-colors uppercase text-sm tracking-wide">{{ skill.name }}</span>
+                <div v-for="(skill, index) in skillsData.designSkills" :key="`design-2-${index}`" class="flex flex-col items-center gap-3 p-4 rounded-xl hover:bg-gray-50 transition-all border border-transparent hover:border-gray-100 group text-center">
+                  <div class="w-12 h-12 rounded-lg bg-gray-50 flex items-center justify-center p-2 border border-gray-100 group-hover:border-primary-100 group-hover:bg-white transition-all shadow-sm group-hover:scale-110">
+                    <img :src="getSkillIcon(skill.name)" class="w-full h-full object-contain" :alt="skill.name">
                   </div>
-                  <div class="flex items-center gap-1">
-                    <svg v-for="i in 5" :key="i" class="w-4 h-4 transition-all duration-300" :class="i <= getStarCount(skill.level || percentageToLevel(skill.percentage)) ? 'text-yellow-400 fill-current' : 'text-gray-200'" viewBox="0 0 20 20">
-                      <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
-                    </svg>
-                  </div>
+                  <span class="font-bold text-gray-700 group-hover:text-primary-600 transition-colors uppercase text-xs tracking-widest">{{ skill.name }}</span>
                 </div>
               </div>
             </div>
@@ -147,32 +123,18 @@
             <div class="relative h-[320px] overflow-hidden">
               <div class="space-y-4 animate-slide-up pause-on-hover">
                 <!-- Original List -->
-                <div v-for="(skill, index) in skillsData.developmentSkills" :key="`dev-1-${index}`" class="flex items-center justify-between p-3 rounded-xl hover:bg-gray-50 transition-colors border border-transparent hover:border-gray-100 group">
-                  <div class="flex items-center gap-3">
-                    <div class="w-10 h-10 rounded-lg bg-gray-50 flex items-center justify-center p-1.5 border border-gray-100 group-hover:border-primary-100 group-hover:bg-white transition-all shadow-sm">
-                      <img :src="`https://skillicons.dev/icons?i=${getIconSlug(skill.name)}`" class="w-full h-full object-contain" :alt="skill.name">
-                    </div>
-                    <span class="font-medium text-gray-700 group-hover:text-primary-600 transition-colors uppercase text-sm tracking-wide">{{ skill.name }}</span>
+                <div v-for="(skill, index) in skillsData.developmentSkills" :key="`dev-1-${index}`" class="flex flex-col items-center gap-3 p-4 rounded-xl hover:bg-gray-50 transition-all border border-transparent hover:border-gray-100 group text-center">
+                  <div class="w-12 h-12 rounded-lg bg-gray-50 flex items-center justify-center p-2 border border-gray-100 group-hover:border-primary-100 group-hover:bg-white transition-all shadow-sm group-hover:scale-110">
+                    <img :src="getSkillIcon(skill.name)" class="w-full h-full object-contain" :alt="skill.name">
                   </div>
-                  <div class="flex items-center gap-1">
-                    <svg v-for="i in 5" :key="i" class="w-4 h-4 transition-all duration-300" :class="i <= getStarCount(skill.level || percentageToLevel(skill.percentage)) ? 'text-yellow-400 fill-current' : 'text-gray-200'" viewBox="0 0 20 20">
-                      <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
-                    </svg>
-                  </div>
+                  <span class="font-bold text-gray-700 group-hover:text-primary-600 transition-colors uppercase text-xs tracking-widest">{{ skill.name }}</span>
                 </div>
                 <!-- Duplicate for Loop -->
-                <div v-for="(skill, index) in skillsData.developmentSkills" :key="`dev-2-${index}`" class="flex items-center justify-between p-3 rounded-xl hover:bg-gray-50 transition-colors border border-transparent hover:border-gray-100 group">
-                  <div class="flex items-center gap-3">
-                    <div class="w-10 h-10 rounded-lg bg-gray-50 flex items-center justify-center p-1.5 border border-gray-100 group-hover:border-primary-100 group-hover:bg-white transition-all shadow-sm">
-                      <img :src="`https://skillicons.dev/icons?i=${getIconSlug(skill.name)}`" class="w-full h-full object-contain" :alt="skill.name">
-                    </div>
-                    <span class="font-medium text-gray-700 group-hover:text-primary-600 transition-colors uppercase text-sm tracking-wide">{{ skill.name }}</span>
+                <div v-for="(skill, index) in skillsData.developmentSkills" :key="`dev-2-${index}`" class="flex flex-col items-center gap-3 p-4 rounded-xl hover:bg-gray-50 transition-all border border-transparent hover:border-gray-100 group text-center">
+                  <div class="w-12 h-12 rounded-lg bg-gray-50 flex items-center justify-center p-2 border border-gray-100 group-hover:border-primary-100 group-hover:bg-white transition-all shadow-sm group-hover:scale-110">
+                    <img :src="getSkillIcon(skill.name)" class="w-full h-full object-contain" :alt="skill.name">
                   </div>
-                  <div class="flex items-center gap-1">
-                    <svg v-for="i in 5" :key="i" class="w-4 h-4 transition-all duration-300" :class="i <= getStarCount(skill.level || percentageToLevel(skill.percentage)) ? 'text-yellow-400 fill-current' : 'text-gray-200'" viewBox="0 0 20 20">
-                      <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
-                    </svg>
-                  </div>
+                  <span class="font-bold text-gray-700 group-hover:text-primary-600 transition-colors uppercase text-xs tracking-widest">{{ skill.name }}</span>
                 </div>
               </div>
             </div>
@@ -198,21 +160,21 @@
               <!-- Original List -->
               <div v-for="(tool, index) in skillsData.tools" :key="`tool-1-${index}`" class="w-[200px] bg-gray-50 p-6 rounded-2xl text-center hover:bg-white hover:shadow-xl border border-transparent hover:border-primary-100 transition-all duration-500 group">
                 <div class="w-16 h-16 bg-white rounded-2xl shadow-sm border border-gray-100 flex items-center justify-center mx-auto mb-4 group-hover:scale-110 group-hover:rotate-3 transition-all duration-500 p-3">
-                  <img :src="`https://skillicons.dev/icons?i=${getIconSlug(tool)}`" class="w-full h-full object-contain" :alt="tool">
+                  <img :src="getSkillIcon(tool)" class="w-full h-full object-contain" :alt="tool">
                 </div>
                 <span class="font-bold text-sm text-gray-700 group-hover:text-primary-600 transition-colors duration-300 uppercase tracking-widest block">{{ tool }}</span>
               </div>
               <!-- Duplicate for Loop -->
               <div v-for="(tool, index) in skillsData.tools" :key="`tool-2-${index}`" class="w-[200px] bg-gray-50 p-6 rounded-2xl text-center hover:bg-white hover:shadow-xl border border-transparent hover:border-primary-100 transition-all duration-500 group">
                 <div class="w-16 h-16 bg-white rounded-2xl shadow-sm border border-gray-100 flex items-center justify-center mx-auto mb-4 group-hover:scale-110 group-hover:rotate-3 transition-all duration-500 p-3">
-                  <img :src="`https://skillicons.dev/icons?i=${getIconSlug(tool)}`" class="w-full h-full object-contain" :alt="tool">
+                  <img :src="getSkillIcon(tool)" class="w-full h-full object-contain" :alt="tool">
                 </div>
                 <span class="font-bold text-sm text-gray-700 group-hover:text-primary-600 transition-colors duration-300 uppercase tracking-widest block">{{ tool }}</span>
               </div>
               <!-- Triplicate to ensure full width cover for slow/wide screens -->
               <div v-for="(tool, index) in skillsData.tools" :key="`tool-3-${index}`" class="w-[200px] bg-gray-50 p-6 rounded-2xl text-center hover:bg-white hover:shadow-xl border border-transparent hover:border-primary-100 transition-all duration-500 group">
                 <div class="w-16 h-16 bg-white rounded-2xl shadow-sm border border-gray-100 flex items-center justify-center mx-auto mb-4 group-hover:scale-110 group-hover:rotate-3 transition-all duration-500 p-3">
-                  <img :src="`https://skillicons.dev/icons?i=${getIconSlug(tool)}`" class="w-full h-full object-contain" :alt="tool">
+                  <img :src="getSkillIcon(tool)" class="w-full h-full object-contain" :alt="tool">
                 </div>
                 <span class="font-bold text-sm text-gray-700 group-hover:text-primary-600 transition-colors duration-300 uppercase tracking-widest block">{{ tool }}</span>
               </div>
@@ -231,27 +193,6 @@ import { supabase } from '../supabase'
 const skillsData = ref(null)
 const isLoading = ref(true)
 const hasError = ref(false)
-
-const getStarCount = (level) => {
-  if (level === 'None') return 0
-  const starMap = {
-    'Beginner': 1,
-    'Intermediate': 2,
-    'Advanced': 3,
-    'Expert': 4,
-    'Professional': 5
-  }
-  return starMap[level] || 1
-}
-
-const percentageToLevel = (pct) => {
-  const n = Number(pct || 0)
-  if (n >= 90) return 'Professional'
-  if (n >= 70) return 'Expert'
-  if (n >= 50) return 'Advanced'
-  if (n >= 30) return 'Intermediate'
-  return 'Beginner'
-}
 
 const getIconSlug = (name) => {
   if (!name) return 'js'
@@ -367,6 +308,14 @@ const getIconSlug = (name) => {
   if (lower.includes('webpack')) return 'webpack'
   
   return 'js' // default fallback
+}
+
+const getSkillIcon = (name) => {
+  const lower = name.toLowerCase()
+  if (lower.includes('framer')) {
+    return 'https://raw.githubusercontent.com/simple-icons/simple-icons/develop/icons/framer.svg'
+  }
+  return `https://skillicons.dev/icons?i=${getIconSlug(name)}`
 }
 
 onMounted(async () => {

@@ -1,6 +1,6 @@
 <template>
   <section id="hero" class="relative min-h-screen flex items-center justify-center overflow-hidden">
-    <div class="absolute inset-0 bg-gradient-to-br from-primary-50 via-white to-blue-50"></div>
+    <div class="absolute inset-0 bg-gradient-to-br from-primary-50 via-[#FAF9F6] to-blue-50"></div>
     
     <!-- Cover Image Banner -->
     <div class="absolute top-0 left-0 w-full h-64 md:h-96 z-0" style="-webkit-mask-image: linear-gradient(to bottom, black 30%, transparent 100%); mask-image: linear-gradient(to bottom, black 30%, transparent 100%);">

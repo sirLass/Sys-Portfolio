@@ -2,6 +2,7 @@
 import { ref, onMounted, computed, provide } from 'vue'
 import { supabase } from './supabase'
 import LoadingScreen from './components/LoadingScreen.vue'
+import ChatBot from './components/ChatBot.vue'
 
 const currentPalette = ref({
   primary: '#008060',
@@ -75,6 +76,7 @@ onMounted(fetchTheme)
   <LoadingScreen :style="themeVariables" />
   <div :style="themeVariables" class="min-h-screen">
     <router-view />
+    <ChatBot />
   </div>
 </template>
 
