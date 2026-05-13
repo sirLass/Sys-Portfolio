@@ -142,7 +142,7 @@ const knowledgeBase = {
     faq: [
         {
             keywords: ["who", "name", "brian", "owner", "developer", "about you", "about him", "sino", "ikaw", "siya"],
-            answer: "Brian Perez is a Full-Stack Software Developer who specializes in building modern, responsive web applications. He combines thoughtful UI/UX design with clean, scalable code to deliver premium digital experiences."
+            answer: "Brian Perez A.K.A sirLass is a Full-Stack Software Developer who specializes in building modern, responsive web applications. He combines thoughtful UI/UX design with clean, scalable code to deliver premium digital experiences."
         },
         {
             keywords: ["skill", "tech", "technology", "stack", "know", "tools", "framework", "language", "alam", "expertise"],
@@ -154,7 +154,7 @@ const knowledgeBase = {
         },
         {
             keywords: ["contact", "hire", "reach", "email", "message", "connect", "talk", "makipag"],
-            answer: "Great question! You can reach Brian through the Contact Section at the bottom of this page. There's a form you can fill out, and he'll get back to you as soon as possible."
+            answer: "Great question! You can reach sirLass through the Contact Section at the bottom of this page. There's a form you can fill out, and he'll get back to you as soon as possible."
         },
         {
             keywords: ["built with", "what tech", "portfolio tech", "how was this", "made with", "frontend", "backend", "database", "vue", "supabase", "postgresql"],
@@ -166,15 +166,15 @@ const knowledgeBase = {
         },
         {
             keywords: ["hello", "hi", "hey", "kumusta", "musta", "good morning", "good afternoon", "good evening", "yo", "sup"],
-            answer: "Hey there! 👋 Welcome to Brian Perez's portfolio. I'm the Systematic Assistant — feel free to ask me anything about Brian, his skills, projects, or how to get in touch!"
+            answer: "Hey there! 👋 Welcome to sirLass's portfolio. I'm the Systematic Assistant — feel free to ask me anything about Brian, his skills, projects, or how to get in touch!"
         },
         {
             keywords: ["thank", "thanks", "salamat", "appreciate"],
-            answer: "You're welcome! If you have any more questions about Brian or his work, don't hesitate to ask. Enjoy exploring the portfolio! 😊"
+            answer: "You're welcome! If you have any more questions about sirLass or his work, don't hesitate to ask. Enjoy exploring the portfolio! 😊"
         },
         {
             keywords: ["experience", "work history", "career", "job", "trabaho"],
-            answer: "Brian's professional journey is outlined in the Experience Section of this portfolio. Scroll down to see his career timeline and the roles he's held!"
+            answer: "sirLass's professional journey is outlined in the Experience Section of this portfolio. Scroll down to see his career timeline and the roles he's held!"
         }
     ]
 }
