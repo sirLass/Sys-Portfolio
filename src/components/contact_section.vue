@@ -211,7 +211,6 @@ const isLoading = ref(true)
 const hasError = ref(false)
 
 onMounted(async () => {
-  console.log('Contact - Supabase client:', supabase)
   if (!supabase) {
     console.error('Supabase not initialized - check .env.local credentials')
     hasError.value = true
@@ -225,7 +224,6 @@ onMounted(async () => {
       .limit(1)
       .maybeSingle()
 
-    console.log('Contact query result:', { data, error })
 
     if (error) {
       console.error('Supabase error:', error)
@@ -241,7 +239,6 @@ onMounted(async () => {
         location: data.location || '',
         formHeading: data.form_heading || 'Send a Message'
       }
-      console.log('Contact data loaded:', contactData.value)
     } else {
       console.error('No data found in contact_section table')
       // Use fallback data instead of error

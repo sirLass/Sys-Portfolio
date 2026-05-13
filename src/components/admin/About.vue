@@ -640,7 +640,6 @@ const resetData = () => {
 // --- Expose for parent ---
 defineExpose({
   refresh: loadFromDatabase,
-  onSearch: (query) => console.log('Searching:', query)
 })
 </script>
 

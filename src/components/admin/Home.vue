@@ -727,7 +727,6 @@ defineExpose({
   refresh: loadFromDb,
   onSearch: (query) => {
     // Implement search functionality if needed
-    console.log('Searching:', query)
   }
 })
 </script>

@@ -530,7 +530,6 @@ onMounted(async () => {
       }
       return
     } else {
-      console.log('ProjectsSection: No remote data found, trying local storage.')
       loadFromLocalStorage()
     }
   } catch (e) {

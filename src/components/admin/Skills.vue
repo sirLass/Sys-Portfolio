@@ -1445,7 +1445,6 @@ const resetData = () => {
 defineExpose({
   refresh: loadFromDatabase,
   onSearch: (query) => {
-    console.log('Searching:', query)
   }
 })
 </script>

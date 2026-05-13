@@ -169,7 +169,6 @@ const hasError = ref(false)
 const heroData = ref(null)
 
 onMounted(async () => {
-  console.log('Supabase client:', supabase)
   if (!supabase) {
     console.error('Supabase not initialized - check .env.local credentials')
     hasError.value = true
@@ -184,7 +183,6 @@ onMounted(async () => {
       .limit(1)
       .maybeSingle()
 
-    console.log('Hero query result:', { data, error })
 
     if (error) throw error
     if (data) {

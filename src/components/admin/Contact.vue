@@ -496,7 +496,6 @@ const handleSave = async () => {
 defineExpose({
   refresh: loadFromDatabase,
   onSearch: (query) => {
-    console.log('Searching:', query)
   }
 })
 </script>
