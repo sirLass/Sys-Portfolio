@@ -186,9 +186,9 @@ onMounted(async () => {
 
     if (personalError) throw personalError
 
-    // Fetch project count from projects_section
+    // Fetch project count from the correct table: 'projects'
     const { data: projectData } = await supabase
-      .from('projects_section')
+      .from('projects')
       .select('projects')
       .limit(1)
       .maybeSingle()
