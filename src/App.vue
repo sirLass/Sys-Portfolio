@@ -1,5 +1,6 @@
 <script setup>
 import { ref, onMounted, computed, provide } from 'vue'
+import { useRoute } from 'vue-router'
 import { supabase } from './supabase'
 import LoadingScreen from './components/LoadingScreen.vue'
 import ChatBot from './components/ChatBot.vue'
@@ -9,6 +10,9 @@ const currentPalette = ref({
   secondary: '#004c3f',
   accent: '#95bf47'
 })
+
+const route = useRoute()
+const showChatBot = computed(() => !route.path?.startsWith('/admin'))
 
 const hexToRgb = (hex) => {
   if (!hex) return '0 0 0'
@@ -76,7 +80,7 @@ onMounted(fetchTheme)
   <LoadingScreen :style="themeVariables" />
   <div :style="themeVariables" class="min-h-screen">
     <router-view />
-    <ChatBot />
+    <ChatBot v-if="showChatBot" />
   </div>
 </template>
 
