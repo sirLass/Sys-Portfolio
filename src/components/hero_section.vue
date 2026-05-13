@@ -176,33 +176,42 @@ onMounted(async () => {
     return
   }
   try {
-    const { data, error } = await supabase
+    // Fetch personal info
+    const { data: personalData, error: personalError } = await supabase
       .from('personal_info')
       .select('name, title, description, image, cover_image')
       .order('updated_at', { ascending: false })
       .limit(1)
       .maybeSingle()
 
+    if (personalError) throw personalError
 
-    if (error) throw error
-    if (data) {
+    // Fetch project count from projects_section
+    const { data: projectData } = await supabase
+      .from('projects_section')
+      .select('projects')
+      .limit(1)
+      .maybeSingle()
+
+    const projectsCount = projectData?.projects?.length || 0
+
+    if (personalData) {
       heroData.value = {
         greeting: "Hello, I'm",
-        name: data.name || '',
-        title: data.title || '',
-        description: data.description || '',
-        image: data.image || '',
-        coverImage: data.cover_image || '',
-        projectsCount: 0,
+        name: personalData.name || '',
+        title: personalData.title || '',
+        description: personalData.description || '',
+        image: personalData.image || '',
+        coverImage: personalData.cover_image || '',
+        projectsCount: projectsCount,
         githubReposCount: 0,
         socials: { facebook: '#', twitter: '#', instagram: '#' }
       }
     } else {
-      console.error('No data found in personal_info table')
       hasError.value = true
     }
   } catch (e) {
-    console.error('Error loading personal_info:', e)
+    console.error('Error loading data:', e)
     hasError.value = true
   } finally {
     isLoading.value = false
