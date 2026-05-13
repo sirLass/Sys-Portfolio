@@ -297,8 +297,15 @@ const updateTheme = (newPalette) => {
 
 provide('updateTheme', updateTheme)
 
-// Get username from localStorage
-const username = ref(localStorage.getItem('username') || 'Admin')
+// Get user info from Supabase session
+const username = ref('Admin')
+
+const fetchUser = async () => {
+  const { data: { user } } = await supabase.auth.getUser()
+  if (user) {
+    username.value = user.email.split('@')[0] || 'Admin'
+  }
+}
 
 const userInitials = computed(() => {
   return username.value
@@ -329,11 +336,14 @@ const currentItem = computed(()=>{
 
 const toggleSidebar = ()=> isCollapsed.value=!isCollapsed.value
 
-const handleLogout=()=>{
-  localStorage.removeItem('isAuthenticated')
-  localStorage.removeItem('username')
-  router.push('/')
-  addToast('Signed out successfully','info')
+const handleLogout = async () => {
+  const { error } = await supabase.auth.signOut()
+  if (error) {
+    addToast(error.message, 'error')
+  } else {
+    router.push('/login')
+    addToast('Signed out successfully', 'info')
+  }
 }
 
 const handleRefresh=()=>{
@@ -370,6 +380,7 @@ const handleClickOutside=(event)=>{
 onMounted(() => {
   document.addEventListener('click', handleClickOutside)
   fetchTheme()
+  fetchUser()
 })
 onUnmounted(()=>document.removeEventListener('click',handleClickOutside))
 

@@ -51,25 +51,25 @@
           </div>
 
           <form @submit.prevent="handleLogin" class="login-form" novalidate>
-            <!-- Username -->
-            <div class="field-group" :class="{ 'has-value': username, 'has-error': fieldErrors.username }">
-              <label class="field-label" for="username">Username</label>
+            <!-- Email -->
+            <div class="field-group" :class="{ 'has-value': email, 'has-error': fieldErrors.email }">
+              <label class="field-label" for="email">Email</label>
               <div class="field-wrap">
                 <svg class="field-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
-                  <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 6a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0zM4.501 20.118a7.5 7.5 0 0114.998 0A17.933 17.933 0 0112 21.75c-2.676 0-5.216-.584-7.499-1.632z"/>
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M21.75 6.75v10.5a2.25 2.25 0 01-2.25 2.25h-15a2.25 2.25 0 01-2.25-2.25V6.75m19.5 0A2.25 2.25 0 0019.5 4.5h-15a2.25 2.25 0 00-2.25 2.25m19.5 0l-9.75 6.75-9.75-6.75"/>
                 </svg>
                 <input
-                  id="username"
-                  v-model="username"
-                  type="text"
+                  id="email"
+                  v-model="email"
+                  type="email"
                   required
-                  autocomplete="username"
+                  autocomplete="email"
                   class="field-input"
-                  placeholder="Your username"
-                  @focus="clearFieldError('username')"
+                  placeholder="Your email"
+                  @focus="clearFieldError('email')"
                 />
               </div>
-              <span v-if="fieldErrors.username" class="field-error">{{ fieldErrors.username }}</span>
+              <span v-if="fieldErrors.email" class="field-error">{{ fieldErrors.email }}</span>
             </div>
 
             <!-- Password -->
@@ -153,43 +153,42 @@
 </template>
 
 <script setup>
-import { ref, reactive } from 'vue'
-import { useRouter } from 'vue-router'
+import { supabase } from '../supabase'
 
 const router = useRouter()
-const username = ref('')
+const email = ref('')
 const password = ref('')
 const loading = ref(false)
 const error = ref('')
 const showPassword = ref(false)
 const rememberMe = ref(false)
-const fieldErrors = reactive({ username: '', password: '' })
-
-const VALID_USERNAME = 'sirlass'
-const VALID_PASSWORD = '123'
+const fieldErrors = reactive({ email: '', password: '' })
 
 const clearFieldError = (field) => { fieldErrors[field] = '' }
 
 const handleLogin = async () => {
-  fieldErrors.username = ''
+  fieldErrors.email = ''
   fieldErrors.password = ''
   error.value = ''
 
-  if (!username.value.trim()) { fieldErrors.username = 'Username is required'; return }
+  if (!email.value.trim()) { fieldErrors.email = 'Email is required'; return }
   if (!password.value) { fieldErrors.password = 'Password is required'; return }
 
   loading.value = true
   try {
-    await new Promise(resolve => setTimeout(resolve, 700))
-    if (username.value === VALID_USERNAME && password.value === VALID_PASSWORD) {
-      localStorage.setItem('isAuthenticated', 'true')
-      localStorage.setItem('username', username.value)
+    const { data, error: authError } = await supabase.auth.signInWithPassword({
+      email: email.value,
+      password: password.value,
+    })
+
+    if (authError) {
+      error.value = authError.message
+    } else if (data.user) {
       router.push('/admin')
-    } else {
-      error.value = 'Invalid username or password. Please try again.'
     }
   } catch (err) {
-    error.value = 'An error occurred. Please try again.'
+    error.value = 'An unexpected error occurred. Please try again.'
+    console.error('Login error:', err)
   } finally {
     loading.value = false
   }

@@ -27,13 +27,19 @@ const router = createRouter({
   routes
 })
 
+import { supabase } from '../supabase'
+
 // Route guard to protect admin panel
-router.beforeEach((to, from, next) => {
-  const isAuthenticated = localStorage.getItem('isAuthenticated') === 'true'
+router.beforeEach(async (to, from, next) => {
+  const { data: { session } } = await supabase.auth.getSession()
+  const isAuthenticated = !!session
   
   if (to.meta.requiresAuth && !isAuthenticated) {
     // Redirect to login if not authenticated
     next('/login')
+  } else if (to.path === '/login' && isAuthenticated) {
+    // Redirect to admin if already logged in and trying to access login page
+    next('/admin')
   } else {
     next()
   }
