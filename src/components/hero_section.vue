@@ -210,7 +210,7 @@ onMounted(async () => {
 
       // Fetch real GitHub repo count
       try {
-        const ghResponse = await fetch('https://api.github.com/users/SirP-rezDev')
+        const ghResponse = await fetch('https://api.github.com/users/sirLass')
         if (ghResponse.ok) {
           const ghData = await ghResponse.json()
           heroData.value.githubReposCount = ghData.public_repos || 12
