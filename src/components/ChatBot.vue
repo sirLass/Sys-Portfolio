@@ -118,6 +118,92 @@
 <script setup>
 import { ref, watch, nextTick } from 'vue'
 
+// ─── JSON Knowledge Base ─────────────────────────────────────────────
+const knowledgeBase = {
+    owner: {
+        name: "Brian Perez",
+        role: "Full-Stack Software Developer",
+        summary: "Brian is a Full-Stack Software Developer who crafts solutions that are not only visually appealing but also intuitive and efficient — combining thoughtful design with clean, scalable code."
+    },
+    portfolio: {
+        frontend: "Vue.js (Vue 3 with Composition API)",
+        styling: "Tailwind CSS",
+        backend: "Supabase (Backend-as-a-Service)",
+        database: "PostgreSQL (via Supabase)",
+        status: "Ongoing Development — Brian is continuously improving and adding new features to this portfolio."
+    },
+    sections: {
+        skills: "For a detailed breakdown of Brian's technical skills and proficiencies, please scroll down to the Skills Section of this portfolio — it covers everything from frontend frameworks to backend technologies.",
+        projects: "To see Brian's featured work and case studies, please check out the Projects Section below. Each project showcases different aspects of his development capabilities.",
+        contact: "If you'd like to get in touch with Brian, head over to the Contact Section at the bottom of the page. You can also reach out directly through the form there.",
+        about: "The About Section provides more insight into Brian's background, journey, and what drives him as a developer.",
+        experience: "Check out the Experience Section to see Brian's professional timeline and career journey."
+    },
+    faq: [
+        {
+            keywords: ["who", "name", "brian", "owner", "developer", "about you", "about him", "sino", "ikaw", "siya"],
+            answer: "Brian Perez is a Full-Stack Software Developer who specializes in building modern, responsive web applications. He combines thoughtful UI/UX design with clean, scalable code to deliver premium digital experiences."
+        },
+        {
+            keywords: ["skill", "tech", "technology", "stack", "know", "tools", "framework", "language", "alam", "expertise"],
+            answer: "Brian has a diverse skill set! For a complete and detailed breakdown of all his technical skills and proficiencies, I'd recommend checking out the Skills Section of this portfolio — it's all laid out there with proficiency levels."
+        },
+        {
+            keywords: ["project", "work", "portfolio", "build", "made", "gawa", "ginawa", "created"],
+            answer: "Brian has worked on some impressive projects! You can explore all of them in the Projects Section below — each one highlights different technologies and problem-solving approaches. Give it a scroll!"
+        },
+        {
+            keywords: ["contact", "hire", "reach", "email", "message", "connect", "talk", "makipag"],
+            answer: "Great question! You can reach Brian through the Contact Section at the bottom of this page. There's a form you can fill out, and he'll get back to you as soon as possible."
+        },
+        {
+            keywords: ["built with", "what tech", "portfolio tech", "how was this", "made with", "frontend", "backend", "database", "vue", "supabase", "postgresql"],
+            answer: "This portfolio is built with a modern tech stack: Vue.js (Vue 3) for the frontend, Tailwind CSS for styling, Supabase as the backend service, and PostgreSQL as the database. The project is currently under ongoing development with new features being added regularly."
+        },
+        {
+            keywords: ["status", "ongoing", "finished", "complete", "done", "update"],
+            answer: "This portfolio is currently under ongoing development! Brian is continuously improving and adding new features to make the experience even better. Stay tuned for more updates."
+        },
+        {
+            keywords: ["hello", "hi", "hey", "kumusta", "musta", "good morning", "good afternoon", "good evening", "yo", "sup"],
+            answer: "Hey there! 👋 Welcome to Brian Perez's portfolio. I'm the Systematic Assistant — feel free to ask me anything about Brian, his skills, projects, or how to get in touch!"
+        },
+        {
+            keywords: ["thank", "thanks", "salamat", "appreciate"],
+            answer: "You're welcome! If you have any more questions about Brian or his work, don't hesitate to ask. Enjoy exploring the portfolio! 😊"
+        },
+        {
+            keywords: ["experience", "work history", "career", "job", "trabaho"],
+            answer: "Brian's professional journey is outlined in the Experience Section of this portfolio. Scroll down to see his career timeline and the roles he's held!"
+        }
+    ]
+}
+
+// ─── Fallback: Match user input against knowledge base ───────────────
+const getFallbackResponse = (userText) => {
+    const input = userText.toLowerCase()
+
+    // Check FAQ entries for keyword matches
+    let bestMatch = null
+    let bestScore = 0
+
+    for (const entry of knowledgeBase.faq) {
+        const score = entry.keywords.filter(kw => input.includes(kw)).length
+        if (score > bestScore) {
+            bestScore = score
+            bestMatch = entry
+        }
+    }
+
+    if (bestMatch && bestScore > 0) {
+        return bestMatch.answer
+    }
+
+    // Generic fallback if no keywords matched at all
+    return `Thanks for your question! While I'm having a bit of trouble connecting to my AI engine right now, here's what I can tell you: Brian Perez is a ${knowledgeBase.owner.role} who builds modern web apps with Vue.js, Supabase, and PostgreSQL. Feel free to explore the Skills, Projects, and Contact sections of this portfolio for more details — or try asking me again in a moment!`
+}
+
+// ─── Component State ─────────────────────────────────────────────────
 const isOpen = ref(false)
 const isTyping = ref(false)
 const userInput = ref('')
@@ -137,6 +223,38 @@ const scrollToBottom = async () => {
     }
 }
 
+// ─── Build enriched system prompt with knowledge base context ────────
+const buildSystemPrompt = () => {
+    return `
+        You are the "Systematic Assistant", a high-end AI representative for Brian Perez's professional portfolio.
+        
+        IMPORTANT CONTEXT ABOUT BRIAN:
+        - Name: ${knowledgeBase.owner.name}
+        - Role: ${knowledgeBase.owner.role}
+        - Summary: ${knowledgeBase.owner.summary}
+        
+        PORTFOLIO TECH STACK:
+        - Frontend: ${knowledgeBase.portfolio.frontend}
+        - Styling: ${knowledgeBase.portfolio.styling}
+        - Backend: ${knowledgeBase.portfolio.backend}
+        - Database: ${knowledgeBase.portfolio.database}
+        - Project Status: ${knowledgeBase.portfolio.status}
+        
+        SECTION GUIDANCE:
+        - When asked about skills: ${knowledgeBase.sections.skills}
+        - When asked about projects: ${knowledgeBase.sections.projects}
+        - When asked about contact: ${knowledgeBase.sections.contact}
+        - When asked about experience: ${knowledgeBase.sections.experience}
+        
+        BEHAVIOR RULES:
+        - Your persona is professional, sharp, and helpful.
+        - LANGUAGE: If the user speaks Tagalog, reply in Tagalog. If English, stay English.
+        - Be conversational but concise.
+        - Always direct users to the relevant portfolio section when appropriate.
+        - Never make up information about Brian that isn't provided above.
+    `
+}
+
 const sendMessage = async () => {
     if (!userInput.value.trim() || isTyping.value) return
 
@@ -148,13 +266,7 @@ const sendMessage = async () => {
     isTyping.value = true
 
     try {
-        const systemInstructionContent = `
-            You are the "Systematic Assistant", a high-end AI representative for Brian Perez's professional portfolio.
-            Brian Perez is an aspiring Full-Stack Web Developer and UI/UX Designer specialized in Vue.js, Tailwind, and Supabase.
-            Your persona is professional, sharp, and helpful. 
-            LANGUAGE: If the user speaks Tagalog, reply in Tagalog. If English, stay English.
-            Be conversational but concise. Point users to the Contact Section or Projects for more details.
-        `;
+        const systemInstructionContent = buildSystemPrompt()
 
         // Format history for Gemini (alternating user/model)
         const history = messages.value.slice(1, -1).map(m => ({
@@ -197,11 +309,10 @@ const sendMessage = async () => {
             throw new Error("Invalid response format");
         }
     } catch (error) {
-        console.error("AI Error:", error);
-        messages.value.push({ 
-            text: "My apologies, my neural link is temporarily de-synced. Please try again or reach out to Brian directly.", 
-            isUser: false 
-        });
+        console.error("AI Error (falling back to knowledge base):", error);
+        // Use the smart fallback instead of a generic error
+        const fallbackAnswer = getFallbackResponse(userText)
+        messages.value.push({ text: fallbackAnswer, isUser: false });
     } finally {
         isTyping.value = false
         scrollToBottom()
