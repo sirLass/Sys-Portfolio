@@ -204,8 +204,19 @@ onMounted(async () => {
         image: personalData.image || '',
         coverImage: personalData.cover_image || '',
         projectsCount: projectsCount,
-        githubReposCount: 0,
+        githubReposCount: 12, // Default fallback
         socials: { facebook: '#', twitter: '#', instagram: '#' }
+      }
+
+      // Fetch real GitHub repo count
+      try {
+        const ghResponse = await fetch('https://api.github.com/users/SirP-rezDev')
+        if (ghResponse.ok) {
+          const ghData = await ghResponse.json()
+          heroData.value.githubReposCount = ghData.public_repos || 12
+        }
+      } catch (ghError) {
+        console.error('Error fetching GitHub repos:', ghError)
       }
     } else {
       hasError.value = true
