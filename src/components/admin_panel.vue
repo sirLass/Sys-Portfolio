@@ -72,7 +72,7 @@
         </button>
         
         <button
-          @click="handleLogout"
+          @click="openLogoutConfirm"
           class="w-full flex items-center px-3 py-2.5 mt-2 rounded-md text-red-400 hover:text-red-300 hover:bg-red-500/10 transition-all duration-200 text-sm font-medium"
           :title="isCollapsed ? 'Logout' : ''"
         >
@@ -151,7 +151,8 @@
                 <p class="text-xs text-[#6d7175]">Administrator</p>
               </div>
               <button
-                @click="handleLogout"
+                type="button"
+                @click.stop="openLogoutConfirm"
                 class="w-full text-left px-4 py-2 text-sm text-[#d72c0d] hover:bg-[#fff4f4] transition-colors"
               >
                 Sign out
@@ -189,6 +190,41 @@
         </div>
       </section>
     </main>
+
+    <!-- Sign out confirmation -->
+    <Teleport to="body">
+      <div
+        v-if="showLogoutConfirm"
+        class="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-black/40"
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="logout-confirm-title"
+        @click.self="cancelLogout"
+      >
+        <div class="bg-white rounded-lg shadow-xl border border-[#c9cccf] max-w-md w-full p-6">
+          <h2 id="logout-confirm-title" class="text-lg font-semibold text-[#1a1b1c]">Sign out?</h2>
+          <p class="mt-2 text-sm text-[#6d7175] leading-relaxed">
+            You will need to sign in again to access the admin dashboard.
+          </p>
+          <div class="mt-6 flex justify-end gap-3">
+            <button
+              type="button"
+              class="px-4 py-2 text-sm font-medium text-[#1a1b1c] bg-white border border-[#c9cccf] rounded-md hover:bg-[#f6f6f7] transition-colors"
+              @click="cancelLogout"
+            >
+              Cancel
+            </button>
+            <button
+              type="button"
+              class="px-4 py-2 text-sm font-medium text-white bg-[#d72c0d] rounded-md hover:bg-[#b82508] transition-colors"
+              @click="confirmLogout"
+            >
+              Sign out
+            </button>
+          </div>
+        </div>
+      </div>
+    </Teleport>
 
     <!-- Toast Notifications -->
     <TransitionGroup name="toast" tag="div" class="fixed top-4 right-4 z-50 space-y-2">
@@ -236,6 +272,7 @@ const searchQuery = ref('')
 const contentRef = ref(null)
 const sectionRef = ref(null)
 const showUserMenu = ref(false)
+const showLogoutConfirm = ref(false)
 const userMenuRef = ref(null)
 const toasts = ref([])
 const currentPalette = ref({
@@ -336,7 +373,17 @@ const currentItem = computed(()=>{
 
 const toggleSidebar = ()=> isCollapsed.value=!isCollapsed.value
 
-const handleLogout = async () => {
+const openLogoutConfirm = () => {
+  showUserMenu.value = false
+  showLogoutConfirm.value = true
+}
+
+const cancelLogout = () => {
+  showLogoutConfirm.value = false
+}
+
+const confirmLogout = async () => {
+  showLogoutConfirm.value = false
   const { error } = await supabase.auth.signOut()
   if (error) {
     addToast(error.message, 'error')

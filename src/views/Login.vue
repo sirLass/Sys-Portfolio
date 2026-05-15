@@ -153,6 +153,8 @@
 </template>
 
 <script setup>
+import { ref, reactive } from 'vue'
+import { useRouter } from 'vue-router'
 import { supabase } from '../supabase'
 
 const router = useRouter()

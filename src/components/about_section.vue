@@ -95,16 +95,19 @@
               </div>
             </div>
 
-            <a
-              :href="aboutData.cvLink"
-              target="_blank"
-              class="inline-flex items-center bg-primary-600 text-white px-6 py-3 rounded-lg hover:bg-primary-700 transition-all duration-300 shadow-lg hover:shadow-xl transform hover:-translate-y-1 group"
+            <button
+              v-if="aboutData.cvLink"
+              type="button"
+              class="inline-flex items-center bg-primary-600 text-white px-6 py-3 rounded-lg hover:bg-primary-700 transition-all duration-300 shadow-lg hover:shadow-xl transform hover:-translate-y-1 group cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none"
+              :disabled="cvDownloading"
+              @click="downloadCv"
             >
               <svg class="w-5 h-5 mr-2 group-hover:scale-110 transition-transform duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
               </svg>
-              Download CV
-            </a>
+              {{ cvDownloading ? 'Preparing…' : 'Download CV' }}
+            </button>
+            <p v-else class="text-sm text-gray-500">Add a CV in the admin panel (About → Files) to enable download.</p>
           </div>
         </div>
       </div>
@@ -119,6 +122,59 @@ import { supabase } from '../supabase'
 const aboutData = ref(null)
 const isLoading = ref(true)
 const hasError = ref(false)
+const cvDownloading = ref(false)
+
+function dataUrlToBlob(dataUrl) {
+  const comma = dataUrl.indexOf(',')
+  if (comma === -1) throw new Error('Invalid data URL')
+  const header = dataUrl.slice(0, comma)
+  const b64 = dataUrl.slice(comma + 1)
+  const mimeMatch = header.match(/data:([^;]+)/)
+  const mime = mimeMatch ? mimeMatch[1] : 'application/octet-stream'
+  const binary = atob(b64)
+  const bytes = new Uint8Array(binary.length)
+  for (let i = 0; i < binary.length; i++) bytes[i] = binary.charCodeAt(i)
+  return new Blob([bytes], { type: mime })
+}
+
+function triggerBlobDownload(blob, filename) {
+  const url = URL.createObjectURL(blob)
+  const a = document.createElement('a')
+  a.href = url
+  a.download = filename
+  a.rel = 'noopener'
+  document.body.appendChild(a)
+  a.click()
+  a.remove()
+  URL.revokeObjectURL(url)
+}
+
+async function downloadCv() {
+  const link = aboutData.value?.cvLink?.trim()
+  if (!link || cvDownloading.value) return
+
+  const safeName = (aboutData.value.name || 'CV').replace(/[^\w\s-]/g, '').replace(/\s+/g, '_')
+  const filename = `${safeName || 'CV'}_resume.pdf`
+
+  cvDownloading.value = true
+  try {
+    if (link.startsWith('data:')) {
+      const blob = dataUrlToBlob(link)
+      triggerBlobDownload(blob, filename)
+      return
+    }
+
+    const res = await fetch(link)
+    if (!res.ok) throw new Error(`HTTP ${res.status}`)
+    const blob = await res.blob()
+    triggerBlobDownload(blob, filename)
+  } catch (e) {
+    console.error('CV download failed:', e)
+    window.open(link, '_blank', 'noopener,noreferrer')
+  } finally {
+    cvDownloading.value = false
+  }
+}
 
 onMounted(async () => {
   // Try to load from Supabase first
@@ -141,7 +197,7 @@ onMounted(async () => {
           email: data.email || '',
           location: data.location || '',
           status: data.status || 'Available for Remote Work',
-          cvLink: data.cv_link || '/myCv.pdf',
+          cvLink: (data.cv_link && String(data.cv_link).trim()) || '',
           image: data.image_url || '/me.png'
         }
         isLoading.value = false
@@ -167,7 +223,7 @@ onMounted(async () => {
         email: parsed.email || '',
         location: parsed.location || '',
         status: parsed.status || 'Available for Remote Work',
-        cvLink: parsed.cvLink || '/myCv.pdf',
+        cvLink: (parsed.cvLink && String(parsed.cvLink).trim()) || '',
         image: parsed.image || '/me.png'
       }
     } catch (e) {

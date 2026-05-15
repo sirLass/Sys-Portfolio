@@ -376,7 +376,7 @@ const setDefaultValues = () => {
     email: 'perezbrian091598@gmail.com',
     location: 'Quezon Province, Philippines',
     status: 'Available for Remote Work',
-    cvLink: '/myCv.pdf',
+    cvLink: '',
     image: '/me.png'
   }
 }
