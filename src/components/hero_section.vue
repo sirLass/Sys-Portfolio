@@ -169,63 +169,78 @@ const hasError = ref(false)
 const heroData = ref(null)
 
 onMounted(async () => {
-  if (!supabase) {
-    console.error('Supabase not initialized - check .env.local credentials')
-    hasError.value = true
-    isLoading.value = false
-    return
-  }
-  try {
-    // Fetch personal info
-    const { data: personalData, error: personalError } = await supabase
-      .from('personal_info')
-      .select('name, title, description, image, cover_image')
-      .order('updated_at', { ascending: false })
-      .limit(1)
-      .maybeSingle()
+  let loaded = false
+  if (supabase) {
+    try {
+      // Fetch personal info
+      const { data: personalData, error: personalError } = await supabase
+        .from('personal_info')
+        .select('name, title, description, image, cover_image')
+        .order('updated_at', { ascending: false })
+        .limit(1)
+        .maybeSingle()
 
-    if (personalError) throw personalError
-
-    // Fetch project count from the correct table: 'projects'
-    const { data: projectData } = await supabase
-      .from('projects')
-      .select('projects')
-      .limit(1)
-      .maybeSingle()
-
-    const projectsCount = projectData?.projects?.length || 0
-
-    if (personalData) {
-      heroData.value = {
-        greeting: "Hello, I'm",
-        name: personalData.name || '',
-        title: personalData.title || '',
-        description: personalData.description || '',
-        image: personalData.image || '',
-        coverImage: personalData.cover_image || '',
-        projectsCount: projectsCount,
-        githubReposCount: 12, // Default fallback
-        socials: { facebook: '#', twitter: '#', instagram: '#' }
-      }
-
-      // Fetch real GitHub repo count
-      try {
-        const ghResponse = await fetch('https://api.github.com/users/sirLass')
-        if (ghResponse.ok) {
-          const ghData = await ghResponse.json()
-          heroData.value.githubReposCount = ghData.public_repos || 12
+      if (!personalError && personalData) {
+        // Fetch project count from the correct table: 'projects'
+        let projectsCount = 0
+        try {
+          const { data: projectData } = await supabase
+            .from('projects')
+            .select('projects')
+            .limit(1)
+            .maybeSingle()
+          projectsCount = projectData?.projects?.length || 0
+        } catch (e) {
+          console.warn('Projects count fetch warning:', e)
         }
-      } catch (ghError) {
-        console.error('Error fetching GitHub repos:', ghError)
+
+        heroData.value = {
+          greeting: "Hello, I'm",
+          name: personalData.name || 'Brian Perez',
+          title: personalData.title || 'Full-Stack Developer & Designer',
+          description: personalData.description || 'I build highly performant, responsive web applications with modern design systems.',
+          image: personalData.image || '',
+          coverImage: personalData.cover_image || '',
+          projectsCount: projectsCount || 12,
+          githubReposCount: 24,
+          socials: { facebook: 'https://facebook.com', twitter: 'https://twitter.com', instagram: 'https://instagram.com' }
+        }
+        loaded = true
       }
-    } else {
-      hasError.value = true
+    } catch (e) {
+      console.warn('Supabase fetch failed in hero_section, using local fallback:', e)
     }
-  } catch (e) {
-    console.error('Error loading data:', e)
-    hasError.value = true
-  } finally {
-    isLoading.value = false
   }
+
+  // Graceful visual demo fallback if database is unconfigured
+  if (!loaded) {
+    heroData.value = {
+      greeting: "Hello, I'm",
+      name: "Brian Perez",
+      title: "Full-Stack Developer & Designer",
+      description: "I build highly performant, responsive web applications with modern design systems and robust backend structures.",
+      image: '',
+      coverImage: '',
+      projectsCount: 12,
+      githubReposCount: 24,
+      socials: { facebook: 'https://facebook.com', twitter: 'https://twitter.com', instagram: 'https://instagram.com' }
+    }
+    hasError.value = false
+  }
+
+  // Fetch real GitHub repo count
+  if (heroData.value) {
+    try {
+      const ghResponse = await fetch('https://api.github.com/users/sirLass')
+      if (ghResponse.ok) {
+        const ghData = await ghResponse.json()
+        heroData.value.githubReposCount = ghData.public_repos || 24
+      }
+    } catch (ghError) {
+      console.warn('Error fetching GitHub repos:', ghError)
+    }
+  }
+
+  isLoading.value = false
 })
 </script>

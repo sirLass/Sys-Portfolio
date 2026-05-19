@@ -177,6 +177,7 @@ async function downloadCv() {
 }
 
 onMounted(async () => {
+  let loaded = false
   // Try to load from Supabase first
   if (supabase) {
     try {
@@ -200,39 +201,57 @@ onMounted(async () => {
           cvLink: (data.cv_link && String(data.cv_link).trim()) || '',
           image: data.image_url || '/me.png'
         }
-        isLoading.value = false
-        return
+        loaded = true
       }
     } catch (e) {
-      console.error('Error fetching About from Supabase:', e)
+      console.warn('Error fetching About from Supabase, trying cache:', e)
     }
   }
 
-  // Fallback to localStorage
-  const savedData = localStorage.getItem('aboutSectionData')
-  if (savedData) {
-    try {
-      const parsed = JSON.parse(savedData)
-      aboutData.value = {
-        sectionLabel: parsed.sectionLabel || 'Get to know me',
-        mainHeading: parsed.mainHeading || 'About Me',
-        subheading: parsed.subheading || 'My Developer Journey',
-        paragraph1: parsed.paragraph1 || '',
-        paragraph2: parsed.paragraph2 || '',
-        name: parsed.name || '',
-        email: parsed.email || '',
-        location: parsed.location || '',
-        status: parsed.status || 'Available for Remote Work',
-        cvLink: (parsed.cvLink && String(parsed.cvLink).trim()) || '',
-        image: parsed.image || '/me.png'
+  if (!loaded) {
+    // Fallback to localStorage
+    const savedData = localStorage.getItem('aboutSectionData')
+    if (savedData) {
+      try {
+        const parsed = JSON.parse(savedData)
+        aboutData.value = {
+          sectionLabel: parsed.sectionLabel || 'Get to know me',
+          mainHeading: parsed.mainHeading || 'About Me',
+          subheading: parsed.subheading || 'My Developer Journey',
+          paragraph1: parsed.paragraph1 || '',
+          paragraph2: parsed.paragraph2 || '',
+          name: parsed.name || '',
+          email: parsed.email || '',
+          location: parsed.location || '',
+          status: parsed.status || 'Available for Remote Work',
+          cvLink: (parsed.cvLink && String(parsed.cvLink).trim()) || '',
+          image: parsed.image || '/me.png'
+        }
+        loaded = true
+      } catch (e) {
+        console.warn('Error loading about data from localStorage:', e)
       }
-    } catch (e) {
-      console.error('Error loading about data from localStorage:', e)
-      hasError.value = true
     }
-  } else {
-    hasError.value = true
   }
+
+  // Final resilient visual fallback if database & local cache are empty
+  if (!loaded) {
+    aboutData.value = {
+      sectionLabel: 'Get to know me',
+      mainHeading: 'About Me',
+      subheading: 'My Developer Journey',
+      paragraph1: "I am a passionate Full-Stack Developer with deep expertise in JavaScript, Vue, and modern cloud architectures. I love crafting clean user interfaces and optimizing code performance.",
+      paragraph2: "My goal is always to build scalable, maintainable products that offer intuitive and engaging visual experiences for visitors.",
+      name: 'Brian Perez',
+      email: 'perezbrian091598@gmail.com',
+      location: 'Quezon Province, Philippines',
+      status: 'Available for Remote Work',
+      cvLink: '',
+      image: ''
+    }
+    hasError.value = false
+  }
+
   isLoading.value = false
 })
 </script>

@@ -376,61 +376,46 @@ Sent directly to: ${email}`
 }
 
 onMounted(async () => {
-  if (!supabase) {
-    console.error('Supabase not initialized - check .env.local credentials')
-    hasError.value = true
-    isLoading.value = false
-    return
+  let loaded = false
+  if (supabase) {
+    try {
+      const { data, error } = await supabase
+        .from('contact_section')
+        .select('*')
+        .limit(1)
+        .maybeSingle()
+
+      if (!error && data) {
+        contactData.value = {
+          sectionLabel: data.section_label || "Let's work together",
+          mainHeading: data.main_heading || 'Get In Touch',
+          description: data.description || '',
+          emails: data.emails || (data.email ? [data.email] : []),
+          githubs: data.githubs || (data.github ? [data.github] : []),
+          location: data.location || '',
+          formHeading: data.form_heading || 'Send a Message'
+        }
+        loaded = true
+      }
+    } catch (e) {
+      console.warn('Error loading contact_section from Supabase, using mock fallback:', e)
+    }
   }
-  try {
-    const { data, error } = await supabase
-      .from('contact_section')
-      .select('*')
-      .limit(1)
-      .maybeSingle()
 
-
-    if (error) {
-      console.error('Supabase error:', error)
-      throw error
-    }
-    if (data) {
-      contactData.value = {
-        sectionLabel: data.section_label || "Let's work together",
-        mainHeading: data.main_heading || 'Get In Touch',
-        description: data.description || '',
-        emails: data.emails || (data.email ? [data.email] : []),
-        githubs: data.githubs || (data.github ? [data.github] : []),
-        location: data.location || '',
-        formHeading: data.form_heading || 'Send a Message'
-      }
-    } else {
-      console.error('No data found in contact_section table')
-      // Use fallback data instead of error
-      contactData.value = {
-        sectionLabel: "Let's work together",
-        mainHeading: 'Get In Touch',
-        description: "I'm always open to discussing new projects, creative ideas or opportunities to be part of your visions.",
-        emails: ['perezbrian091598@gmail.com'],
-        githubs: ['https://github.com/SirP-rezDev'],
-        location: 'Quezon Province, Philippines',
-        formHeading: 'Send a Message'
-      }
-    }
-  } catch (e) {
-    console.error('Error loading contact_section:', e)
-    // Use fallback data on error
+  // Graceful out-of-the-box fallback config instead of error screen!
+  if (!loaded) {
     contactData.value = {
       sectionLabel: "Let's work together",
       mainHeading: 'Get In Touch',
       description: "I'm always open to discussing new projects, creative ideas or opportunities to be part of your visions.",
-      emails: ['perezbrian091598@gmail.com'],
-      githubs: ['https://github.com/SirP-rezDev'],
+      emails: ['perezbrian091598@gmail.com', 'perezbrian12124124@gmail.com'],
+      githubs: ['https://github.com/sirLass'],
       location: 'Quezon Province, Philippines',
       formHeading: 'Send a Message'
     }
-  } finally {
-    isLoading.value = false
+    hasError.value = false
   }
+
+  isLoading.value = false
 })
 </script>
