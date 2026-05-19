@@ -340,9 +340,17 @@ provide('updateTheme', updateTheme)
 const username = ref('Admin')
 
 const fetchUser = async () => {
-  const { data: { user } } = await supabase.auth.getUser()
-  if (user) {
-    username.value = user.email.split('@')[0] || 'Admin'
+  if (supabase) {
+    try {
+      const { data: { user } } = await supabase.auth.getUser()
+      if (user) {
+        username.value = user.email.split('@')[0] || 'Admin'
+      }
+    } catch (e) {
+      console.error('Error fetching user info:', e)
+    }
+  } else {
+    username.value = 'Demo Admin'
   }
 }
 
@@ -388,13 +396,17 @@ const cancelLogout = () => {
 
 const confirmLogout = async () => {
   showLogoutConfirm.value = false
-  const { error } = await supabase.auth.signOut()
-  if (error) {
-    addToast(error.message, 'error')
+  if (supabase) {
+    const { error } = await supabase.auth.signOut()
+    if (error) {
+      addToast(error.message, 'error')
+      return
+    }
   } else {
-    router.push('/login')
-    addToast('Signed out successfully', 'info')
+    localStorage.removeItem('isMockAuthenticated')
   }
+  router.push('/login')
+  addToast('Signed out successfully', 'info')
 }
 
 const handleRefresh=()=>{

@@ -31,8 +31,18 @@ import { supabase } from '../supabase'
 
 // Route guard to protect admin panel
 router.beforeEach(async (to, from, next) => {
-  const { data: { session } } = await supabase.auth.getSession()
-  const isAuthenticated = !!session
+  let isAuthenticated = false
+  if (supabase) {
+    try {
+      const { data: { session } } = await supabase.auth.getSession()
+      isAuthenticated = !!session
+    } catch (e) {
+      console.error('Error checking active session:', e)
+    }
+  } else {
+    // If Supabase is offline/not configured (e.g. initial Vercel deploy), fallback to localStorage mock auth
+    isAuthenticated = localStorage.getItem('isMockAuthenticated') === 'true'
+  }
   
   if (to.meta.requiresAuth && !isAuthenticated) {
     // Redirect to login if not authenticated

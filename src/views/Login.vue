@@ -177,6 +177,18 @@ const handleLogin = async () => {
   if (!password.value) { fieldErrors.password = 'Password is required'; return }
 
   loading.value = true
+  if (!supabase) {
+    // Graceful fallback for Vercel deployment where env variables are not initialized yet
+    if (email.value === 'admin@systematic.com' && password.value === 'admin123') {
+      localStorage.setItem('isMockAuthenticated', 'true')
+      router.push('/admin')
+    } else {
+      error.value = 'Supabase environment variables are missing on Vercel. Please configure VITE_SUPABASE_URL and VITE_SUPABASE_ANON_KEY, or use mock credentials (admin@systematic.com / admin123) to bypass auth for testing!'
+    }
+    loading.value = false
+    return
+  }
+
   try {
     const { data, error: authError } = await supabase.auth.signInWithPassword({
       email: email.value,
