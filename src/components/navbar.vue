@@ -42,6 +42,9 @@
             <a @click.prevent="smoothScrollTo('#Experience')" href="#Experience" class="nav-item opacity-0 translate-x-6 scale-95 group-hover:opacity-100 group-hover:translate-x-0 group-hover:scale-100 transition-all duration-500 ease-[cubic-bezier(0.34,1.56,0.64,1)] delay-[240ms] px-3 py-2 text-sm font-medium text-gray-600 hover:text-primary-600 rounded-lg hover:bg-primary-50 whitespace-nowrap cursor-pointer">
               Experience
             </a>
+            <a @click.prevent="smoothScrollTo('#Gallery')" href="#Gallery" class="nav-item opacity-0 translate-x-6 scale-95 group-hover:opacity-100 group-hover:translate-x-0 group-hover:scale-100 transition-all duration-500 ease-[cubic-bezier(0.34,1.56,0.64,1)] delay-[300ms] px-3 py-2 text-sm font-medium text-gray-600 hover:text-primary-600 rounded-lg hover:bg-primary-50 whitespace-nowrap cursor-pointer">
+              Gallery
+            </a>
             <div class="w-px h-6 bg-gray-300 mx-1 transition-opacity duration-300 opacity-0 group-hover:opacity-100"></div>
           </div>
           
@@ -80,6 +83,7 @@
         <a @click.prevent="smoothScrollTo('#Skills')" href="#Skills" class="block text-gray-700 hover:text-primary-600 font-medium transition-colors duration-300 cursor-pointer">Skills</a>
         <a @click.prevent="smoothScrollTo('#Projects')" href="#Projects" class="block text-gray-700 hover:text-primary-600 font-medium transition-colors duration-300 cursor-pointer">Projects</a>
         <a @click.prevent="smoothScrollTo('#Experience')" href="#Experience" class="block text-gray-700 hover:text-primary-600 font-medium transition-colors duration-300 cursor-pointer">Experience</a>
+        <a @click.prevent="smoothScrollTo('#Gallery')" href="#Gallery" class="block text-gray-700 hover:text-primary-600 font-medium transition-colors duration-300 cursor-pointer">Gallery</a>
         <a @click.prevent="smoothScrollTo('#Contact')" href="#Contact" class="block bg-primary-600 text-white px-6 py-2 rounded-full hover:bg-primary-700 transition-colors duration-300 text-center cursor-pointer">Contact Me</a>
       </div>
     </div>

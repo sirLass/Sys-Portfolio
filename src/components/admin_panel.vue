@@ -263,7 +263,9 @@ import AdminAbout from './admin/About.vue'
 import AdminSkills from './admin/Skills.vue'
 import AdminProjects from './admin/Projects.vue'
 import AdminExperience from './admin/Experience.vue'
+import AdminGallery from './admin/Gallery.vue'
 import AdminContact from './admin/Contact.vue'
+import AdminInbox from './admin/Inbox.vue'
 
 const router = useRouter()
 const isCollapsed = ref(false)
@@ -359,7 +361,9 @@ const menuItems = [
   { name:'Skills',label:'Skills',iconPath:'M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z',component:AdminSkills},
   { name:'Projects',label:'Projects',iconPath:'M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10',component:AdminProjects},
   { name:'Experience',label:'Experience',iconPath:'M21 13.255A23.931 23.931 0 0112 15c-3.183 0-6.22-.62-9-1.745M16 6V4a2 2 0 00-2-2h-4a2 2 0 00-2 2v2m4 6h.01M5 20h14a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z',component:AdminExperience},
-  { name:'Contact',label:'Contact',iconPath:'M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z',component:AdminContact}
+  { name:'Gallery',label:'Gallery',iconPath:'M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z',component:AdminGallery},
+  { name:'Contact',label:'Contact',iconPath:'M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z',component:AdminContact},
+  { name:'Inbox',label:'Inbox',iconPath:'M8 4H6a2 2 0 00-2 2v12a2 2 0 002 2h12a2 2 0 002-2V6a2 2 0 00-2-2h-2m-4-1v8m0 0l3-3m-3 3L9 8m-5 5h2.586a1 1 0 01.707.293l2.414 2.414a1 1 0 00.707.293h3.172a1 1 0 00.707-.293l2.414-2.414a1 1 0 01.707-.293H20',component:AdminInbox}
 ]
 
 const currentComponent = computed(()=>{

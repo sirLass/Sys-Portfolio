@@ -6,6 +6,7 @@
     <SkillsSection />
     <ProjectSection />
     <ExperienceSection />
+    <GallerySection />
     <ContactSection />
     <Footer />
   </div>
@@ -18,6 +19,7 @@ import AboutSection from '../components/about_section.vue'
 import SkillsSection from '../components/skills_section.vue'
 import ProjectSection from '../components/projects_section.vue'
 import ExperienceSection from '../components/experience_section.vue'
+import GallerySection from '../components/gallery_section.vue'
 import ContactSection from '../components/contact_section.vue'
 import Footer from '../components/footer_section.vue'
 
@@ -30,6 +32,7 @@ export default {
     SkillsSection,
     ProjectSection,
     ExperienceSection,
+    GallerySection,
     ContactSection,
     Footer
   }

@@ -180,3 +180,49 @@ VALUES (
   'Your Location',
   'Send a Message'
 );
+
+-- ============================================
+-- GALLERY SECTION INTEGRATION
+-- ============================================
+CREATE TABLE IF NOT EXISTS gallery_section (
+  id uuid PRIMARY KEY DEFAULT gen_random_uuid(),
+  created_at timestamptz DEFAULT now(),
+  updated_at timestamptz DEFAULT now(),
+  section_label text,
+  main_heading text,
+  description text,
+  images jsonb -- Array of objects: { url, caption, alt, title }
+);
+
+-- Enable RLS and add public read access policies
+ALTER TABLE gallery_section ENABLE ROW LEVEL SECURITY;
+CREATE POLICY "Allow public select access" ON gallery_section FOR SELECT USING (true);
+CREATE POLICY "Allow all operations" ON gallery_section FOR ALL USING (true) WITH CHECK (true);
+
+-- Insert sample gallery data
+INSERT INTO gallery_section (section_label, main_heading, description, images)
+VALUES (
+  'Interactive Gallery Showcase',
+  'Captured Moments & Creations',
+  'A premium, responsive capture grid designed to swap layout positions every 60 seconds with micro-animations.',
+  '[
+    {
+      "url": "https://images.unsplash.com/photo-1555066931-4365d14bab8c?q=80&w=1000&auto=format&fit=crop",
+      "title": "Modern Coding Station",
+      "caption": "A clean, high-productivity developer workspace with elegant ambient neon glow, custom mechanical keyboards, and crisp screen displays.",
+      "alt": "Workspace setup"
+    },
+    {
+      "url": "https://images.unsplash.com/photo-1498050108023-c5249f4df085?q=80&w=1000&auto=format&fit=crop",
+      "title": "Minimalist Tech Design",
+      "caption": "A professional and clean aesthetic illustrating our design process, visual wireframes, and beautiful dark layouts.",
+      "alt": "Laptop and design assets"
+    },
+    {
+      "url": "https://images.unsplash.com/photo-1531403009284-440f080d1e12?q=80&w=1000&auto=format&fit=crop",
+      "title": "User Interface Blueprinting",
+      "caption": "Detailed vector components, clean spacing systems, and Shopify style frameworks assembled for maximum systematic efficiency.",
+      "alt": "Wireframes on display"
+    }
+  ]'::jsonb
+);

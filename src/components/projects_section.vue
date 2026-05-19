@@ -71,11 +71,61 @@
                             {{ projectsData.description }}
                         </p>
                     </div>
-                    
+                </div>
+
+                <!-- Project Type Toggle & Controls Row -->
+                <div class="flex flex-wrap justify-between items-center gap-6 mb-12 border-b border-gray-100 pb-6">
+                    <div class="flex items-center gap-2 p-1.5 bg-gray-50 rounded-2xl border border-gray-200/50">
+                        <button 
+                            @click="activeProjectType = 'major'"
+                            :class="[
+                                'relative px-6 py-2.5 rounded-xl text-xs font-black uppercase tracking-[0.2em] transition-all duration-300 active:scale-95',
+                                activeProjectType === 'major' 
+                                    ? 'bg-gray-900 text-white shadow-lg' 
+                                    : 'text-gray-400 hover:text-gray-900'
+                            ]"
+                        >
+                            Major Projects
+                        </button>
+                        <button 
+                            @click="activeProjectType = 'mini'"
+                            :class="[
+                                'relative px-6 py-2.5 rounded-xl text-xs font-black uppercase tracking-[0.2em] transition-all duration-300 active:scale-95',
+                                activeProjectType === 'mini' 
+                                    ? 'bg-gray-900 text-white shadow-lg' 
+                                    : 'text-gray-400 hover:text-gray-900'
+                            ]"
+                        >
+                            Mini Projects
+                        </button>
+                    </div>
+
+                    <!-- Slide Controls & Auto Slide Toggle -->
+                    <div class="flex items-center gap-4">
+                        <div class="flex items-center gap-2" v-if="filteredProjects.length > 1">
+                            <button 
+                                @click="scrollPrev"
+                                class="p-3 rounded-xl bg-gray-50 border border-gray-200 text-gray-500 hover:text-gray-950 hover:bg-white transition-all shadow-sm active:scale-95"
+                                title="Previous Project"
+                            >
+                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M15 19l-7-7 7-7" />
+                                </svg>
+                            </button>
+                            <button 
+                                @click="scrollNext"
+                                class="p-3 rounded-xl bg-gray-50 border border-gray-200 text-gray-500 hover:text-gray-950 hover:bg-white transition-all shadow-sm active:scale-95"
+                                title="Next Project"
+                            >
+                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M9 5l7 7-7 7" />
+                                </svg>
+                            </button>
+                        </div>
                         <button 
                             @click="toggleAutoSlide"
                             :class="[
-                                'flex items-center gap-2 px-6 py-3 rounded-2xl text-xs font-bold uppercase tracking-widest transition-all shadow-sm active:scale-95',
+                                'flex items-center gap-2 px-6 py-3 rounded-xl text-xs font-bold uppercase tracking-widest transition-all shadow-sm active:scale-95',
                                 isAutoSlide 
                                     ? 'bg-primary-600 text-white shadow-lg shadow-primary-200' 
                                     : 'bg-white text-gray-500 border border-gray-200'
@@ -87,10 +137,11 @@
                     </div>
                 </div>
                 
-                <div class="relative group/carousel px-4" v-if="projectsData?.projects?.length > 0">
+                <!-- Filtered Carousel -->
+                <div class="relative group/carousel px-4" v-if="filteredProjects.length > 0">
                     <!-- Previous Button - Overlay -->
                     <button 
-                        v-if="projectsData?.projects?.length > 1"
+                        v-if="filteredProjects.length > 1"
                         @click="scrollPrev"
                         class="hidden md:flex absolute left-4 top-1/2 -translate-y-1/2 p-4 rounded-2xl bg-white/90 backdrop-blur-md border border-gray-100 text-gray-400 hover:text-primary-600 hover:bg-white transition-all shadow-xl active:scale-95 z-20 opacity-0 group-hover/carousel:opacity-100"
                         title="Previous Project"
@@ -103,13 +154,13 @@
                     <div 
                         ref="projectsScrollRef"
                         class="flex items-start gap-8 overflow-x-auto scrollbar-hide snap-x snap-mandatory pb-4"
-                        :class="{ 'justify-center': projectsData?.projects?.length === 1 }"
+                        :class="{ 'justify-center': filteredProjects.length === 1 }"
                         style="scrollbar-width: none; -ms-overflow-style: none;"
                         @mouseenter="stopAutoSlide"
                         @mouseleave="resumeAutoSlideIfOn"
                     >
                         <div
-                            v-for="(project, index) in projectsData?.projects"
+                            v-for="(project, index) in filteredProjects"
                             :key="index"
                             class="flex-none w-[300px] sm:w-[350px] md:w-[400px] lg:w-[450px] h-auto min-h-[450px] sm:min-h-[500px] snap-center group bg-white rounded-3xl shadow-xl overflow-hidden border border-gray-100"
                         >
@@ -210,7 +261,7 @@
 
                     <!-- Next Button - Overlay -->
                     <button 
-                        v-if="projectsData?.projects?.length > 1"
+                        v-if="filteredProjects.length > 1"
                         @click="scrollNext"
                         class="hidden md:flex absolute right-4 top-1/2 -translate-y-1/2 p-4 rounded-2xl bg-white/90 backdrop-blur-md border border-gray-100 text-gray-400 hover:text-primary-600 hover:bg-white transition-all shadow-xl active:scale-95 z-20 opacity-0 group-hover/carousel:opacity-100"
                         title="Next Project"
@@ -221,6 +272,20 @@
                     </button>
                 </div>
 
+                <!-- Empty Filter State -->
+                <div v-else class="text-center py-20 px-6 animate-in fade-in duration-500">
+                    <div class="max-w-md mx-auto bg-gray-50/50 backdrop-blur-sm rounded-[2rem] p-10 border-2 border-dashed border-gray-200">
+                        <div class="w-16 h-16 bg-white rounded-2xl flex items-center justify-center mx-auto mb-6 shadow-sm">
+                            <svg class="w-8 h-8 text-gray-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
+                            </svg>
+                        </div>
+                        <h3 class="text-xl font-bold text-gray-900 mb-2">No {{ activeProjectType === 'major' ? 'Major' : 'Mini' }} Projects Yet</h3>
+                        <p class="text-gray-500 mb-8 leading-relaxed">Ready to showcase your work? Add your first {{ activeProjectType === 'major' ? 'major' : 'mini' }} project through the admin dashboard.</p>
+                    </div>
+                </div>
+
+            </div> <!-- End of Loaded Data v-else -->
 
                 <!-- Project Detail Modal (Empty Shell) -->
                 <Transition
@@ -381,7 +446,7 @@
 </template>
 
 <script setup>
-import { ref, onMounted, onUnmounted } from 'vue'
+import { ref, onMounted, onUnmounted, computed, nextTick } from 'vue'
 import { supabase } from '../supabase'
 
 const isAutoSlide = ref(false)
@@ -393,6 +458,16 @@ const isLoading = ref(true)
 const hasError = ref(false)
 const selectedProject = ref(null)
 const activeTab = ref('description')
+
+const activeProjectType = ref('major')
+
+const filteredProjects = computed(() => {
+  if (!projectsData.value?.projects) return []
+  return projectsData.value.projects.filter(project => {
+    const type = project.projectType || 'major'
+    return type === activeProjectType.value
+  })
+})
 
 const openModal = (project) => {
     selectedProject.value = project
@@ -497,7 +572,44 @@ const getFavicon = (url) => {
   }
 }
 
+let selectProjectListener = null
+
 onMounted(async () => {
+  // Listen for the custom project selection event from gallery modal
+  selectProjectListener = (e) => {
+    const projectTitle = e.detail?.title
+    if (!projectTitle || !projectsData.value?.projects) return
+
+    // Find the project object in the array
+    const proj = projectsData.value.projects.find(p => p.title === projectTitle)
+    if (proj) {
+      // Switch active type tab to match the target project so it is shown
+      activeProjectType.value = proj.projectType || 'major'
+
+      setTimeout(() => {
+        // Open the details modal automatically
+        openModal(proj)
+        
+        // Scroll the carousel to center this specific project card
+        nextTick(() => {
+          if (projectsScrollRef.value) {
+            const container = projectsScrollRef.value
+            const cards = container.children
+            for (let i = 0; i < cards.length; i++) {
+              const cardTitle = cards[i].querySelector('h3')?.textContent?.trim()
+              if (cardTitle === projectTitle) {
+                cards[i].scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' })
+                break
+              }
+            }
+          }
+        })
+      }, 100)
+    }
+  }
+
+  window.addEventListener('select-project', selectProjectListener)
+
   if (!supabase) {
     console.warn('ProjectsSection: Supabase client not initialized. Falling back to local storage.')
     loadFromLocalStorage()
@@ -636,6 +748,9 @@ const getTechIcon = (tech) => {
 
 onUnmounted(() => {
     stopAutoSlide()
+    if (selectProjectListener) {
+      window.removeEventListener('select-project', selectProjectListener)
+    }
 })
 </script>
 

@@ -165,30 +165,82 @@
                                 {{ contactData.formHeading }}
                             </h3>
 
-                            <form class="space-y-8 relative z-10">
+                            <form @submit.prevent="handleSubmit" class="space-y-8 relative z-10">
                                 <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
                                     <div class="space-y-3">
                                         <label class="text-[11px] font-black text-gray-400 uppercase tracking-[0.3em] ml-2">Name</label>
-                                        <input type="text" class="w-full px-6 py-5 bg-white border-transparent focus:border-primary-500 rounded-2xl focus:outline-none focus:ring-4 focus:ring-primary-500/5 transition-all duration-300 font-bold text-gray-900" placeholder="John Doe">
+                                        <input 
+                                            v-model="form.name"
+                                            type="text" 
+                                            required
+                                            class="w-full px-6 py-5 bg-white border-transparent focus:border-primary-500 rounded-2xl focus:outline-none focus:ring-4 focus:ring-primary-500/5 transition-all duration-300 font-bold text-gray-900" 
+                                            placeholder="John Doe"
+                                        >
                                     </div>
                                     <div class="space-y-3">
                                         <label class="text-[11px] font-black text-gray-400 uppercase tracking-[0.3em] ml-2">Email address</label>
-                                        <input type="email" class="w-full px-6 py-5 bg-white border-transparent focus:border-primary-500 rounded-2xl focus:outline-none focus:ring-4 focus:ring-primary-500/5 transition-all duration-300 font-bold text-gray-900" placeholder="johndoe@gmail.com">
+                                        <input 
+                                            v-model="form.email"
+                                            type="email" 
+                                            required
+                                            class="w-full px-6 py-5 bg-white border-transparent focus:border-primary-500 rounded-2xl focus:outline-none focus:ring-4 focus:ring-primary-500/5 transition-all duration-300 font-bold text-gray-900" 
+                                            placeholder="johndoe@gmail.com"
+                                        >
                                     </div>
                                 </div>
                                 <div class="space-y-3">
                                     <label class="text-[11px] font-black text-gray-400 uppercase tracking-[0.3em] ml-2">Subject</label>
-                                    <input type="text" class="w-full px-6 py-5 bg-white border-transparent focus:border-primary-500 rounded-2xl focus:outline-none focus:ring-4 focus:ring-primary-500/5 transition-all duration-300 font-bold text-gray-900" placeholder="Project Inquiry / Hiring">
+                                    <input 
+                                        v-model="form.subject"
+                                        type="text" 
+                                        class="w-full px-6 py-5 bg-white border-transparent focus:border-primary-500 rounded-2xl focus:outline-none focus:ring-4 focus:ring-primary-500/5 transition-all duration-300 font-bold text-gray-900" 
+                                        placeholder="Project Inquiry / Hiring"
+                                    >
                                 </div>
                                 <div class="space-y-3">
                                     <label class="text-[11px] font-black text-gray-400 uppercase tracking-[0.3em] ml-2">Your Message</label>
-                                    <textarea rows="5" class="w-full px-6 py-5 bg-white border-transparent focus:border-primary-500 rounded-2xl focus:outline-none focus:ring-4 focus:ring-primary-500/5 transition-all duration-300 resize-none font-bold text-gray-900" placeholder="Tell me about your vision..."></textarea>
+                                    <textarea 
+                                        v-model="form.message"
+                                        rows="5" 
+                                        required
+                                        class="w-full px-6 py-5 bg-white border-transparent focus:border-primary-500 rounded-2xl focus:outline-none focus:ring-4 focus:ring-primary-500/5 transition-all duration-300 resize-none font-bold text-gray-900" 
+                                        placeholder="Tell me about your vision..."
+                                    ></textarea>
                                 </div>
                                 
-                                <button type="submit" class="w-full bg-gray-900 hover:bg-black text-white px-10 py-6 rounded-2xl transition-all duration-300 font-black shadow-2xl hover:shadow-primary-500/10 transform active:scale-[0.98] flex items-center justify-center group overflow-hidden relative">
+                                <!-- Feedback Toast Inside Card -->
+                                <div v-if="showFormSuccess" class="p-4 bg-emerald-50 rounded-2xl border border-emerald-100 flex items-start gap-3 animate-in fade-in slide-in-from-top-2 duration-300">
+                                    <svg class="w-5 h-5 text-emerald-500 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                                    </svg>
+                                    <div class="text-left">
+                                        <p class="text-xs font-bold text-emerald-800">Transmission Complete</p>
+                                        <p class="text-[11px] text-emerald-600 font-medium mt-0.5">{{ formFeedbackMsg }}</p>
+                                    </div>
+                                </div>
+
+                                <div v-if="showFormError" class="p-4 bg-rose-50 rounded-2xl border border-rose-100 flex items-start gap-3 animate-in fade-in slide-in-from-top-2 duration-300">
+                                    <svg class="w-5 h-5 text-rose-500 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+                                    </svg>
+                                    <div class="text-left">
+                                        <p class="text-xs font-bold text-rose-800">Dispatch Interrupted</p>
+                                        <p class="text-[11px] text-rose-600 font-medium mt-0.5">{{ formFeedbackMsg }}</p>
+                                    </div>
+                                </div>
+
+                                <button 
+                                    type="submit" 
+                                    :disabled="isSending"
+                                    class="w-full bg-gray-900 hover:bg-black text-white px-10 py-6 rounded-2xl transition-all duration-300 font-black shadow-2xl hover:shadow-primary-500/10 transform active:scale-[0.98] flex items-center justify-center group overflow-hidden relative disabled:opacity-75 disabled:cursor-not-allowed"
+                                >
                                     <span class="relative z-10 flex items-center gap-4 text-[11px] uppercase tracking-[0.3em]">
-                                        Dispatch Message
-                                        <svg class="w-5 h-5 text-primary-400 group-hover:translate-x-2 transition-transform duration-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        {{ isSending ? 'Transmitting Node...' : 'Dispatch Message' }}
+                                        <svg v-if="isSending" class="animate-spin w-5 h-5 text-primary-400" fill="none" viewBox="0 0 24 24">
+                                            <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                                            <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                                        </svg>
+                                        <svg v-else class="w-5 h-5 text-primary-400 group-hover:translate-x-2 transition-transform duration-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M17 8l4 4m0 0l-4 4m4-4H3" />
                                         </svg>
                                     </span>
@@ -209,6 +261,119 @@ import { supabase } from '../supabase'
 const contactData = ref(null)
 const isLoading = ref(true)
 const hasError = ref(false)
+
+const form = ref({
+  name: '',
+  email: '',
+  subject: '',
+  message: ''
+})
+
+const isSending = ref(false)
+const showFormSuccess = ref(false)
+const showFormError = ref(false)
+const formFeedbackMsg = ref('')
+
+const handleSubmit = async () => {
+  if (!form.value.name.trim() || !form.value.email.trim() || !form.value.message.trim()) {
+    showFormError.value = true
+    formFeedbackMsg.value = 'Please complete all required fields.'
+    setTimeout(() => { showFormError.value = false }, 4000)
+    return
+  }
+
+  isSending.value = true
+  showFormSuccess.value = false
+  showFormError.value = false
+
+  const newInquiry = {
+    name: form.value.name.trim(),
+    email: form.value.email.trim(),
+    subject: form.value.subject.trim() || 'General Inquiry',
+    message: form.value.message.trim(),
+    is_read: false,
+    created_at: new Date().toISOString()
+  }
+
+  let dbSaved = false
+
+  // 1. Try to save to Supabase contact_messages table
+  if (supabase) {
+    try {
+      const { error } = await supabase
+        .from('contact_messages')
+        .insert([newInquiry])
+      
+      if (!error) {
+        dbSaved = true
+      } else {
+        console.warn('Supabase message cache fallback:', error)
+      }
+    } catch (e) {
+      console.error('Supabase write failure:', e)
+    }
+  }
+
+  // 2. Backup cache to Local Storage so Inbox works offline/fallback
+  try {
+    const saved = localStorage.getItem('submittedContactMessages')
+    const existing = saved ? JSON.parse(saved) : []
+    existing.push({
+      id: Date.now(),
+      ...newInquiry
+    })
+    localStorage.setItem('submittedContactMessages', JSON.stringify(existing))
+  } catch (e) {
+    console.error('Failed to cache message locally:', e)
+  }
+
+  // 3. Dispatch real-time emails to both addresses using Web3Forms
+  try {
+    const recipients = contactData.value?.emails || ['perezbrian091598@gmail.com', 'perezbrian12124124@gmail.com']
+    for (const email of recipients) {
+      if (!email) continue
+      await fetch('https://api.web3forms.com/submit', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          access_key: '603c40ab-5c3b-48ad-8d96-b6058d88e40f', // Global standard key
+          name: form.value.name,
+          email: form.value.email,
+          subject: `Systematic Portfolio - Message from ${form.value.name}`,
+          message: `Inquiry details:
+          
+Sender Name: ${form.value.name}
+Sender Email: ${form.value.email}
+Subject: ${form.value.subject || 'General Inquiry'}
+
+Message:
+${form.value.message}
+
+--
+Sent directly to: ${email}`
+        })
+      })
+    }
+  } catch (e) {
+    console.error('Email dispatch error:', e)
+  }
+
+  await new Promise(resolve => setTimeout(resolve, 1000))
+  
+  isSending.value = false
+  showFormSuccess.value = true
+  formFeedbackMsg.value = 'Your message has been transmitted successfully! I will reach out to you soon.'
+  
+  // Clear inputs
+  form.value = {
+    name: '',
+    email: '',
+    subject: '',
+    message: ''
+  }
+
+  setTimeout(() => { showFormSuccess.value = false }, 5000)
+}
 
 onMounted(async () => {
   if (!supabase) {

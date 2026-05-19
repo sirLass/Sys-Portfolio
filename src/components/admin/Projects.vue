@@ -33,6 +33,7 @@
               <thead class="bg-[#f6f6f7]">
                 <tr>
                   <th class="px-4 py-3 text-left text-xs font-semibold text-[#6d7175] uppercase tracking-wider">Project</th>
+                  <th class="px-4 py-3 text-left text-xs font-semibold text-[#6d7175] uppercase tracking-wider">Type</th>
                   <th class="px-4 py-3 text-left text-xs font-semibold text-[#6d7175] uppercase tracking-wider">Category</th>
                   <th class="px-4 py-3 text-left text-xs font-semibold text-[#6d7175] uppercase tracking-wider">Technologies</th>
                   <th class="px-4 py-3 text-left text-xs font-semibold text-[#6d7175] uppercase tracking-wider">Status</th>
@@ -54,6 +55,14 @@
                         <p class="text-xs text-[#6d7175] truncate max-w-[200px]">{{ project.description || 'No description' }}</p>
                       </div>
                     </div>
+                  </td>
+                  <td class="px-4 py-4">
+                    <span 
+                      class="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-medium border"
+                      :class="project.projectType === 'mini' ? 'bg-[#e2f1e8] text-[#1e513c] border-[#a3d1b7]' : 'bg-[#e3f2fd] text-[#0d47a1] border-[#bbdefb]'"
+                    >
+                      {{ project.projectType === 'mini' ? 'Mini Project' : 'Major Project' }}
+                    </span>
                   </td>
                   <td class="px-4 py-4">
                     <span class="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-medium bg-[#ebf5ff] text-[#2c6ecb]">
@@ -127,7 +136,7 @@
         </div>
         
         <div class="p-6 space-y-6">
-          <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
             <div>
               <label class="block text-sm font-medium text-[#1a1b1c] mb-2">Title</label>
               <input
@@ -136,6 +145,16 @@
                 class="w-full px-4 py-2.5 text-sm text-[#1a1b1c] bg-white border border-[#c9cccf] rounded-md focus:outline-none focus:border-[var(--admin-primary)] focus:ring-2 focus:ring-[var(--admin-primary)]/20 transition-all font-outfit"
                 placeholder="Project Title"
               />
+            </div>
+            <div>
+              <label class="block text-sm font-medium text-[#1a1b1c] mb-2">Project Type</label>
+              <select
+                v-model="newProject.projectType"
+                class="w-full px-4 py-2.5 text-sm text-[#1a1b1c] bg-white border border-[#c9cccf] rounded-md focus:outline-none focus:border-[var(--admin-primary)] focus:ring-2 focus:ring-[var(--admin-primary)]/20 transition-all font-outfit cursor-pointer"
+              >
+                <option value="major">Major Project</option>
+                <option value="mini">Mini Project</option>
+              </select>
             </div>
             <div>
               <label class="block text-sm font-medium text-[#1a1b1c] mb-2">Category</label>
@@ -313,7 +332,7 @@
         </div>
         
         <div class="p-6 space-y-6" v-if="editingProject !== null">
-          <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
             <div>
               <label class="block text-sm font-medium text-[#1a1b1c] mb-2">Title</label>
               <input
@@ -322,6 +341,16 @@
                 class="w-full px-4 py-2.5 text-sm text-[#1a1b1c] bg-white border border-[#c9cccf] rounded-md focus:outline-none focus:border-[var(--admin-primary)] focus:ring-2 focus:ring-[var(--admin-primary)]/20 transition-all font-outfit"
                 placeholder="Project Title"
               />
+            </div>
+            <div>
+              <label class="block text-sm font-medium text-[#1a1b1c] mb-2">Project Type</label>
+              <select
+                v-model="projectsData.projects[editingProject].projectType"
+                class="w-full px-4 py-2.5 text-sm text-[#1a1b1c] bg-white border border-[#c9cccf] rounded-md focus:outline-none focus:border-[var(--admin-primary)] focus:ring-2 focus:ring-[var(--admin-primary)]/20 transition-all font-outfit cursor-pointer"
+              >
+                <option value="major">Major Project</option>
+                <option value="mini">Mini Project</option>
+              </select>
             </div>
             <div>
               <label class="block text-sm font-medium text-[#1a1b1c] mb-2">Category</label>
@@ -539,6 +568,7 @@ const newProject = ref({
   title: '',
   description: '',
   category: '',
+  projectType: 'major',
   link: '',
   technologies: [],
   gallery: [],
@@ -709,6 +739,7 @@ const openAddModal = () => {
     title: '',
     description: '',
     category: '',
+    projectType: 'major',
     link: '',
     technologies: [],
     gallery: [],
@@ -769,6 +800,9 @@ const removeProject = async (index) => {
 
 const editProject = async (index) => {
   editingProject.value = index
+  if (!projectsData.value.projects[index].projectType) {
+    projectsData.value.projects[index].projectType = 'major'
+  }
   await nextTick()
   if (editTechInput.value) {
     editTechInput.value.focus()
