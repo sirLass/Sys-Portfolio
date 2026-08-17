@@ -62,43 +62,19 @@
             </div>
           </div>
 
-          <div class="order-1 lg:order-2">
+          <div class="order-1 lg:order-2 text-left">
             <h3 class="text-3xl font-bold text-gray-900 mb-6">{{ aboutData.subheading }}</h3>
-            <div class="space-y-6 text-lg text-gray-700 leading-relaxed">
+            <div class="space-y-6 text-lg text-gray-700 leading-relaxed max-w-xl">
               <p>{{ aboutData.paragraph1 }}</p>
               <p>{{ aboutData.paragraph2 }}</p>
             </div>
 
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mt-8 mb-8">
-              <div class="space-y-4">
-                <div class="flex items-center">
-                  <span class="font-semibold text-gray-900 w-20">Name:</span>
-                  <span class="text-gray-600">{{ aboutData.name }}</span>
-                </div>
-                <div class="flex items-center">
-                  <span class="font-semibold text-gray-900 w-20">Email:</span>
-                  <span class="text-gray-600">{{ aboutData.email }}</span>
-                </div>
-              </div>
-              <div class="space-y-4">
-                <div class="flex items-center">
-                  <span class="font-semibold text-gray-900 w-24">Location:</span>
-                  <span class="text-gray-600">{{ aboutData.location }}</span>
-                </div>
-                <div class="flex items-center">
-                  <span class="font-semibold text-gray-900 w-24">Status:</span>
-                  <span class="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-green-100 text-green-800">
-                    <span class="w-2 h-2 bg-green-400 rounded-full mr-2"></span>
-                    {{ aboutData.status }}
-                  </span>
-                </div>
-              </div>
-            </div>
+
 
             <button
               v-if="aboutData.cvLink"
               type="button"
-              class="inline-flex items-center bg-primary-600 text-white px-6 py-3 rounded-lg hover:bg-primary-700 transition-all duration-300 shadow-lg hover:shadow-xl transform hover:-translate-y-1 group cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none"
+              class="inline-flex items-center bg-primary-600 text-white px-6 py-3 rounded-lg hover:bg-primary-700 transition-all duration-300 shadow-lg hover:shadow-xl transform hover:-translate-y-1 group cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none mt-8"
               :disabled="cvDownloading"
               @click="downloadCv"
             >
@@ -107,7 +83,7 @@
               </svg>
               {{ cvDownloading ? 'Preparing…' : 'Download CV' }}
             </button>
-            <p v-else class="text-sm text-gray-500">Add a CV in the admin panel (About → Files) to enable download.</p>
+            <p v-else class="text-sm text-gray-500 mt-8">Add a CV in the admin panel (About → Files) to enable download.</p>
           </div>
         </div>
       </div>

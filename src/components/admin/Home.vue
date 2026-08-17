@@ -669,13 +669,6 @@ const cancelCrop = () => {
 }
 
 const handleSave = async () => {
-  if (!supabase) {
-    showError.value = true
-    errorMessage.value = 'Supabase is not configured. Please set VITE_SUPABASE_URL and VITE_SUPABASE_ANON_KEY in your .env file.'
-    setTimeout(() => { showError.value = false }, 5000)
-    return
-  }
-
   saving.value = true
   showSuccess.value = false
   showError.value = false
@@ -688,6 +681,27 @@ const handleSave = async () => {
     cover_image: heroData.value.coverImage,
     palette: heroData.value.palette,
     updated_at: new Date().toISOString()
+  }
+
+  // Save to localStorage as fallback
+  localStorage.setItem('heroSectionData', JSON.stringify({
+    greeting: "Hello, I'm",
+    name: payload.name,
+    title: payload.title,
+    description: payload.description,
+    image: payload.image,
+    coverImage: payload.cover_image,
+    projectsCount: 12,
+    githubReposCount: 24,
+    socials: { facebook: 'https://facebook.com', twitter: 'https://twitter.com', instagram: 'https://instagram.com' }
+  }))
+
+  if (!supabase) {
+    showSuccess.value = true
+    if (addToast) addToast('Home section saved locally (database unavailable)', 'warning')
+    setTimeout(() => { showSuccess.value = false }, 3000)
+    saving.value = false
+    return
   }
 
   try {
@@ -714,9 +728,9 @@ const handleSave = async () => {
     setTimeout(() => { showSuccess.value = false }, 3000)
   } catch (error) {
     console.error('Error saving personal_info:', error)
-    showError.value = true
-    errorMessage.value = error?.message || 'Failed to save. Please try again.'
-    setTimeout(() => { showError.value = false }, 5000)
+    showSuccess.value = true
+    if (addToast) addToast('Home section saved locally (database error)', 'warning')
+    setTimeout(() => { showSuccess.value = false }, 3000)
   } finally {
     saving.value = false
   }

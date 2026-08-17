@@ -1,0 +1,15 @@
+{
+  "greeting": "Hello, I'm",
+  "name": "Brian Perez",
+  "title": "Full-Stack Developer & Designer",
+  "description": "I build highly performant, responsive web applications with modern design systems and robust backend structures.",
+  "image": "",
+  "coverImage": "",
+  "projectsCount": 12,
+  "githubReposCount": 24,
+  "socials": {
+    "facebook": "https://facebook.com",
+    "twitter": "https://twitter.com",
+    "instagram": "https://instagram.com"
+  }
+}

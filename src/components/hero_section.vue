@@ -163,6 +163,7 @@
 <script setup>
 import { ref, onMounted } from 'vue'
 import { supabase } from '../supabase'
+import heroDefaults from '../data/hero-defaults.json'
 
 const isLoading = ref(true)
 const hasError = ref(false)
@@ -212,19 +213,33 @@ onMounted(async () => {
     }
   }
 
-  // Graceful visual demo fallback if database is unconfigured
+  // Fallback: try localStorage, then imported JSON defaults
   if (!loaded) {
-    heroData.value = {
-      greeting: "Hello, I'm",
-      name: "Brian Perez",
-      title: "Full-Stack Developer & Designer",
-      description: "I build highly performant, responsive web applications with modern design systems and robust backend structures.",
-      image: '',
-      coverImage: '',
-      projectsCount: 12,
-      githubReposCount: 24,
-      socials: { facebook: 'https://facebook.com', twitter: 'https://twitter.com', instagram: 'https://instagram.com' }
+    const savedData = localStorage.getItem('heroSectionData')
+    if (savedData) {
+      try {
+        const parsed = JSON.parse(savedData)
+        heroData.value = {
+          greeting: parsed.greeting || "Hello, I'm",
+          name: parsed.name || heroDefaults.name,
+          title: parsed.title || heroDefaults.title,
+          description: parsed.description || heroDefaults.description,
+          image: parsed.image || heroDefaults.image,
+          coverImage: parsed.coverImage || heroDefaults.coverImage,
+          projectsCount: parsed.projectsCount || heroDefaults.projectsCount,
+          githubReposCount: parsed.githubReposCount || heroDefaults.githubReposCount,
+          socials: parsed.socials || heroDefaults.socials
+        }
+        loaded = true
+      } catch (e) {
+        console.warn('Error loading hero data from localStorage:', e)
+      }
     }
+  }
+
+  // Final fallback: imported JSON defaults
+  if (!loaded) {
+    heroData.value = { ...heroDefaults }
     hasError.value = false
   }
 
