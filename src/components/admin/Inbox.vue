@@ -1,12 +1,7 @@
 <template>
   <div class="p-6">
-    <!-- Success Message -->
-    <div v-if="showSuccess" class="mb-6 flex items-center gap-3 p-4 bg-[var(--admin-primary-light)] border border-[var(--admin-primary)] rounded-lg">
-      <svg class="w-5 h-5 text-[var(--admin-primary)]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
-      </svg>
-      <p class="text-sm font-medium text-[var(--admin-secondary)]">Message status updated successfully!</p>
-    </div>
+    <!-- Banners -->
+    <Banner :show="showSuccess" type="success" message="Message status updated successfully!" />
 
     <!-- Toolbar Actions -->
     <div class="flex justify-between items-center bg-[#f6f6f7] p-4 rounded-lg border border-[#e3e5e7] mb-6">
@@ -174,6 +169,7 @@
 <script setup>
 import { ref, onMounted, inject, computed } from 'vue'
 import { supabase, isSupabaseConfigured } from '../../supabase'
+import Banner from './ui/Banner.vue'
 
 const addToast = inject('addToast')
 const messages = ref([])

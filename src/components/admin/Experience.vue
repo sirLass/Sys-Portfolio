@@ -1,50 +1,56 @@
 <template>
   <div class="p-6">
-    <!-- Success Message -->
-    <div v-if="showSuccess" class="mb-6 flex items-center gap-3 p-4 bg-[var(--admin-primary-light)] border border-[var(--admin-primary)] rounded-lg">
-      <svg class="w-5 h-5 text-[var(--admin-primary)]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
-      </svg>
-      <p class="text-sm font-medium text-[var(--admin-secondary)]">Changes saved successfully!</p>
-    </div>
+    <!-- Banners -->
+    <Banner :show="showSuccess" type="success" message="Changes saved successfully!" />
 
     <form @submit.prevent="handleSave">
       <!-- Tabs Navigation -->
-      <div class="flex items-center gap-1 mb-8 border-b border-[#c9cccf]">
-        <button
-          type="button"
-          @click="activeTab = 'header'"
-          :class="[
-            'px-4 py-2 text-sm font-medium transition-all relative',
-            activeTab === 'header' 
-              ? 'text-[var(--admin-primary)] border-b-2 border-[var(--admin-primary)]' 
-              : 'text-[#6d7175] hover:text-[#1a1b1c] hover:bg-[#f6f6f7]'
-          ]"
-        >
-          Experience Header
-        </button>
-        <button
-          type="button"
-          @click="activeTab = 'timeline'"
-          :class="[
-            'px-4 py-2 text-sm font-medium transition-all relative',
-            activeTab === 'timeline' 
-              ? 'text-[var(--admin-primary)] border-b-2 border-[var(--admin-primary)]' 
-              : 'text-[#6d7175] hover:text-[#1a1b1c] hover:bg-[#f6f6f7]'
-          ]"
-        >
-          Experience Timeline
-        </button>
+      <div class="mb-6 border-b border-[#c9cccf]">
+        <nav class="flex gap-1">
+          <button
+            type="button"
+            @click="activeTab = 'header'"
+            :class="[
+              'px-4 py-3 text-sm font-medium border-b-2 transition-colors',
+              activeTab === 'header'
+                ? 'border-[var(--admin-primary)] text-[var(--admin-primary)]'
+                : 'border-transparent text-[#6d7175] hover:text-[#1a1b1c]'
+            ]"
+          >
+            Experience Header
+          </button>
+          <button
+            type="button"
+            @click="activeTab = 'timeline'"
+            :class="[
+              'px-4 py-3 text-sm font-medium border-b-2 transition-colors',
+              activeTab === 'timeline'
+                ? 'border-[var(--admin-primary)] text-[var(--admin-primary)]'
+                : 'border-transparent text-[#6d7175] hover:text-[#1a1b1c]'
+            ]"
+          >
+            Experience Timeline
+          </button>
+        </nav>
       </div>
 
-      <div class="space-y-8">
+      <div class="space-y-6">
         <!-- Experience Header Tab -->
         <div v-show="activeTab === 'header'">
-          <div class="space-y-6">
+          <div class="bg-[#f6f6f7]/50 p-6 rounded-xl border border-[#e3e5e7] space-y-6">
+            <div class="flex items-center justify-between mb-2">
+              <h4 class="text-sm font-semibold text-[#1a1b1c]">Experience Section Visibility</h4>
+              <p class="text-xs text-[#6d7175]">Toggle visibility on public site</p>
+            </div>
             <div>
-              <label for="sectionLabel" class="block text-sm font-medium text-[#1a1b1c] mb-2">
-                Section Label
-              </label>
+              <div class="flex items-center justify-between mb-2">
+                <label for="sectionLabel" class="text-sm font-medium text-[#1a1b1c]">Section Label</label>
+                <button type="button" @click="toggleVis('experience', 'sectionLabel')" class="inline-flex items-center gap-1.5 px-2 py-1 rounded-md text-xs font-medium transition-all" :class="vis.experience.sectionLabel ? 'text-[var(--admin-primary)] bg-[var(--admin-primary)]/10' : 'text-[#6d7175] bg-[#f6f6f7]'" :title="vis.experience.sectionLabel ? 'Visible on public site' : 'Hidden from public site'">
+                  <svg v-if="vis.experience.sectionLabel" class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" /><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.477 0 8.268 2.943 9.542 7-1.274 4.057-5.065 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" /></svg>
+                  <svg v-else class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13.875 18.825A10.05 10.05 0 0112 19c-4.478 0-8.268-2.943-9.543-7a9.97 9.97 0 011.563-3.029m5.858.908a3 3 0 114.243 4.243M9.878 9.878l4.242 4.242M9.88 9.88l-3.29-3.29m7.532 7.532l3.29 3.29M3 3l3.59 3.59m0 0A9.953 9.953 0 0112 5c4.478 0 8.268 2.943 9.543 7a10.025 10.025 0 01-4.132 5.411m0 0L21 21" /></svg>
+                  {{ vis.experience.sectionLabel ? 'Visible' : 'Hidden' }}
+                </button>
+              </div>
               <input
                 id="sectionLabel"
                 v-model="experienceData.sectionLabel"
@@ -55,9 +61,14 @@
             </div>
 
             <div>
-              <label for="mainHeading" class="block text-sm font-medium text-[#1a1b1c] mb-2">
-                Main Heading
-              </label>
+              <div class="flex items-center justify-between mb-2">
+                <label for="mainHeading" class="text-sm font-medium text-[#1a1b1c]">Main Heading</label>
+                <button type="button" @click="toggleVis('experience', 'mainHeading')" class="inline-flex items-center gap-1.5 px-2 py-1 rounded-md text-xs font-medium transition-all" :class="vis.experience.mainHeading ? 'text-[var(--admin-primary)] bg-[var(--admin-primary)]/10' : 'text-[#6d7175] bg-[#f6f6f7]'" :title="vis.experience.mainHeading ? 'Visible on public site' : 'Hidden from public site'">
+                  <svg v-if="vis.experience.mainHeading" class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" /><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.477 0 8.268 2.943 9.542 7-1.274 4.057-5.065 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" /></svg>
+                  <svg v-else class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13.875 18.825A10.05 10.05 0 0112 19c-4.478 0-8.268-2.943-9.543-7a9.97 9.97 0 011.563-3.029m5.858.908a3 3 0 114.243 4.243M9.878 9.878l4.242 4.242M9.88 9.88l-3.29-3.29m7.532 7.532l3.29 3.29M3 3l3.59 3.59m0 0A9.953 9.953 0 0112 5c4.478 0 8.268 2.943 9.543 7a10.025 10.025 0 01-4.132 5.411m0 0L21 21" /></svg>
+                  {{ vis.experience.mainHeading ? 'Visible' : 'Hidden' }}
+                </button>
+              </div>
               <input
                 id="mainHeading"
                 v-model="experienceData.mainHeading"
@@ -68,9 +79,14 @@
             </div>
 
             <div>
-              <label for="description" class="block text-sm font-medium text-[#1a1b1c] mb-2">
-                Description
-              </label>
+              <div class="flex items-center justify-between mb-2">
+                <label for="description" class="text-sm font-medium text-[#1a1b1c]">Description</label>
+                <button type="button" @click="toggleVis('experience', 'timeline')" class="inline-flex items-center gap-1.5 px-2 py-1 rounded-md text-xs font-medium transition-all" :class="vis.experience.timeline ? 'text-[var(--admin-primary)] bg-[var(--admin-primary)]/10' : 'text-[#6d7175] bg-[#f6f6f7]'" :title="vis.experience.timeline ? 'Timeline visible on public site' : 'Timeline hidden from public site'">
+                  <svg v-if="vis.experience.timeline" class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" /><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.477 0 8.268 2.943 9.542 7-1.274 4.057-5.065 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" /></svg>
+                  <svg v-else class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13.875 18.825A10.05 10.05 0 0112 19c-4.478 0-8.268-2.943-9.543-7a9.97 9.97 0 011.563-3.029m5.858.908a3 3 0 114.243 4.243M9.878 9.878l4.242 4.242M9.88 9.88l-3.29-3.29m7.532 7.532l3.29 3.29M3 3l3.59 3.59m0 0A9.953 9.953 0 0112 5c4.478 0 8.268 2.943 9.543 7a10.025 10.025 0 01-4.132 5.411m0 0L21 21" /></svg>
+                  {{ vis.experience.timeline ? 'Visible' : 'Hidden' }}
+                </button>
+              </div>
               <textarea
                 id="description"
                 v-model="experienceData.description"
@@ -213,7 +229,7 @@
       </div>
 
       <!-- Save Button (Only for Header) -->
-      <div v-if="activeTab === 'header'" class="mt-8 pt-6 border-t border-[#c9cccf] flex items-center justify-end gap-3">
+      <div v-if="activeTab === 'header'" class="mt-8 pt-6 border-t border-[#e3e5e7] flex items-center justify-end gap-3">
         <button
           type="button"
           @click="resetData"
@@ -375,8 +391,11 @@
 <script setup>
 import { ref, onMounted, inject, computed, watch } from 'vue'
 import { supabase, isSupabaseConfigured } from '../../supabase'
+import { useVisibility } from '../../composables/useVisibility'
+import Banner from './ui/Banner.vue'
 
 const addToast = inject('addToast')
+const { vis, toggle: toggleVis } = useVisibility()
 const experienceId = ref(null)
 const activeTab = ref('header')
 

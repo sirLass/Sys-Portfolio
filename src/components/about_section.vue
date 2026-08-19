@@ -45,14 +45,16 @@
 
       <!-- Loaded Data -->
       <div v-else>
-        <div class="text-center mb-16">
+        <!-- Heading: fade in -->
+        <div ref="headingRef" class="text-center mb-16 opacity-0 translate-y-8 transition-all duration-700 ease-out" :class="{ 'opacity-100 translate-y-0': headingVisible }">
           <p class="text-primary-600 font-semibold text-lg mb-4">{{ aboutData.sectionLabel }}</p>
           <h2 class="text-4xl lg:text-5xl font-bold text-gray-900 mb-6">{{ aboutData.mainHeading }}</h2>
           <div class="w-24 h-1 bg-primary-600 mx-auto rounded-full"></div>
         </div>
 
         <div class="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
-          <div class="order-2 lg:order-1 flex justify-center">
+          <!-- Image: slide from left -->
+          <div ref="imageRef" class="order-2 lg:order-1 flex justify-center opacity-0 -translate-x-16 transition-all duration-800 ease-out" :class="{ 'opacity-100 translate-x-0': imageVisible }">
             <div class="relative">
               <div class="w-80 h-80 lg:w-96 lg:h-96 bg-gradient-to-br from-primary-100 to-blue-100 rounded-3xl shadow-2xl flex items-center justify-center">
                 <img :src="aboutData.image || '/me.png'" :alt="aboutData.name || 'Your Photo'" class="w-full h-full object-cover transform translate-y-2" />
@@ -62,17 +64,16 @@
             </div>
           </div>
 
-          <div class="order-1 lg:order-2 text-left">
-            <h3 class="text-3xl font-bold text-gray-900 mb-6">{{ aboutData.subheading }}</h3>
-            <div class="space-y-6 text-lg text-gray-700 leading-relaxed max-w-xl">
-              <p>{{ aboutData.paragraph1 }}</p>
-              <p>{{ aboutData.paragraph2 }}</p>
+          <!-- Text + button: slide from right -->
+          <div ref="contentRef" class="order-1 lg:order-2 text-left opacity-0 translate-x-16 transition-all duration-800 ease-out delay-200" :class="{ 'opacity-100 translate-x-0': contentVisible }">
+            <h3 v-if="!isHidden('about', 'mainHeading')" class="text-3xl font-bold text-gray-900 mb-6">{{ aboutData.subheading }}</h3>
+            <div v-if="!isHidden('about', 'paragraph1') || !isHidden('about', 'paragraph2')" class="space-y-6 text-lg text-gray-700 leading-relaxed max-w-xl">
+              <p v-if="!isHidden('about', 'paragraph1')">{{ aboutData.paragraph1 }}</p>
+              <p v-if="!isHidden('about', 'paragraph2')">{{ aboutData.paragraph2 }}</p>
             </div>
 
-
-
             <button
-              v-if="aboutData.cvLink"
+              v-if="aboutData.cvLink && !isHidden('about', 'cvButton')"
               type="button"
               class="inline-flex items-center bg-primary-600 text-white px-6 py-3 rounded-lg hover:bg-primary-700 transition-all duration-300 shadow-lg hover:shadow-xl transform hover:-translate-y-1 group cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none mt-8"
               :disabled="cvDownloading"
@@ -92,13 +93,38 @@
 </template>
 
 <script setup>
-import { ref, onMounted } from 'vue'
+import { ref, onMounted, onBeforeUnmount } from 'vue'
 import { supabase } from '../supabase'
+import { useVisibility } from '../composables/useVisibility'
+
+const { isHidden } = useVisibility()
 
 const aboutData = ref(null)
 const isLoading = ref(true)
 const hasError = ref(false)
 const cvDownloading = ref(false)
+
+// Scroll animation refs
+const headingRef = ref(null)
+const imageRef = ref(null)
+const contentRef = ref(null)
+const headingVisible = ref(false)
+const imageVisible = ref(false)
+const contentVisible = ref(false)
+let headingObserver = null
+let imageObserver = null
+let contentObserver = null
+
+function createObserver(targetRef, visibleRef) {
+  return new IntersectionObserver(
+    ([entry]) => {
+      if (entry.isIntersecting) {
+        visibleRef.value = true
+      }
+    },
+    { threshold: 0.15 }
+  )
+}
 
 function dataUrlToBlob(dataUrl) {
   const comma = dataUrl.indexOf(',')
@@ -229,5 +255,26 @@ onMounted(async () => {
   }
 
   isLoading.value = false
+
+  // Set up scroll-triggered animations
+  await new Promise(r => setTimeout(r, 50)) // wait for DOM render
+  if (headingRef.value) {
+    headingObserver = createObserver(headingRef, headingVisible)
+    headingObserver.observe(headingRef.value)
+  }
+  if (imageRef.value) {
+    imageObserver = createObserver(imageRef, imageVisible)
+    imageObserver.observe(imageRef.value)
+  }
+  if (contentRef.value) {
+    contentObserver = createObserver(contentRef, contentVisible)
+    contentObserver.observe(contentRef.value)
+  }
+})
+
+onBeforeUnmount(() => {
+  headingObserver?.disconnect()
+  imageObserver?.disconnect()
+  contentObserver?.disconnect()
 })
 </script>

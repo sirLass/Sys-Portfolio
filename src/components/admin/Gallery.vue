@@ -1,33 +1,21 @@
 <template>
   <div class="p-6">
-    <!-- Success Message -->
-    <div v-if="showSuccess" class="mb-6 flex items-center gap-3 p-4 bg-[var(--admin-primary-light)] border border-[var(--admin-primary)] rounded-lg">
-      <svg class="w-5 h-5 text-[var(--admin-primary)]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
-      </svg>
-      <p class="text-sm font-medium text-[var(--admin-secondary)]">Gallery changes saved successfully!</p>
-    </div>
+    <!-- Banners -->
+    <Banner :show="showSuccess" type="success" message="Gallery changes saved successfully!" />
+    <Banner v-if="!isSupabaseConfigured()" :show="true" type="warning" message="Database not configured. Data will be saved locally only." />
 
-    <!-- Database Warning -->
-    <div v-if="!isSupabaseConfigured()" class="mb-6 flex items-center gap-3 p-4 bg-[#fff3cd] border border-[#ffc107] rounded-lg">
-      <svg class="w-5 h-5 text-[#856404]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
-      </svg>
-      <p class="text-sm font-medium text-[#856404]">Database not configured. Data will be saved locally only.</p>
-    </div>
-
-    <!-- Tabs for visual structure -->
-    <div class="border-b border-[#c9cccf] mb-6">
-      <nav class="flex space-x-8" aria-label="Tabs">
+    <!-- Tabs -->
+    <div class="mb-6 border-b border-[#c9cccf]">
+      <nav class="flex gap-1">
         <button
           v-for="tab in tabs"
           :key="tab.name"
           @click="activeTab = tab.name"
           :class="[
-            'py-2 px-1 border-b-2 font-medium text-sm transition-colors',
+            'px-4 py-3 text-sm font-medium border-b-2 transition-colors',
             activeTab === tab.name
               ? 'border-[var(--admin-primary)] text-[var(--admin-primary)]'
-              : 'border-transparent text-[#6d7175] hover:text-[#1a1b1c] hover:border-[#b5babf]'
+              : 'border-transparent text-[#6d7175] hover:text-[#1a1b1c]'
           ]"
         >
           {{ tab.label }}
@@ -38,9 +26,27 @@
     <form @submit.prevent="handleSave">
       <!-- General Settings Tab -->
       <div v-if="activeTab === 'general'" class="space-y-6">
+        <div class="bg-[#f6f6f7]/50 p-6 rounded-xl border border-[#e3e5e7]">
+        <div class="flex items-center justify-between mb-4">
+          <h4 class="text-sm font-semibold text-[#1a1b1c]">Gallery Visibility</h4>
+          <div class="flex items-center gap-2">
+            <button type="button" @click="toggleVis('gallery', 'gallery')" class="inline-flex items-center gap-1.5 px-2 py-1 rounded-md text-xs font-medium transition-all" :class="vis.gallery.gallery ? 'text-[var(--admin-primary)] bg-[var(--admin-primary)]/10' : 'text-[#6d7175] bg-[#f6f6f7]'" :title="vis.gallery.gallery ? 'Visible on public site' : 'Hidden from public site'">
+              <svg v-if="vis.gallery.gallery" class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" /><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.477 0 8.268 2.943 9.542 7-1.274 4.057-5.065 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" /></svg>
+              <svg v-else class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13.875 18.825A10.05 10.05 0 0112 19c-4.478 0-8.268-2.943-9.543-7a9.97 9.97 0 011.563-3.029m5.858.908a3 3 0 114.243 4.243M9.878 9.878l4.242 4.242M9.88 9.88l-3.29-3.29m7.532 7.532l3.29 3.29M3 3l3.59 3.59m0 0A9.953 9.953 0 0112 5c4.478 0 8.268 2.943 9.543 7a10.025 10.025 0 01-4.132 5.411m0 0L21 21" /></svg>
+              {{ vis.gallery.gallery ? 'Visible' : 'Hidden' }}
+            </button>
+          </div>
+        </div>
         <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
           <div>
-            <label for="sectionLabel" class="block text-sm font-medium text-[#1a1b1c] mb-2">Section Label</label>
+            <div class="flex items-center justify-between mb-2">
+              <label for="sectionLabel" class="text-sm font-medium text-[#1a1b1c]">Section Label</label>
+              <button type="button" @click="toggleVis('gallery', 'sectionLabel')" class="inline-flex items-center gap-1.5 px-2 py-1 rounded-md text-xs font-medium transition-all" :class="vis.gallery.sectionLabel ? 'text-[var(--admin-primary)] bg-[var(--admin-primary)]/10' : 'text-[#6d7175] bg-[#f6f6f7]'" :title="vis.gallery.sectionLabel ? 'Visible on public site' : 'Hidden from public site'">
+                <svg v-if="vis.gallery.sectionLabel" class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" /><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.477 0 8.268 2.943 9.542 7-1.274 4.057-5.065 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" /></svg>
+                <svg v-else class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13.875 18.825A10.05 10.05 0 0112 19c-4.478 0-8.268-2.943-9.543-7a9.97 9.97 0 011.563-3.029m5.858.908a3 3 0 114.243 4.243M9.878 9.878l4.242 4.242M9.88 9.88l-3.29-3.29m7.532 7.532l3.29 3.29M3 3l3.59 3.59m0 0A9.953 9.953 0 0112 5c4.478 0 8.268 2.943 9.543 7a10.025 10.025 0 01-4.132 5.411m0 0L21 21" /></svg>
+                {{ vis.gallery.sectionLabel ? 'Visible' : 'Hidden' }}
+              </button>
+            </div>
             <input
               id="sectionLabel"
               v-model="galleryData.sectionLabel"
@@ -50,7 +56,14 @@
             />
           </div>
           <div>
-            <label for="mainHeading" class="block text-sm font-medium text-[#1a1b1c] mb-2">Main Heading</label>
+            <div class="flex items-center justify-between mb-2">
+              <label for="mainHeading" class="text-sm font-medium text-[#1a1b1c]">Main Heading</label>
+              <button type="button" @click="toggleVis('gallery', 'mainHeading')" class="inline-flex items-center gap-1.5 px-2 py-1 rounded-md text-xs font-medium transition-all" :class="vis.gallery.mainHeading ? 'text-[var(--admin-primary)] bg-[var(--admin-primary)]/10' : 'text-[#6d7175] bg-[#f6f6f7]'" :title="vis.gallery.mainHeading ? 'Visible on public site' : 'Hidden from public site'">
+                <svg v-if="vis.gallery.mainHeading" class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" /><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.477 0 8.268 2.943 9.542 7-1.274 4.057-5.065 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" /></svg>
+                <svg v-else class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13.875 18.825A10.05 10.05 0 0112 19c-4.478 0-8.268-2.943-9.543-7a9.97 9.97 0 011.563-3.029m5.858.908a3 3 0 114.243 4.243M9.878 9.878l4.242 4.242M9.88 9.88l-3.29-3.29m7.532 7.532l3.29 3.29M3 3l3.59 3.59m0 0A9.953 9.953 0 0112 5c4.478 0 8.268 2.943 9.543 7a10.025 10.025 0 01-4.132 5.411m0 0L21 21" /></svg>
+                {{ vis.gallery.mainHeading ? 'Visible' : 'Hidden' }}
+              </button>
+            </div>
             <input
               id="mainHeading"
               v-model="galleryData.mainHeading"
@@ -69,6 +82,7 @@
             class="w-full px-4 py-2.5 text-sm text-[#1a1b1c] bg-white border border-[#c9cccf] rounded-md focus:outline-none focus:border-[var(--admin-primary)] focus:ring-2 focus:ring-[var(--admin-primary)]/20 transition-all font-outfit resize-y"
             placeholder="Introduce the gallery content..."
           ></textarea>
+        </div>
         </div>
       </div>
 
@@ -341,8 +355,11 @@
 <script setup>
 import { ref, onMounted, inject } from 'vue'
 import { supabase, isSupabaseConfigured } from '../../supabase'
+import { useVisibility } from '../../composables/useVisibility'
+import Banner from './ui/Banner.vue'
 
 const addToast = inject('addToast')
+const { vis, toggle: toggleVis } = useVisibility()
 
 const tabs = [
   { name: 'general', label: 'General Information' },

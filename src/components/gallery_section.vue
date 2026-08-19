@@ -18,14 +18,14 @@
       <!-- Loaded Gallery -->
       <div v-else>
         <!-- Section Header -->
-        <div class="text-center mb-16 max-w-3xl mx-auto">
-          <span class="text-primary-600 font-semibold text-sm uppercase tracking-[0.2em] block mb-4">
+        <div v-if="!isHidden('gallery', 'sectionLabel') || !isHidden('gallery', 'mainHeading')" class="text-center mb-16 max-w-3xl mx-auto">
+          <span v-if="!isHidden('gallery', 'sectionLabel')" class="text-primary-600 font-semibold text-sm uppercase tracking-[0.2em] block mb-4">
             {{ galleryData.sectionLabel }}
           </span>
-          <h2 class="text-4xl lg:text-5xl font-black text-gray-900 mb-6 font-outfit">
+          <h2 v-if="!isHidden('gallery', 'mainHeading')" class="text-4xl lg:text-5xl font-black text-gray-900 mb-6 font-outfit">
             {{ galleryData.mainHeading }}
           </h2>
-          <p class="text-lg text-gray-600 leading-relaxed">
+          <p v-if="!isHidden('gallery', 'gallery')" class="text-lg text-gray-600 leading-relaxed">
             {{ galleryData.description }}
           </p>
           
@@ -201,7 +201,9 @@
 <script setup>
 import { ref, computed, onMounted, onUnmounted } from 'vue'
 import { supabase } from '../supabase'
+import { useVisibility } from '../composables/useVisibility'
 
+const { isHidden } = useVisibility()
 const galleryData = ref(null)
 const isLoading = ref(true)
 const galleryScrollRef = ref(null)

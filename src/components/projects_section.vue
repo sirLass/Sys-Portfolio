@@ -63,11 +63,11 @@
             <!-- Loaded Data -->
             <div v-else>
                 <!-- Section Header -->
-                <div class="flex flex-col md:flex-row md:items-end justify-between gap-8 mb-16">
+                <div v-if="!isHidden('projects', 'sectionLabel') || !isHidden('projects', 'mainHeading') || !isHidden('projects', 'description')" class="flex flex-col md:flex-row md:items-end justify-between gap-8 mb-16">
                     <div class="text-left max-w-2xl">
-                        <p class="text-primary-600 font-semibold text-lg mb-4">{{ projectsData.sectionLabel }}</p>
-                        <h2 class="text-4xl lg:text-5xl font-bold text-gray-900 mb-6">{{ projectsData.mainHeading }}</h2>
-                        <p class="text-xl text-gray-600 leading-relaxed">
+                        <p v-if="!isHidden('projects', 'sectionLabel')" class="text-primary-600 font-semibold text-lg mb-4">{{ projectsData.sectionLabel }}</p>
+                        <h2 v-if="!isHidden('projects', 'mainHeading')" class="text-4xl lg:text-5xl font-bold text-gray-900 mb-6">{{ projectsData.mainHeading }}</h2>
+                        <p v-if="!isHidden('projects', 'description')" class="text-xl text-gray-600 leading-relaxed">
                             {{ projectsData.description }}
                         </p>
                     </div>
@@ -448,6 +448,9 @@
 <script setup>
 import { ref, onMounted, onUnmounted, computed, nextTick } from 'vue'
 import { supabase } from '../supabase'
+import { useVisibility } from '../composables/useVisibility'
+
+const { isHidden } = useVisibility()
 
 const isAutoSlide = ref(false)
 const projectsScrollRef = ref(null)

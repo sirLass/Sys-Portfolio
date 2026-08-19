@@ -125,6 +125,11 @@
             </div>
           </div>
           <div class="flex items-center gap-4">
+            <button type="button" @click.stop="toggleVis('skills', 'designSkills')" class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-medium transition-all" :class="vis.skills.designSkills ? 'text-[var(--admin-primary)] bg-[var(--admin-primary-light)]' : 'text-gray-500 bg-gray-100'" :title="vis.skills.designSkills ? 'Visible on public site' : 'Hidden from public site'">
+              <svg v-if="vis.skills.designSkills" class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" /><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.477 0 8.268 2.943 9.542 7-1.274 4.057-5.065 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" /></svg>
+              <svg v-else class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13.875 18.825A10.05 10.05 0 0112 19c-4.478 0-8.268-2.943-9.543-7a9.97 9.97 0 011.563-3.029m5.858.908a3 3 0 114.243 4.243M9.878 9.878l4.242 4.242M9.88 9.88l-3.29-3.29m7.532 7.532l3.29 3.29M3 3l3.59 3.59m0 0A9.953 9.953 0 0112 5c4.478 0 8.268 2.943 9.543 7a10.025 10.025 0 01-4.132 5.411m0 0L21 21" /></svg>
+              {{ vis.skills.designSkills ? 'Visible' : 'Hidden' }}
+            </button>
             <button 
               @click.stop="addSkill('design')"
               class="inline-flex items-center gap-2 px-4 py-2 text-sm font-medium text-[var(--admin-primary)] bg-[var(--admin-primary-light)] hover:opacity-80 rounded-lg transition-colors"
@@ -231,6 +236,11 @@
             </div>
           </div>
           <div class="flex items-center gap-4">
+            <button type="button" @click.stop="toggleVis('skills', 'developmentSkills')" class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-medium transition-all" :class="vis.skills.developmentSkills ? 'text-[var(--admin-primary)] bg-[var(--admin-primary-light)]' : 'text-gray-500 bg-gray-100'" :title="vis.skills.developmentSkills ? 'Visible on public site' : 'Hidden from public site'">
+              <svg v-if="vis.skills.developmentSkills" class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" /><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.477 0 8.268 2.943 9.542 7-1.274 4.057-5.065 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" /></svg>
+              <svg v-else class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13.875 18.825A10.05 10.05 0 0112 19c-4.478 0-8.268-2.943-9.543-7a9.97 9.97 0 011.563-3.029m5.858.908a3 3 0 114.243 4.243M9.878 9.878l4.242 4.242M9.88 9.88l-3.29-3.29m7.532 7.532l3.29 3.29M3 3l3.59 3.59m0 0A9.953 9.953 0 0112 5c4.478 0 8.268 2.943 9.543 7a10.025 10.025 0 01-4.132 5.411m0 0L21 21" /></svg>
+              {{ vis.skills.developmentSkills ? 'Visible' : 'Hidden' }}
+            </button>
             <button 
               @click.stop="addSkill('development')"
               class="inline-flex items-center gap-2 px-4 py-2 text-sm font-medium text-[var(--admin-primary)] bg-[var(--admin-primary-light)] hover:opacity-80 rounded-lg transition-colors"
@@ -337,6 +347,11 @@
             </div>
           </div>
           <div class="flex items-center gap-2">
+            <button type="button" @click.stop="toggleVis('skills', 'tools')" class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-medium transition-all" :class="vis.skills.tools ? 'text-[var(--admin-primary)] bg-[var(--admin-primary-light)]' : 'text-gray-500 bg-gray-100'" :title="vis.skills.tools ? 'Visible on public site' : 'Hidden from public site'">
+              <svg v-if="vis.skills.tools" class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" /><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.477 0 8.268 2.943 9.542 7-1.274 4.057-5.065 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" /></svg>
+              <svg v-else class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13.875 18.825A10.05 10.05 0 0112 19c-4.478 0-8.268-2.943-9.543-7a9.97 9.97 0 011.563-3.029m5.858.908a3 3 0 114.243 4.243M9.878 9.878l4.242 4.242M9.88 9.88l-3.29-3.29m7.532 7.532l3.29 3.29M3 3l3.59 3.59m0 0A9.953 9.953 0 0112 5c4.478 0 8.268 2.943 9.543 7a10.025 10.025 0 01-4.132 5.411m0 0L21 21" /></svg>
+              {{ vis.skills.tools ? 'Visible' : 'Hidden' }}
+            </button>
             <button 
               @click.stop="isAddingTool = true"
               class="inline-flex items-center gap-2 px-4 py-2 text-sm font-medium text-[var(--admin-primary)] bg-[var(--admin-primary-light)] hover:opacity-80 rounded-lg transition-colors"
@@ -594,8 +609,10 @@
 <script setup>
 import { ref, onMounted, inject, computed } from 'vue'
 import { supabase, isSupabaseConfigured } from '../../supabase'
+import { useVisibility } from '../../composables/useVisibility'
 
 const addToast = inject('addToast')
+const { vis, toggle: toggleVis } = useVisibility()
 const saving = ref(false)
 const skillsId = ref(null)
 

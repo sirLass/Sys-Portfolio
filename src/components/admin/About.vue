@@ -1,33 +1,21 @@
 <template>
   <div class="p-6">
-    <!-- Success Message -->
-    <div v-if="showSuccess" class="mb-6 flex items-center gap-3 p-4 bg-[var(--admin-primary-light)] border border-[var(--admin-primary)] rounded-lg">
-      <svg class="w-5 h-5 text-[var(--admin-primary)]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
-      </svg>
-      <p class="text-sm font-medium text-[var(--admin-secondary)]">Changes saved successfully!</p>
-    </div>
-
-    <!-- Database Warning -->
-    <div v-if="!isSupabaseConfigured()" class="mb-6 flex items-center gap-3 p-4 bg-[#fff3cd] border border-[#ffc107] rounded-lg">
-      <svg class="w-5 h-5 text-[#856404]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
-      </svg>
-      <p class="text-sm font-medium text-[#856404]">Database not configured. Data will be saved locally only.</p>
-    </div>
+    <!-- Banners -->
+    <Banner :show="showSuccess" type="success" message="Changes saved successfully!" />
+    <Banner v-if="!isSupabaseConfigured()" :show="true" type="warning" message="Database not configured. Data will be saved locally only." />
 
     <!-- Tabs -->
-    <div class="border-b border-[#c9cccf] mb-6">
-      <nav class="flex space-x-8" aria-label="Tabs">
+    <div class="mb-6 border-b border-[#c9cccf]">
+      <nav class="flex gap-1">
         <button
           v-for="tab in tabs"
           :key="tab.name"
           @click="activeTab = tab.name"
           :class="[
-            'py-2 px-1 border-b-2 font-medium text-sm transition-colors',
+            'px-4 py-3 text-sm font-medium border-b-2 transition-colors',
             activeTab === tab.name
               ? 'border-[var(--admin-primary)] text-[var(--admin-primary)]'
-              : 'border-transparent text-[#6d7175] hover:text-[#1a1b1c] hover:border-[#b5babf]'
+              : 'border-transparent text-[#6d7175] hover:text-[#1a1b1c]'
           ]"
         >
           {{ tab.label }}
@@ -38,12 +26,24 @@
     <form @submit.prevent="handleSave">
       <!-- About Me Tab -->
       <div v-if="activeTab === 'about'" class="space-y-6">
+        <div class="bg-[#f6f6f7]/50 p-6 rounded-xl border border-[#e3e5e7]">
+          <div class="flex items-center justify-between mb-4">
+            <h4 class="text-sm font-semibold text-[#1a1b1c]">Content Visibility</h4>
+            <p class="text-xs text-[#6d7175]">Toggle visibility on public site</p>
+          </div>
         <!-- Description Paragraphs -->
         <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
           <div>
-            <label for="paragraph1" class="block text-sm font-medium text-[#1a1b1c] mb-2">
-              First Paragraph
-            </label>
+            <div class="flex items-center justify-between mb-2">
+              <label for="paragraph1" class="text-sm font-medium text-[#1a1b1c]">
+                First Paragraph
+              </label>
+              <button type="button" @click="toggleVis('about', 'paragraph1')" class="inline-flex items-center gap-1.5 px-2 py-1 rounded-md text-xs font-medium transition-all" :class="vis.about.paragraph1 ? 'text-[var(--admin-primary)] bg-[var(--admin-primary)]/10' : 'text-[#6d7175] bg-[#f6f6f7]'" :title="vis.about.paragraph1 ? 'Visible on public site' : 'Hidden from public site'">
+                <svg v-if="vis.about.paragraph1" class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" /><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.477 0 8.268 2.943 9.542 7-1.274 4.057-5.065 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" /></svg>
+                <svg v-else class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13.875 18.825A10.05 10.05 0 0112 19c-4.478 0-8.268-2.943-9.543-7a9.97 9.97 0 011.563-3.029m5.858.908a3 3 0 114.243 4.243M9.878 9.878l4.242 4.242M9.88 9.88l-3.29-3.29m7.532 7.532l3.29 3.29M3 3l3.59 3.59m0 0A9.953 9.953 0 0112 5c4.478 0 8.268 2.943 9.543 7a10.025 10.025 0 01-4.132 5.411m0 0L21 21" /></svg>
+                {{ vis.about.paragraph1 ? 'Visible' : 'Hidden' }}
+              </button>
+            </div>
             <textarea
               id="paragraph1"
               v-model="aboutData.paragraph1"
@@ -53,9 +53,16 @@
             ></textarea>
           </div>
           <div>
-            <label for="paragraph2" class="block text-sm font-medium text-[#1a1b1c] mb-2">
-              Second Paragraph
-            </label>
+            <div class="flex items-center justify-between mb-2">
+              <label for="paragraph2" class="text-sm font-medium text-[#1a1b1c]">
+                Second Paragraph
+              </label>
+              <button type="button" @click="toggleVis('about', 'paragraph2')" class="inline-flex items-center gap-1.5 px-2 py-1 rounded-md text-xs font-medium transition-all" :class="vis.about.paragraph2 ? 'text-[var(--admin-primary)] bg-[var(--admin-primary)]/10' : 'text-[#6d7175] bg-[#f6f6f7]'" :title="vis.about.paragraph2 ? 'Visible on public site' : 'Hidden from public site'">
+                <svg v-if="vis.about.paragraph2" class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" /><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.477 0 8.268 2.943 9.542 7-1.274 4.057-5.065 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" /></svg>
+                <svg v-else class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13.875 18.825A10.05 10.05 0 0112 19c-4.478 0-8.268-2.943-9.543-7a9.97 9.97 0 011.563-3.029m5.858.908a3 3 0 114.243 4.243M9.878 9.878l4.242 4.242M9.88 9.88l-3.29-3.29m7.532 7.532l3.29 3.29M3 3l3.59 3.59m0 0A9.953 9.953 0 0112 5c4.478 0 8.268 2.943 9.543 7a10.025 10.025 0 01-4.132 5.411m0 0L21 21" /></svg>
+                {{ vis.about.paragraph2 ? 'Visible' : 'Hidden' }}
+              </button>
+            </div>
             <textarea
               id="paragraph2"
               v-model="aboutData.paragraph2"
@@ -65,15 +72,26 @@
             ></textarea>
           </div>
         </div>
+        </div>
       </div>
 
       <!-- Personal Information Tab -->
       <div v-if="activeTab === 'personal'" class="space-y-6">
+        <div class="bg-[#f6f6f7]/50 p-6 rounded-xl border border-[#e3e5e7]">
+          <div class="flex items-center justify-between mb-4">
+            <h4 class="text-sm font-semibold text-[#1a1b1c]">Personal Information Visibility</h4>
+            <p class="text-xs text-[#6d7175]">Toggle visibility on public site</p>
+          </div>
         <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
           <div>
-            <label for="name" class="block text-sm font-medium text-[#1a1b1c] mb-2">
-              Name
-            </label>
+            <div class="flex items-center justify-between mb-2">
+              <label for="name" class="text-sm font-medium text-[#1a1b1c]">Name</label>
+              <button type="button" @click="toggleVis('about', 'name')" class="inline-flex items-center gap-1.5 px-2 py-1 rounded-md text-xs font-medium transition-all" :class="vis.about.name ? 'text-[var(--admin-primary)] bg-[var(--admin-primary)]/10' : 'text-[#6d7175] bg-[#f6f6f7]'" :title="vis.about.name ? 'Visible on public site' : 'Hidden from public site'">
+                <svg v-if="vis.about.name" class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" /><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.477 0 8.268 2.943 9.542 7-1.274 4.057-5.065 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" /></svg>
+                <svg v-else class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13.875 18.825A10.05 10.05 0 0112 19c-4.478 0-8.268-2.943-9.543-7a9.97 9.97 0 011.563-3.029m5.858.908a3 3 0 114.243 4.243M9.878 9.878l4.242 4.242M9.88 9.88l-3.29-3.29m7.532 7.532l3.29 3.29M3 3l3.59 3.59m0 0A9.953 9.953 0 0112 5c4.478 0 8.268 2.943 9.543 7a10.025 10.025 0 01-4.132 5.411m0 0L21 21" /></svg>
+                {{ vis.about.name ? 'Visible' : 'Hidden' }}
+              </button>
+            </div>
             <input
               id="name"
               v-model="aboutData.name"
@@ -83,9 +101,14 @@
             />
           </div>
           <div>
-            <label for="email" class="block text-sm font-medium text-[#1a1b1c] mb-2">
-              Email
-            </label>
+            <div class="flex items-center justify-between mb-2">
+              <label for="email" class="text-sm font-medium text-[#1a1b1c]">Email</label>
+              <button type="button" @click="toggleVis('about', 'email')" class="inline-flex items-center gap-1.5 px-2 py-1 rounded-md text-xs font-medium transition-all" :class="vis.about.email ? 'text-[var(--admin-primary)] bg-[var(--admin-primary)]/10' : 'text-[#6d7175] bg-[#f6f6f7]'" :title="vis.about.email ? 'Visible on public site' : 'Hidden from public site'">
+                <svg v-if="vis.about.email" class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" /><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.477 0 8.268 2.943 9.542 7-1.274 4.057-5.065 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" /></svg>
+                <svg v-else class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13.875 18.825A10.05 10.05 0 0112 19c-4.478 0-8.268-2.943-9.543-7a9.97 9.97 0 011.563-3.029m5.858.908a3 3 0 114.243 4.243M9.878 9.878l4.242 4.242M9.88 9.88l-3.29-3.29m7.532 7.532l3.29 3.29M3 3l3.59 3.59m0 0A9.953 9.953 0 0112 5c4.478 0 8.268 2.943 9.543 7a10.025 10.025 0 01-4.132 5.411m0 0L21 21" /></svg>
+                {{ vis.about.email ? 'Visible' : 'Hidden' }}
+              </button>
+            </div>
             <input
               id="email"
               v-model="aboutData.email"
@@ -95,9 +118,14 @@
             />
           </div>
           <div>
-            <label for="location" class="block text-sm font-medium text-[#1a1b1c] mb-2">
-              Location
-            </label>
+            <div class="flex items-center justify-between mb-2">
+              <label for="location" class="text-sm font-medium text-[#1a1b1c]">Location</label>
+              <button type="button" @click="toggleVis('about', 'location')" class="inline-flex items-center gap-1.5 px-2 py-1 rounded-md text-xs font-medium transition-all" :class="vis.about.location ? 'text-[var(--admin-primary)] bg-[var(--admin-primary)]/10' : 'text-[#6d7175] bg-[#f6f6f7]'" :title="vis.about.location ? 'Visible on public site' : 'Hidden from public site'">
+                <svg v-if="vis.about.location" class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" /><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.477 0 8.268 2.943 9.542 7-1.274 4.057-5.065 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" /></svg>
+                <svg v-else class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13.875 18.825A10.05 10.05 0 0112 19c-4.478 0-8.268-2.943-9.543-7a9.97 9.97 0 011.563-3.029m5.858.908a3 3 0 114.243 4.243M9.878 9.878l4.242 4.242M9.88 9.88l-3.29-3.29m7.532 7.532l3.29 3.29M3 3l3.59 3.59m0 0A9.953 9.953 0 0112 5c4.478 0 8.268 2.943 9.543 7a10.025 10.025 0 01-4.132 5.411m0 0L21 21" /></svg>
+                {{ vis.about.location ? 'Visible' : 'Hidden' }}
+              </button>
+            </div>
             <input
               id="location"
               v-model="aboutData.location"
@@ -107,9 +135,14 @@
             />
           </div>
           <div>
-            <label for="status" class="block text-sm font-medium text-[#1a1b1c] mb-2">
-              Status
-            </label>
+            <div class="flex items-center justify-between mb-2">
+              <label for="status" class="text-sm font-medium text-[#1a1b1c]">Status</label>
+              <button type="button" @click="toggleVis('about', 'status')" class="inline-flex items-center gap-1.5 px-2 py-1 rounded-md text-xs font-medium transition-all" :class="vis.about.status ? 'text-[var(--admin-primary)] bg-[var(--admin-primary)]/10' : 'text-[#6d7175] bg-[#f6f6f7]'" :title="vis.about.status ? 'Visible on public site' : 'Hidden from public site'">
+                <svg v-if="vis.about.status" class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" /><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.477 0 8.268 2.943 9.542 7-1.274 4.057-5.065 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" /></svg>
+                <svg v-else class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13.875 18.825A10.05 10.05 0 0112 19c-4.478 0-8.268-2.943-9.543-7a9.97 9.97 0 011.563-3.029m5.858.908a3 3 0 114.243 4.243M9.878 9.878l4.242 4.242M9.88 9.88l-3.29-3.29m7.532 7.532l3.29 3.29M3 3l3.59 3.59m0 0A9.953 9.953 0 0112 5c4.478 0 8.268 2.943 9.543 7a10.025 10.025 0 01-4.132 5.411m0 0L21 21" /></svg>
+                {{ vis.about.status ? 'Visible' : 'Hidden' }}
+              </button>
+            </div>
             <select
               id="status"
               v-model="aboutData.status"
@@ -122,14 +155,15 @@
             </select>
           </div>
         </div>
+        </div>
       </div>
 
       <!-- Files Tab -->
-      <div v-if="activeTab === 'files'" class="space-y-8">
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+      <div v-if="activeTab === 'files'" class="space-y-6">
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
           <!-- Image Box -->
-          <div class="bg-white p-8 rounded-2xl border border-[#e3e5e7] shadow-sm flex flex-col items-center">
-            <h4 class="text-sm font-bold text-[#1a1b1c] mb-6 self-start">Profile Image</h4>
+          <div class="bg-white p-6 rounded-xl border border-[#e3e5e7] shadow-sm flex flex-col items-center">
+            <h4 class="text-sm font-bold text-[#1a1b1c] mb-4 self-start">Profile Image</h4>
             <div 
               class="relative group cursor-pointer w-48 h-48 rounded-2xl overflow-hidden border-2 border-[#c9cccf] bg-[#f6f6f7] transition-all hover:border-[var(--admin-primary)]"
               @click="triggerFileInput"
@@ -160,8 +194,8 @@
           </div>
 
           <!-- CV Box -->
-          <div class="bg-white p-8 rounded-2xl border border-[#e3e5e7] shadow-sm flex flex-col">
-            <h4 class="text-sm font-bold text-[#1a1b1c] mb-6">CV / Resume</h4>
+          <div class="bg-white p-6 rounded-xl border border-[#e3e5e7] shadow-sm flex flex-col">
+            <h4 class="text-sm font-bold text-[#1a1b1c] mb-4">CV / Resume</h4>
             <div 
               class="flex-1 border-2 border-dashed border-[#c9cccf] rounded-2xl flex flex-col items-center justify-center p-6 transition-all hover:border-[var(--admin-primary)] hover:bg-[var(--admin-primary)]/5 group cursor-pointer"
               @click="handleCvBoxClick"
@@ -242,7 +276,7 @@
       </div>
 
       <!-- Save Button -->
-      <div class="mt-8 pt-6 border-t border-[#c9cccf] flex items-center justify-end gap-3">
+      <div class="mt-8 pt-6 border-t border-[#e3e5e7] flex items-center justify-end gap-3">
         <button
           type="button"
           @click="resetData"
@@ -327,8 +361,11 @@ import { ref, onMounted, inject, nextTick } from 'vue'
 import { supabase, isSupabaseConfigured } from '../../supabase'
 import Cropper from 'cropperjs'
 import 'cropperjs/dist/cropper.css'
+import { useVisibility } from '../../composables/useVisibility'
+import Banner from './ui/Banner.vue'
 
 const addToast = inject('addToast')
+const { vis, toggle: toggleVis } = useVisibility()
 
 // Tabs
 const activeTab = ref('about')

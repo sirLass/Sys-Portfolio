@@ -1,8 +1,12 @@
 <template>
   <header
-    class="sticky top-0 z-50 bg-[#FAF9F6]/95 backdrop-blur-sm border-b border-gray-100 transition-all duration-300"
+    ref="headerRef"
+    :class="[
+      'sticky top-0 z-50 bg-[#FAF9F6]/95 backdrop-blur-sm border-b border-gray-100 transition-transform duration-300 ease-in-out',
+      isHidden ? '-translate-y-full' : 'translate-y-0'
+    ]"
   >
-    <div class="max-w-7xl mx-auto px-6 h-20 flex justify-between items-center relative">
+    <div class="max-w-7xl mx-auto px-6 h-20 grid grid-cols-[auto_1fr_auto] items-center relative">
       <div class="flex items-center">
         <div 
           @click="handleLogoClick"
@@ -22,49 +26,40 @@
         </div>
       </transition>
 
-      <nav class="hidden lg:flex items-center">
-        <!-- Single Expandable Contact Navigation -->
-        <div class="contact-expandable flex items-center gap-1 group relative">
-          <!-- Hidden nav items that appear on hover - positioned before Contact -->
-          <div class="flex items-center gap-1 overflow-hidden max-w-0 group-hover:max-w-[600px] transition-all duration-700 ease-[cubic-bezier(0.34,1.56,0.64,1)]">
-            <a @click.prevent="smoothScrollTo('#hero')" href="#hero" class="nav-item opacity-0 translate-x-6 scale-95 group-hover:opacity-100 group-hover:translate-x-0 group-hover:scale-100 transition-all duration-500 ease-[cubic-bezier(0.34,1.56,0.64,1)] delay-[0ms] px-3 py-2 text-sm font-medium text-gray-600 hover:text-primary-600 rounded-lg hover:bg-primary-50 whitespace-nowrap cursor-pointer">
-              Home
-            </a>
-            <a @click.prevent="smoothScrollTo('#About')" href="#About" class="nav-item opacity-0 translate-x-6 scale-95 group-hover:opacity-100 group-hover:translate-x-0 group-hover:scale-100 transition-all duration-500 ease-[cubic-bezier(0.34,1.56,0.64,1)] delay-[60ms] px-3 py-2 text-sm font-medium text-gray-600 hover:text-primary-600 rounded-lg hover:bg-primary-50 whitespace-nowrap cursor-pointer">
-              About
-            </a>
-            <a @click.prevent="smoothScrollTo('#Skills')" href="#Skills" class="nav-item opacity-0 translate-x-6 scale-95 group-hover:opacity-100 group-hover:translate-x-0 group-hover:scale-100 transition-all duration-500 ease-[cubic-bezier(0.34,1.56,0.64,1)] delay-[120ms] px-3 py-2 text-sm font-medium text-gray-600 hover:text-primary-600 rounded-lg hover:bg-primary-50 whitespace-nowrap cursor-pointer">
-              Skills
-            </a>
-            <a @click.prevent="smoothScrollTo('#Projects')" href="#Projects" class="nav-item opacity-0 translate-x-6 scale-95 group-hover:opacity-100 group-hover:translate-x-0 group-hover:scale-100 transition-all duration-500 ease-[cubic-bezier(0.34,1.56,0.64,1)] delay-[180ms] px-3 py-2 text-sm font-medium text-gray-600 hover:text-primary-600 rounded-lg hover:bg-primary-50 whitespace-nowrap cursor-pointer">
-              Projects
-            </a>
-            <a @click.prevent="smoothScrollTo('#Experience')" href="#Experience" class="nav-item opacity-0 translate-x-6 scale-95 group-hover:opacity-100 group-hover:translate-x-0 group-hover:scale-100 transition-all duration-500 ease-[cubic-bezier(0.34,1.56,0.64,1)] delay-[240ms] px-3 py-2 text-sm font-medium text-gray-600 hover:text-primary-600 rounded-lg hover:bg-primary-50 whitespace-nowrap cursor-pointer">
-              Experience
-            </a>
-            <a @click.prevent="smoothScrollTo('#Gallery')" href="#Gallery" class="nav-item opacity-0 translate-x-6 scale-95 group-hover:opacity-100 group-hover:translate-x-0 group-hover:scale-100 transition-all duration-500 ease-[cubic-bezier(0.34,1.56,0.64,1)] delay-[300ms] px-3 py-2 text-sm font-medium text-gray-600 hover:text-primary-600 rounded-lg hover:bg-primary-50 whitespace-nowrap cursor-pointer">
-              Gallery
-            </a>
-            <div class="w-px h-6 bg-gray-300 mx-1 transition-opacity duration-300 opacity-0 group-hover:opacity-100"></div>
-          </div>
-          
-          <!-- Chevron that changes direction with smooth spring animation -->
-          <span class="chevron-icon text-gray-400 group-hover:text-primary-600 transition-all duration-500 ease-[cubic-bezier(0.34,1.56,0.64,1)] mr-1">
-            <svg class="w-5 h-5 transform transition-transform duration-500 ease-[cubic-bezier(0.34,1.56,0.64,1)] group-hover:-scale-x-100 group-hover:translate-x-[-2px]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
-            </svg>
-          </span>
-          
-          <!-- Contact Button with subtle pulse on hover -->
-          <a 
-            @click.prevent="smoothScrollTo('#Contact')"
-            href="#Contact"
-            class="bg-primary-600 text-white px-5 py-2 rounded-full hover:bg-primary-700 hover:shadow-lg hover:shadow-primary-600/30 hover:scale-105 active:scale-95 transition-all duration-500 ease-[cubic-bezier(0.34,1.56,0.64,1)] text-sm font-medium whitespace-nowrap cursor-pointer"
-          >
-            Contact Me
+      <!-- Desktop Nav -->
+      <nav class="hidden lg:flex items-center justify-center">
+        <div class="flex items-center gap-1">
+          <a @click.prevent="smoothScrollTo('#hero')" href="#hero" class="px-3 py-2 text-sm font-medium text-gray-600 hover:text-primary-600 rounded-lg hover:bg-primary-50 whitespace-nowrap cursor-pointer">
+            Home
+          </a>
+          <a @click.prevent="smoothScrollTo('#About')" href="#About" class="px-3 py-2 text-sm font-medium text-gray-600 hover:text-primary-600 rounded-lg hover:bg-primary-50 whitespace-nowrap cursor-pointer">
+            About
+          </a>
+          <a @click.prevent="smoothScrollTo('#Skills')" href="#Skills" class="px-3 py-2 text-sm font-medium text-gray-600 hover:text-primary-600 rounded-lg hover:bg-primary-50 whitespace-nowrap cursor-pointer">
+            Skills
+          </a>
+          <a @click.prevent="smoothScrollTo('#Projects')" href="#Projects" class="px-3 py-2 text-sm font-medium text-gray-600 hover:text-primary-600 rounded-lg hover:bg-primary-50 whitespace-nowrap cursor-pointer">
+            Projects
+          </a>
+          <a @click.prevent="smoothScrollTo('#Experience')" href="#Experience" class="px-3 py-2 text-sm font-medium text-gray-600 hover:text-primary-600 rounded-lg hover:bg-primary-50 whitespace-nowrap cursor-pointer">
+            Experience
+          </a>
+          <a @click.prevent="smoothScrollTo('#Gallery')" href="#Gallery" class="px-3 py-2 text-sm font-medium text-gray-600 hover:text-primary-600 rounded-lg hover:bg-primary-50 whitespace-nowrap cursor-pointer">
+            Gallery
           </a>
         </div>
       </nav>
+
+     <!-- Contact Me (right-aligned) -->
+      <div class="hidden lg:block">
+        <a
+          @click.prevent="smoothScrollTo('#Contact')"
+          href="#Contact"
+          class="bg-primary-600 text-white px-5 py-2 rounded-full hover:bg-primary-700 hover:shadow-lg hover:shadow-primary-600/30 active:scale-95 transition-all duration-300 text-sm font-medium whitespace-nowrap cursor-pointer"
+        >
+          Contact Me
+        </a>
+      </div>
 
       <button
         id="mobile-menu-btn"
@@ -99,7 +94,11 @@ const router = useRouter()
 const clickCount = ref(0)
 const showMessage = ref(false)
 const currentMessage = ref('')
+const headerRef = ref(null)
+const isHidden = ref(false)
 let messageTimeout = null
+let lastScrollY = 0
+const SCROLL_THRESHOLD = 10
 
 const handleLogoClick = () => {
   clickCount.value++
@@ -137,14 +136,26 @@ const closeMobileMenu = () => {
 }
 
 const handleScroll = () => {
-  const header = document.querySelector('header')
-  if (!header) return
-  if (window.scrollY > 100) {
-    header.classList.add('shadow-lg')
-    header.classList.remove('shadow-sm')
-  } else {
-    header.classList.remove('shadow-lg')
-    header.classList.add('shadow-sm')
+  const currentScrollY = window.scrollY
+  const delta = currentScrollY - lastScrollY
+
+  // Always show navbar at the very top
+  if (currentScrollY < 80) {
+    isHidden.value = false
+    lastScrollY = currentScrollY
+    return
+  }
+
+  // Only toggle after crossing the threshold to avoid jitter
+  if (Math.abs(delta) > SCROLL_THRESHOLD) {
+    if (delta > 0) {
+      // Scrolling down → hide
+      isHidden.value = true
+    } else {
+      // Scrolling up → show
+      isHidden.value = false
+    }
+    lastScrollY = currentScrollY
   }
 }
 

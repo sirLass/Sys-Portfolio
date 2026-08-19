@@ -68,15 +68,15 @@
                     <!-- LEFT COLUMN: Intent & Context -->
                     <div class="lg:col-span-5 flex flex-col justify-between">
                         <div>
-                            <header class="mb-16">
-                                <div class="flex items-center gap-4 mb-6">
+                            <header v-if="!isHidden('contact', 'sectionLabel') || !isHidden('contact', 'info')" class="mb-16">
+                                <div v-if="!isHidden('contact', 'sectionLabel')" class="flex items-center gap-4 mb-6">
                                     <span class="w-12 h-[2px] bg-primary-500"></span>
                                     <h4 class="text-[12px] font-black text-primary-500 uppercase tracking-[0.5em]">{{ contactData.sectionLabel }}</h4>
                                 </div>
                                 <h2 class="text-5xl md:text-7xl font-black text-gray-900 leading-[1.05] tracking-tighter mb-8 italic uppercase">
                                     Let's <span class="text-primary-600">Connect</span>
                                 </h2>
-                                <p class="text-xl text-gray-500 font-medium leading-relaxed max-w-md">
+                                <p v-if="!isHidden('contact', 'info')" class="text-xl text-gray-500 font-medium leading-relaxed max-w-md">
                                     {{ contactData.description }}
                                 </p>
                             </header>
@@ -257,7 +257,9 @@
 <script setup>
 import { ref, onMounted } from 'vue'
 import { supabase } from '../supabase'
+import { useVisibility } from '../composables/useVisibility'
 
+const { isHidden } = useVisibility()
 const contactData = ref(null)
 const isLoading = ref(true)
 const hasError = ref(false)

@@ -2,10 +2,8 @@
 @tailwind components;
 @tailwind utilities;
 
-/* Smooth scrolling for the entire page */
-html {
-  scroll-behavior: smooth;
-}
+/* Removed global smooth scroll to prevent parallax-like slide effect on sections.
+   Navbar uses programmatic smoothScrollTo instead. */
 
 /* Shopify Admin Design System */
 :root {

@@ -6,7 +6,7 @@
     <div class="absolute top-0 left-0 w-full h-64 md:h-96 z-0" style="-webkit-mask-image: linear-gradient(to bottom, black 30%, transparent 100%); mask-image: linear-gradient(to bottom, black 30%, transparent 100%);">
       <div v-if="isLoading" class="w-full h-full bg-gray-200 animate-pulse"></div>
       <img v-else-if="heroData?.coverImage" :src="heroData.coverImage" @error="$event.target.style.display='none'" alt="Cover Image" class="w-full h-full object-cover opacity-40 mix-blend-overlay" />
-      <div class="absolute inset-0 bg-gradient-to-b from-transparent to-primary-50/80"></div>
+      <div class="absolute inset-0" :style="coverGradientStyle"></div>
     </div>
 
     <div class="absolute inset-0 opacity-30 mt-48 md:mt-72">
@@ -58,13 +58,13 @@
 
       <!-- Loaded Data -->
       <div v-else class="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
-        <div class="text-center lg:text-left">
+        <div class="text-center lg:text-left" :style="textStyle">
           <div class="mb-8">
-            <p class="text-primary-600 font-semibold text-lg mb-4 flex items-center justify-center lg:justify-start">
+            <p v-if="!isHidden('hero', 'greeting')" class="text-primary-600 font-semibold text-lg mb-4 flex items-center justify-center lg:justify-start">
               <span class="w-8 h-px bg-primary-600 mr-3"></span>
               {{ heroData.greeting }}
             </p>
-            <h1 class="text-5xl lg:text-7xl font-bold text-gray-900 mb-6 leading-tight">
+            <h1 v-if="!isHidden('hero', 'name')" class="text-5xl lg:text-7xl font-bold text-gray-900 mb-6 leading-tight">
               <template v-if="heroData.name.includes(' ')">
                 {{ heroData.name.split(' ')[0] }} <span class="gradient-text">{{ heroData.name.split(' ').slice(1).join(' ') }}</span>
               </template>
@@ -72,10 +72,10 @@
                 <span class="gradient-text">{{ heroData.name }}</span>
               </template>
             </h1>
-            <h2 class="text-2xl lg:text-3xl text-gray-600 mb-8 font-light">{{ heroData.title }}</h2>
+            <h2 v-if="!isHidden('hero', 'title')" class="text-2xl lg:text-3xl text-gray-600 mb-8 font-light">{{ heroData.title }}</h2>
           </div>
 
-          <p class="text-xl text-gray-700 mb-10 leading-relaxed max-w-2xl mx-auto lg:mx-0">
+          <p v-if="!isHidden('hero', 'description')" class="text-xl text-gray-700 mb-10 leading-relaxed max-w-2xl mx-auto lg:mx-0">
             {{ heroData.description }}
           </p>
 
@@ -130,7 +130,7 @@
           </div>
         </div>
 
-        <div class="flex justify-center lg:justify-end">
+        <div class="flex justify-center lg:justify-end" :style="imageStyle">
           <div class="relative">
             <div class="w-80 h-80 lg:w-96 lg:h-96 relative">
               <div class="absolute inset-0 bg-gradient-to-br from-primary-400 to-primary-600 rounded-full shadow-2xl"></div>
@@ -161,15 +161,59 @@
 </template>
 
 <script setup>
-import { ref, onMounted } from 'vue'
+import { ref, computed, onMounted, onUnmounted } from 'vue'
 import { supabase } from '../supabase'
 import heroDefaults from '../data/hero-defaults.json'
+import { useVisibility } from '../composables/useVisibility'
+
+const { isHidden } = useVisibility()
+
+const gradientPosition = ref(85)
+const gradientOpacity = ref(80)
+
+const coverGradientStyle = computed(() => {
+  const pos = gradientPosition.value
+  const opa = gradientOpacity.value / 100
+  return {
+    background: `linear-gradient(to bottom, transparent 0%, transparent ${pos}%, rgba(250, 249, 246, ${opa}) 100%)`
+  }
+})
 
 const isLoading = ref(true)
 const hasError = ref(false)
 const heroData = ref(null)
+const scrollProgress = ref(0)
+
+// Scroll-driven slide animation: text slides left, image slides right
+const handleHeroScroll = () => {
+  const vh = window.innerHeight
+  const scrollY = window.scrollY
+  // Progress goes from 0 (top) to 1 (scrolled past hero)
+  scrollProgress.value = Math.min(Math.max(scrollY / vh, 0), 1)
+}
+
+const textStyle = computed(() => {
+  const x = scrollProgress.value * -80 // slide up to 80px left
+  const opacity = 1 - scrollProgress.value * 0.6
+  return {
+    transform: `translateX(${x}px)`,
+    opacity,
+    transition: 'transform 0.1s ease-out, opacity 0.1s ease-out'
+  }
+})
+
+const imageStyle = computed(() => {
+  const x = scrollProgress.value * 80 // slide up to 80px right
+  const opacity = 1 - scrollProgress.value * 0.4
+  return {
+    transform: `translateX(${x}px)`,
+    opacity,
+    transition: 'transform 0.1s ease-out, opacity 0.1s ease-out'
+  }
+})
 
 onMounted(async () => {
+  window.addEventListener('scroll', handleHeroScroll, { passive: true })
   let loaded = false
   if (supabase) {
     try {
@@ -213,12 +257,25 @@ onMounted(async () => {
     }
   }
 
+  // Always load gradient settings from dedicated localStorage key
+  try {
+    const savedGradient = localStorage.getItem('heroGradientSettings')
+    if (savedGradient) {
+      const g = JSON.parse(savedGradient)
+      gradientPosition.value = g.position ?? 85
+      gradientOpacity.value = g.opacity ?? 80
+    }
+  } catch (e) {
+    console.warn('Error loading gradient settings from localStorage:', e)
+  }
+
   // Fallback: try localStorage, then imported JSON defaults
   if (!loaded) {
     const savedData = localStorage.getItem('heroSectionData')
     if (savedData) {
       try {
         const parsed = JSON.parse(savedData)
+
         heroData.value = {
           greeting: parsed.greeting || "Hello, I'm",
           name: parsed.name || heroDefaults.name,
@@ -257,5 +314,9 @@ onMounted(async () => {
   }
 
   isLoading.value = false
+})
+
+onUnmounted(() => {
+  window.removeEventListener('scroll', handleHeroScroll)
 })
 </script>

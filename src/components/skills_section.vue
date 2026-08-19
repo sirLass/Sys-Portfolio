@@ -80,7 +80,7 @@
         </div>
 
         <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-12">
-          <div class="bg-white p-8 rounded-2xl shadow-lg border border-gray-100 card-hover">
+          <div v-if="!isHidden('skills', 'designSkills')" class="bg-white p-8 rounded-2xl shadow-lg border border-gray-100 card-hover">
             <div class="flex items-center mb-8">
               <div class="w-14 h-14 bg-primary-100 rounded-xl flex items-center justify-center mr-4">
                 <svg class="w-7 h-7 text-primary-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -110,7 +110,7 @@
             </div>
           </div>
 
-          <div class="bg-white p-8 rounded-2xl shadow-lg border border-gray-100 card-hover">
+          <div v-if="!isHidden('skills', 'developmentSkills')" class="bg-white p-8 rounded-2xl shadow-lg border border-gray-100 card-hover">
             <div class="flex items-center mb-8">
               <div class="w-14 h-14 bg-primary-100 rounded-xl flex items-center justify-center mr-4">
                 <svg class="w-7 h-7 text-primary-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -141,7 +141,7 @@
           </div>
         </div>
 
-        <div class="bg-white p-8 rounded-2xl shadow-lg border border-gray-100 card-hover overflow-hidden relative">
+        <div v-if="!isHidden('skills', 'tools')" class="bg-white p-8 rounded-2xl shadow-lg border border-gray-100 card-hover overflow-hidden relative">
           <div class="flex items-center mb-8">
             <div class="w-14 h-14 bg-primary-100 rounded-xl flex items-center justify-center mr-4">
               <svg class="w-7 h-7 text-primary-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -189,6 +189,9 @@
 <script setup>
 import { ref, onMounted } from 'vue'
 import { supabase } from '../supabase'
+import { useVisibility } from '../composables/useVisibility'
+
+const { isHidden } = useVisibility()
 
 const skillsData = ref(null)
 const isLoading = ref(true)

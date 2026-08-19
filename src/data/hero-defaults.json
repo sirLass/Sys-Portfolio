@@ -5,6 +5,8 @@
   "description": "I build highly performant, responsive web applications with modern design systems and robust backend structures.",
   "image": "",
   "coverImage": "",
+  "gradientPosition": 85,
+  "gradientOpacity": 80,
   "projectsCount": 12,
   "githubReposCount": 24,
   "socials": {

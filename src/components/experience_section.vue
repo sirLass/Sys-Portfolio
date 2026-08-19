@@ -54,10 +54,10 @@
       <!-- Loaded Data -->
       <div v-else>
         <!-- Section Header -->
-        <div class="text-center mb-16">
-          <p class="text-primary-600 font-semibold text-lg mb-4">{{ experienceData.sectionLabel }}</p>
-          <h2 class="text-4xl lg:text-5xl font-bold text-gray-900 mb-6">{{ experienceData.mainHeading }}</h2>
-          <p class="text-xl text-gray-600 max-w-3xl mx-auto leading-relaxed mb-8">
+        <div v-if="!isHidden('experience', 'sectionLabel') || !isHidden('experience', 'mainHeading')" class="text-center mb-16">
+          <p v-if="!isHidden('experience', 'sectionLabel')" class="text-primary-600 font-semibold text-lg mb-4">{{ experienceData.sectionLabel }}</p>
+          <h2 v-if="!isHidden('experience', 'mainHeading')" class="text-4xl lg:text-5xl font-bold text-gray-900 mb-6">{{ experienceData.mainHeading }}</h2>
+          <p v-if="!isHidden('experience', 'timeline')" class="text-xl text-gray-600 max-w-3xl mx-auto leading-relaxed mb-8">
             {{ experienceData.description }}
           </p>
           
@@ -169,7 +169,9 @@
 <script setup>
 import { ref, onMounted, computed } from 'vue'
 import { supabase } from '../supabase'
+import { useVisibility } from '../composables/useVisibility'
 
+const { isHidden } = useVisibility()
 const experienceData = ref(null)
 const isLoading = ref(true)
 const hasError = ref(false)
