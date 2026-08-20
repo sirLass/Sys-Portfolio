@@ -1,9 +1,9 @@
 <template>
   <section id="hero" class="relative min-h-screen flex items-center justify-center overflow-hidden">
-    <div class="absolute inset-0 bg-gradient-to-br from-primary-50 via-[#FAF9F6] to-blue-50"></div>
+    <div class="absolute inset-0 bg-gradient-to-br from-primary-50 via-[#FAF9F6] to-blue-50 dark:from-[#0f1117] dark:via-[#12141c] dark:to-[#0b1220]"></div>
     
     <!-- Cover Image Banner -->
-    <div class="absolute top-0 left-0 w-full h-64 md:h-96 z-0" style="-webkit-mask-image: linear-gradient(to bottom, black 30%, transparent 100%); mask-image: linear-gradient(to bottom, black 30%, transparent 100%);">
+    <div class="absolute top-0 left-0 w-full h-64 md:h-96 z-0 overflow-hidden">
       <div v-if="isLoading" class="w-full h-full bg-gray-200 animate-pulse"></div>
       <img v-else-if="heroData?.coverImage" :src="heroData.coverImage" @error="$event.target.style.display='none'" alt="Cover Image" class="w-full h-full object-cover opacity-40 mix-blend-overlay" />
       <div class="absolute inset-0" :style="coverGradientStyle"></div>
@@ -58,28 +58,47 @@
 
       <!-- Loaded Data -->
       <div v-else class="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
-        <div class="text-center lg:text-left" :style="textStyle">
+        <div :class="containerAlignmentClass" :style="[textStyle, fontFamilyStyle]">
           <div class="mb-8">
-            <p v-if="!isHidden('hero', 'greeting')" class="text-primary-600 font-semibold text-lg mb-4 flex items-center justify-center lg:justify-start">
-              <span class="w-8 h-px bg-primary-600 mr-3"></span>
-              {{ heroData.greeting }}
+            <p
+              v-if="!isHidden('hero', 'greeting')"
+              class="text-primary-600 font-semibold text-lg mb-4 flex items-center"
+              :class="greetingClasses"
+            >
+              <span v-if="(heroData.textAlign ?? 'left') !== 'right'" class="w-8 h-px bg-primary-600 mr-3"></span>
+              {{ heroData.greeting || "Hello, I'm" }}
+              <span v-if="(heroData.textAlign ?? 'left') === 'right'" class="w-8 h-px bg-primary-600 ml-3"></span>
             </p>
-            <h1 v-if="!isHidden('hero', 'name')" class="text-5xl lg:text-7xl font-bold text-gray-900 mb-6 leading-tight">
-              <template v-if="heroData.name.includes(' ')">
+            <h1
+              v-if="!isHidden('hero', 'name')"
+              class="text-gray-900 mb-6 leading-tight transition-all"
+              :class="[nameSizeClass, nameWeightClass]"
+            >
+              <template v-if="(heroData.name || '').includes(' ')">
                 {{ heroData.name.split(' ')[0] }} <span class="gradient-text">{{ heroData.name.split(' ').slice(1).join(' ') }}</span>
               </template>
               <template v-else>
                 <span class="gradient-text">{{ heroData.name }}</span>
               </template>
             </h1>
-            <h2 v-if="!isHidden('hero', 'title')" class="text-2xl lg:text-3xl text-gray-600 mb-8 font-light">{{ heroData.title }}</h2>
+            <h2
+              v-if="!isHidden('hero', 'title')"
+              class="text-gray-600 mb-8 font-light leading-snug"
+              :class="titleSizeClass"
+            >
+              {{ heroData.title }}
+            </h2>
           </div>
 
-          <p v-if="!isHidden('hero', 'description')" class="text-xl text-gray-700 mb-10 leading-relaxed max-w-2xl mx-auto lg:mx-0">
+          <p
+            v-if="!isHidden('hero', 'description')"
+            class="text-gray-700 mb-10 leading-relaxed"
+            :class="[descSizeClass, descWidthClass]"
+          >
             {{ heroData.description }}
           </p>
 
-          <div class="flex flex-col sm:flex-row gap-4 justify-center lg:justify-start">
+          <div class="flex flex-col sm:flex-row gap-4" :class="buttonContainerClasses">
             <a
               href="#Projects"
               class="inline-flex items-center bg-primary-600 text-white px-8 py-4 rounded-full hover:bg-primary-700 transition-all duration-300 shadow-lg hover:shadow-xl transform hover:-translate-y-1 group"
@@ -97,7 +116,7 @@
             </a>
           </div>
 
-          <div class="mt-12 flex flex-col sm:flex-row items-center justify-center lg:justify-start gap-8 border-t border-gray-200 pt-8">
+          <div class="mt-12 flex flex-col sm:flex-row items-center gap-8 border-t border-gray-200 pt-8" :class="statsContainerClasses">
             <div class="flex items-center gap-8">
               <div class="text-center lg:text-left">
                 <p class="text-3xl font-bold text-gray-900">{{ heroData.projectsCount }}<span class="text-primary-600 text-xl align-top">+</span></p>
@@ -130,27 +149,74 @@
           </div>
         </div>
 
-        <div class="flex justify-center lg:justify-end" :style="imageStyle">
-          <div class="relative">
-            <div class="w-80 h-80 lg:w-96 lg:h-96 relative">
-              <div class="absolute inset-0 bg-gradient-to-br from-primary-400 to-primary-600 rounded-full shadow-2xl"></div>
-              <div class="absolute inset-4 bg-white rounded-full shadow-inner flex items-center justify-center">
-                <div
-                  class="w-64 h-64 lg:w-80 lg:h-80 bg-gradient-to-br from-gray-100 to-gray-200 rounded-full flex items-center justify-center overflow-hidden"
-                >
-                  <div v-if="isLoading" class="w-full h-full bg-gray-300 animate-pulse"></div>
-                  <img v-else-if="heroData?.image" :src="heroData.image" @error="$event.target.style.display='none'" :alt="heroData.name || 'Your Photo'" class="w-full h-full object-cover rounded-full" />
-                </div>
+        <div class="flex justify-center lg:justify-end items-center relative" :style="imageStyle">
+          <div class="relative flex items-center justify-center -translate-y-6 lg:-translate-y-10">
+            <!-- Ambient Glow Backdrop -->
+            <div class="absolute w-72 h-72 lg:w-96 lg:h-96 rounded-full bg-gradient-to-tr from-primary-400/25 via-primary-300/35 to-blue-400/25 filter blur-3xl -z-0 transform translate-y-6"></div>
+            
+            <!-- Modern Arch Backdrop Layer -->
+            <div class="absolute bottom-0 w-64 lg:w-80 h-72 lg:h-[380px] bg-gradient-to-t from-primary-100/60 via-white/40 to-transparent dark:from-primary-900/40 dark:via-white/5 dark:to-transparent rounded-t-[3.5rem] border-t border-x border-white/60 dark:border-white/10 shadow-xl backdrop-blur-sm -z-0"></div>
+
+            <!-- Transparent Cutout Portrait Image with Hover Lens -->
+            <div
+              class="relative z-10 flex justify-center items-end select-none"
+              ref="portraitContainerRef"
+              @mouseenter="onPortraitMouseEnter"
+              @mousemove="onPortraitMouseMove"
+              @mouseleave="onPortraitMouseLeave"
+              @contextmenu.prevent
+            >
+              <div v-if="isLoading" class="w-72 h-96 lg:w-80 lg:h-[480px] bg-gray-200 rounded-3xl animate-pulse"></div>
+              <img
+                v-else-if="portraitSrc"
+                :src="portraitSrc"
+                draggable="false"
+                @dragstart.prevent
+                @error="$event.target.style.display='none'"
+                :alt="heroData.name || 'Your Photo'"
+                class="relative z-10 w-auto max-w-[280px] sm:max-w-[340px] lg:max-w-[400px] max-h-[460px] lg:max-h-[530px] object-contain drop-shadow-[0_20px_35px_rgba(0,0,0,0.18)] transition-all duration-500 hover:scale-[1.02] select-none"
+                :style="{ cursor: !isDark && heroData?.hoverImage ? 'none' : 'default', userSelect: 'none', WebkitUserDrag: 'none' }"
+              />
+              <!-- Cursor Lens Circle -->
+              <div
+                v-if="lensVisible && !isDark && heroData?.hoverImage"
+                class="pointer-events-none fixed z-50 rounded-full border-2 border-white/70 shadow-2xl overflow-hidden"
+                :style="lensStyle"
+              >
+                <img
+                  :src="heroData.hoverImage"
+                  alt="Hover Reveal"
+                  draggable="false"
+                  class="absolute inset-0 w-full h-full object-cover pointer-events-none"
+                  :style="lensImageStyle"
+                />
               </div>
-              <div class="absolute -top-4 -right-4 w-16 h-16 bg-primary-100 rounded-full flex items-center justify-center shadow-lg">
-                <svg class="w-8 h-8 text-primary-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            </div>
+
+            <!-- Floating Badge: Specialized in -->
+            <div class="absolute top-10 -right-2 lg:-right-6 z-20 bg-white/95 dark:bg-[#1a1d27]/95 backdrop-blur-md px-4 py-2.5 rounded-2xl shadow-xl border border-white/80 dark:border-white/10 flex items-center gap-3 transform hover:-translate-y-1 transition-transform">
+              <div class="w-9 h-9 rounded-xl bg-primary-100 dark:bg-primary-900/40 flex items-center justify-center text-primary-600 dark:text-primary-300 shadow-inner">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4" />
                 </svg>
               </div>
-              <div class="absolute -bottom-4 -left-4 w-16 h-16 bg-blue-100 rounded-full flex items-center justify-center shadow-lg">
-                <svg class="w-8 h-8 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 21a4 4 0 01-4-4V5a2 2 0 012-2h4a2 2 0 012 2v12a4 4 0 01-4 4zm0 0h12a2 2 0 002-2v-4a2 2 0 00-2-2h-2.343M11 7.343l1.657-1.657a2 2 0 012.828 0l2.829 2.829a2 2 0 010 2.828l-8.486 8.485M7 17h.01" />
-                </svg>
+              <div class="text-left">
+                <p class="text-[11px] text-gray-500 dark:text-gray-400 font-medium leading-none">Specialized in</p>
+                <p class="text-xs font-bold text-gray-900 dark:text-gray-100 leading-tight mt-0.5">Full-Stack & UI</p>
+              </div>
+            </div>
+
+            <!-- Floating Badge: Status -->
+            <div class="absolute bottom-10 -left-2 lg:-left-6 z-20 bg-white/95 dark:bg-[#1a1d27]/95 backdrop-blur-md px-4 py-2.5 rounded-2xl shadow-xl border border-white/80 dark:border-white/10 flex items-center gap-3 transform hover:-translate-y-1 transition-transform">
+              <div class="w-9 h-9 rounded-xl bg-emerald-100 dark:bg-emerald-900/30 flex items-center justify-center text-emerald-600 dark:text-emerald-300 shadow-inner">
+                <span class="relative flex h-3 w-3">
+                  <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
+                  <span class="relative inline-flex rounded-full h-3 w-3 bg-emerald-500"></span>
+                </span>
+              </div>
+              <div class="text-left">
+                <p class="text-[11px] text-gray-500 dark:text-gray-400 font-medium leading-none">Status</p>
+                <p class="text-xs font-bold text-gray-900 dark:text-gray-100 leading-tight mt-0.5">Available for Work</p>
               </div>
             </div>
           </div>
@@ -161,21 +227,72 @@
 </template>
 
 <script setup>
-import { ref, computed, onMounted, onUnmounted } from 'vue'
+import { ref, computed, watch, onMounted, onUnmounted } from 'vue'
 import { supabase } from '../supabase'
 import heroDefaults from '../data/hero-defaults.json'
 import { useVisibility } from '../composables/useVisibility'
+import { useTheme } from '../composables/useTheme'
 
 const { isHidden } = useVisibility()
+const { isDark } = useTheme()
 
 const gradientPosition = ref(85)
 const gradientOpacity = ref(80)
 
-const coverGradientStyle = computed(() => {
-  const pos = gradientPosition.value
-  const opa = gradientOpacity.value / 100
+// ─── Hover Lens State ──────────────────────────────────────
+const portraitContainerRef = ref(null)
+const lensVisible = ref(false)
+const lensX = ref(0)
+const lensY = ref(0)
+const LENS_SIZE = 140 // px diameter of the cursor lens circle
+
+const lensStyle = computed(() => ({
+  width: `${LENS_SIZE}px`,
+  height: `${LENS_SIZE}px`,
+  left: `${lensX.value - LENS_SIZE / 2}px`,
+  top: `${lensY.value - LENS_SIZE / 2}px`,
+  transition: lensVisible.value ? 'opacity 0.25s ease-out' : 'opacity 0.2s ease-in',
+  opacity: lensVisible.value ? 1 : 0,
+  boxShadow: '0 8px 32px rgba(0,0,0,0.25), inset 0 0 12px rgba(255,255,255,0.15)'
+}))
+
+const lensImageStyle = computed(() => {
+  if (!portraitContainerRef.value) return {}
+  const rect = portraitContainerRef.value.getBoundingClientRect()
+  // Map cursor position within the container to the hover image position
+  const relX = ((lensX.value - rect.left) / rect.width) * 100
+  const relY = ((lensY.value - rect.top) / rect.height) * 100
   return {
-    background: `linear-gradient(to bottom, transparent 0%, transparent ${pos}%, rgba(250, 249, 246, ${opa}) 100%)`
+    objectPosition: `${relX}% ${relY}%`,
+    transform: 'scale(1.3)'
+  }
+})
+
+const portraitSrc = computed(() => heroData.value?.image || '')
+
+function onPortraitMouseEnter() {
+  if (!isDark.value && heroData.value?.hoverImage) {
+    lensVisible.value = true
+  }
+}
+function onPortraitMouseMove(e) {
+  lensX.value = e.clientX
+  lensY.value = e.clientY
+}
+function onPortraitMouseLeave() {
+  lensVisible.value = false
+}
+
+watch(isDark, () => {
+  lensVisible.value = false
+})
+
+const coverGradientStyle = computed(() => {
+  const pos = Number(gradientPosition.value ?? 85)
+  const opa = Number(gradientOpacity.value ?? 80) / 100
+  const fade = isDark.value ? `rgba(15, 17, 23, ${opa})` : `rgba(250, 249, 246, ${opa})`
+  return {
+    background: `linear-gradient(to bottom, transparent 0%, transparent ${pos}%, ${fade} 100%)`
   }
 })
 
@@ -184,48 +301,178 @@ const hasError = ref(false)
 const heroData = ref(null)
 const scrollProgress = ref(0)
 
-// Scroll-driven slide animation: text slides left, image slides right
+// Scroll-driven slide animation: text slides left, image slides right in sync
 const handleHeroScroll = () => {
   const vh = window.innerHeight
   const scrollY = window.scrollY
-  // Progress goes from 0 (top) to 1 (scrolled past hero)
-  scrollProgress.value = Math.min(Math.max(scrollY / vh, 0), 1)
+  const delayThreshold = 0.08
+  const rawProgress = Math.max(scrollY / vh, 0)
+
+  if (rawProgress <= delayThreshold) {
+    scrollProgress.value = 0
+  } else {
+    scrollProgress.value = Math.min((rawProgress - delayThreshold) / (1 - delayThreshold), 1)
+  }
 }
 
+const slideTransition = 'transform 0.3s cubic-bezier(0.25, 1, 0.5, 1), opacity 0.3s ease-out'
+
 const textStyle = computed(() => {
-  const x = scrollProgress.value * -80 // slide up to 80px left
+  const x = scrollProgress.value * -80
   const opacity = 1 - scrollProgress.value * 0.6
   return {
     transform: `translateX(${x}px)`,
     opacity,
-    transition: 'transform 0.1s ease-out, opacity 0.1s ease-out'
+    transition: slideTransition
   }
 })
 
 const imageStyle = computed(() => {
-  const x = scrollProgress.value * 80 // slide up to 80px right
+  const x = scrollProgress.value * 80
   const opacity = 1 - scrollProgress.value * 0.4
   return {
     transform: `translateX(${x}px)`,
     opacity,
-    transition: 'transform 0.1s ease-out, opacity 0.1s ease-out'
+    transition: slideTransition
   }
 })
 
+// ─── Computed Typography & Placement Styles ───────────────────────
+const containerAlignmentClass = computed(() => {
+  const align = heroData.value?.textAlign ?? 'left'
+  if (align === 'center') return 'text-center'
+  if (align === 'right') return 'text-center lg:text-right'
+  return 'text-center lg:text-left'
+})
+
+const fontFamilyStyle = computed(() => {
+  const f = heroData.value?.fontFamily ?? 'sans'
+  if (f === 'serif') return { fontFamily: 'Georgia, Cambria, "Times New Roman", serif' }
+  if (f === 'mono') return { fontFamily: 'ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace' }
+  if (f === 'display') return { fontFamily: 'Outfit, "Plus Jakarta Sans", system-ui, sans-serif' }
+  return { fontFamily: 'system-ui, -apple-system, Inter, BlinkMacSystemFont, sans-serif' }
+})
+
+const greetingClasses = computed(() => {
+  const align = heroData.value?.textAlign ?? 'left'
+  if (align === 'center') return 'justify-center'
+  if (align === 'right') return 'justify-center lg:justify-end'
+  return 'justify-center lg:justify-start'
+})
+
+const nameSizeClass = computed(() => {
+  const s = heroData.value?.nameSize ?? 'xl'
+  if (s === 'sm') return 'text-4xl lg:text-5xl'
+  if (s === 'md') return 'text-5xl lg:text-6xl'
+  if (s === 'lg') return 'text-5xl lg:text-6xl xl:text-7xl'
+  return 'text-5xl lg:text-7xl xl:text-8xl' // xl
+})
+
+const nameWeightClass = computed(() => {
+  const w = heroData.value?.fontWeight ?? 'bold'
+  if (w === 'normal') return 'font-normal'
+  if (w === 'medium') return 'font-medium'
+  if (w === 'semibold') return 'font-semibold'
+  return 'font-bold'
+})
+
+const titleSizeClass = computed(() => {
+  const s = heroData.value?.titleSize ?? 'lg'
+  if (s === 'sm') return 'text-xl lg:text-2xl'
+  if (s === 'md') return 'text-2xl lg:text-3xl'
+  return 'text-2xl lg:text-3xl xl:text-4xl'
+})
+
+const descSizeClass = computed(() => {
+  const s = heroData.value?.descSize ?? 'md'
+  if (s === 'sm') return 'text-base lg:text-lg'
+  if (s === 'lg') return 'text-xl lg:text-2xl'
+  return 'text-lg lg:text-xl'
+})
+
+const descWidthClass = computed(() => {
+  const align = heroData.value?.textAlign ?? 'left'
+  if (align === 'center') return 'max-w-2xl mx-auto'
+  if (align === 'right') return 'max-w-2xl mx-auto lg:ml-auto lg:mr-0'
+  return 'max-w-2xl mx-auto lg:mx-0'
+})
+
+const buttonContainerClasses = computed(() => {
+  const align = heroData.value?.textAlign ?? 'left'
+  if (align === 'center') return 'justify-center'
+  if (align === 'right') return 'justify-center lg:justify-end'
+  return 'justify-center lg:justify-start'
+})
+
+const statsContainerClasses = computed(() => {
+  const align = heroData.value?.textAlign ?? 'left'
+  if (align === 'center') return 'justify-center'
+  if (align === 'right') return 'justify-center lg:justify-end'
+  return 'justify-center lg:justify-start'
+})
+
+const applyGradientSettings = (pos, opa) => {
+  if (pos != null && !isNaN(Number(pos))) gradientPosition.value = Number(pos)
+  if (opa != null && !isNaN(Number(opa))) gradientOpacity.value = Number(opa)
+}
+
+const handleStorageEvent = (e) => {
+  if (e.key === 'heroGradientSettings' && e.newValue) {
+    try {
+      const g = JSON.parse(e.newValue)
+      applyGradientSettings(g.position, g.opacity)
+    } catch (_) {}
+  }
+  if (e.key === 'heroSectionData' && e.newValue) {
+    try {
+      const parsed = JSON.parse(e.newValue)
+      if (heroData.value) {
+        heroData.value = {
+          ...heroData.value,
+          ...parsed
+        }
+      }
+    } catch (_) {}
+  }
+}
+
 onMounted(async () => {
   window.addEventListener('scroll', handleHeroScroll, { passive: true })
+  window.addEventListener('storage', handleStorageEvent)
+  
+  // 1. Check dedicated localStorage gradient settings first
+  try {
+    const savedGradient = localStorage.getItem('heroGradientSettings')
+    if (savedGradient) {
+      const g = JSON.parse(savedGradient)
+      applyGradientSettings(g.position, g.opacity)
+    }
+  } catch (e) {
+    console.warn('Error loading gradient settings from localStorage:', e)
+  }
+
   let loaded = false
   if (supabase) {
     try {
-      // Fetch personal info
+      // Fetch personal info including palette
       const { data: personalData, error: personalError } = await supabase
         .from('personal_info')
-        .select('name, title, description, image, cover_image')
+        .select('name, title, description, image, cover_image, palette')
         .order('updated_at', { ascending: false })
         .limit(1)
         .maybeSingle()
 
       if (!personalError && personalData) {
+        let pal = null
+        if (personalData.palette) {
+          try {
+            pal = typeof personalData.palette === 'string' ? JSON.parse(personalData.palette) : personalData.palette
+            if (!localStorage.getItem('heroGradientSettings')) {
+              applyGradientSettings(pal?.gradientPosition, pal?.gradientOpacity)
+            }
+          } catch (_) {}
+        }
+
         // Fetch project count from the correct table: 'projects'
         let projectsCount = 0
         try {
@@ -240,12 +487,19 @@ onMounted(async () => {
         }
 
         heroData.value = {
-          greeting: "Hello, I'm",
+          greeting: pal?.greeting || heroDefaults.greeting || "Hello, I'm",
           name: personalData.name || 'Brian Perez',
           title: personalData.title || 'Full-Stack Developer & Designer',
           description: personalData.description || 'I build highly performant, responsive web applications with modern design systems.',
           image: personalData.image || '',
+          hoverImage: pal?.hoverImage || '',
           coverImage: personalData.cover_image || '',
+          fontFamily: pal?.fontFamily || heroDefaults.fontFamily || 'sans',
+          nameSize: pal?.nameSize || heroDefaults.nameSize || 'xl',
+          fontWeight: pal?.fontWeight || heroDefaults.fontWeight || 'bold',
+          textAlign: pal?.textAlign || heroDefaults.textAlign || 'left',
+          titleSize: pal?.titleSize || heroDefaults.titleSize || 'lg',
+          descSize: pal?.descSize || heroDefaults.descSize || 'md',
           projectsCount: projectsCount || 12,
           githubReposCount: 24,
           socials: { facebook: 'https://facebook.com', twitter: 'https://twitter.com', instagram: 'https://instagram.com' }
@@ -257,32 +511,30 @@ onMounted(async () => {
     }
   }
 
-  // Always load gradient settings from dedicated localStorage key
-  try {
-    const savedGradient = localStorage.getItem('heroGradientSettings')
-    if (savedGradient) {
-      const g = JSON.parse(savedGradient)
-      gradientPosition.value = g.position ?? 85
-      gradientOpacity.value = g.opacity ?? 80
-    }
-  } catch (e) {
-    console.warn('Error loading gradient settings from localStorage:', e)
-  }
-
   // Fallback: try localStorage, then imported JSON defaults
   if (!loaded) {
     const savedData = localStorage.getItem('heroSectionData')
     if (savedData) {
       try {
         const parsed = JSON.parse(savedData)
+        if (!localStorage.getItem('heroGradientSettings')) {
+          applyGradientSettings(parsed.gradientPosition, parsed.gradientOpacity)
+        }
 
         heroData.value = {
-          greeting: parsed.greeting || "Hello, I'm",
+          greeting: parsed.greeting || heroDefaults.greeting || "Hello, I'm",
           name: parsed.name || heroDefaults.name,
           title: parsed.title || heroDefaults.title,
           description: parsed.description || heroDefaults.description,
           image: parsed.image || heroDefaults.image,
+          hoverImage: parsed.hoverImage || heroDefaults.hoverImage || '',
           coverImage: parsed.coverImage || heroDefaults.coverImage,
+          fontFamily: parsed.fontFamily || heroDefaults.fontFamily || 'sans',
+          nameSize: parsed.nameSize || heroDefaults.nameSize || 'xl',
+          fontWeight: parsed.fontWeight || heroDefaults.fontWeight || 'bold',
+          textAlign: parsed.textAlign || heroDefaults.textAlign || 'left',
+          titleSize: parsed.titleSize || heroDefaults.titleSize || 'lg',
+          descSize: parsed.descSize || heroDefaults.descSize || 'md',
           projectsCount: parsed.projectsCount || heroDefaults.projectsCount,
           githubReposCount: parsed.githubReposCount || heroDefaults.githubReposCount,
           socials: parsed.socials || heroDefaults.socials
@@ -297,6 +549,9 @@ onMounted(async () => {
   // Final fallback: imported JSON defaults
   if (!loaded) {
     heroData.value = { ...heroDefaults }
+    if (!localStorage.getItem('heroGradientSettings')) {
+      applyGradientSettings(heroDefaults.gradientPosition, heroDefaults.gradientOpacity)
+    }
     hasError.value = false
   }
 
@@ -318,5 +573,6 @@ onMounted(async () => {
 
 onUnmounted(() => {
   window.removeEventListener('scroll', handleHeroScroll)
+  window.removeEventListener('storage', handleStorageEvent)
 })
 </script>

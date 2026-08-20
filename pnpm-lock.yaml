@@ -14,6 +14,9 @@ importers:
       '@vitejs/plugin-vue':
         specifier: ^6.0.7
         version: 6.0.8(vite@5.4.21)(vue@3.5.41)
+      bootstrap-icons:
+        specifier: ^1.13.1
+        version: 1.13.1
       cropperjs:
         specifier: ^1.6.2
         version: 1.6.2
@@ -471,6 +474,9 @@ packages:
   binary-extensions@2.3.0:
     resolution: {integrity: sha512-Ceh+7ox5qe7LJuLHoY0feh3pHuUDHAcRUeyL2VYghZwfpkNIy/+8Ocg0a3UuSoYzavmylwuLWQOf3hl0jjMMIw==}
     engines: {node: '>=8'}
+
+  bootstrap-icons@1.13.1:
+    resolution: {integrity: sha512-ijombt4v6bv5CLeXvRWKy7CuM3TRTuPEuGaGKvTV5cz65rQSY8RQ2JcHt6b90cBBAC7s8fsf2EkQDldzCoXUjw==}
 
   braces@3.0.3:
     resolution: {integrity: sha512-yQbXgO/OSZVD2IsiLlro+7Hf6Q18EJrKSEsdoMzKePKXct3gvD8oLcOQdIzGupr5Fj+EDe8gO/lxc1BzfMpxvA==}
@@ -1146,6 +1152,8 @@ snapshots:
   baseline-browser-mapping@2.11.14: {}
 
   binary-extensions@2.3.0: {}
+
+  bootstrap-icons@1.13.1: {}
 
   braces@3.0.3:
     dependencies:

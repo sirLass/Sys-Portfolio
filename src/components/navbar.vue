@@ -2,7 +2,7 @@
   <header
     ref="headerRef"
     :class="[
-      'sticky top-0 z-50 bg-[#FAF9F6]/95 backdrop-blur-sm border-b border-gray-100 transition-transform duration-300 ease-in-out',
+      'sticky top-0 z-50 bg-[#FAF9F6]/95 dark:bg-[#0f1117]/95 backdrop-blur-sm border-b border-gray-100 dark:border-white/10 transition-transform duration-300 ease-in-out',
       isHidden ? '-translate-y-full' : 'translate-y-0'
     ]"
   >
@@ -29,56 +29,61 @@
       <!-- Desktop Nav -->
       <nav class="hidden lg:flex items-center justify-center">
         <div class="flex items-center gap-1">
-          <a @click.prevent="smoothScrollTo('#hero')" href="#hero" class="px-3 py-2 text-sm font-medium text-gray-600 hover:text-primary-600 rounded-lg hover:bg-primary-50 whitespace-nowrap cursor-pointer">
+          <a @click.prevent="smoothScrollTo('#hero')" href="#hero" class="px-3 py-2 text-sm font-medium text-gray-600 dark:text-gray-300 hover:text-primary-600 rounded-lg hover:bg-primary-50 dark:hover:bg-white/10 whitespace-nowrap cursor-pointer">
             Home
           </a>
-          <a @click.prevent="smoothScrollTo('#About')" href="#About" class="px-3 py-2 text-sm font-medium text-gray-600 hover:text-primary-600 rounded-lg hover:bg-primary-50 whitespace-nowrap cursor-pointer">
+          <a @click.prevent="smoothScrollTo('#About')" href="#About" class="px-3 py-2 text-sm font-medium text-gray-600 dark:text-gray-300 hover:text-primary-600 rounded-lg hover:bg-primary-50 dark:hover:bg-white/10 whitespace-nowrap cursor-pointer">
             About
           </a>
-          <a @click.prevent="smoothScrollTo('#Skills')" href="#Skills" class="px-3 py-2 text-sm font-medium text-gray-600 hover:text-primary-600 rounded-lg hover:bg-primary-50 whitespace-nowrap cursor-pointer">
+          <a @click.prevent="smoothScrollTo('#Skills')" href="#Skills" class="px-3 py-2 text-sm font-medium text-gray-600 dark:text-gray-300 hover:text-primary-600 rounded-lg hover:bg-primary-50 dark:hover:bg-white/10 whitespace-nowrap cursor-pointer">
             Skills
           </a>
-          <a @click.prevent="smoothScrollTo('#Projects')" href="#Projects" class="px-3 py-2 text-sm font-medium text-gray-600 hover:text-primary-600 rounded-lg hover:bg-primary-50 whitespace-nowrap cursor-pointer">
+          <a @click.prevent="smoothScrollTo('#Projects')" href="#Projects" class="px-3 py-2 text-sm font-medium text-gray-600 dark:text-gray-300 hover:text-primary-600 rounded-lg hover:bg-primary-50 dark:hover:bg-white/10 whitespace-nowrap cursor-pointer">
             Projects
           </a>
-          <a @click.prevent="smoothScrollTo('#Experience')" href="#Experience" class="px-3 py-2 text-sm font-medium text-gray-600 hover:text-primary-600 rounded-lg hover:bg-primary-50 whitespace-nowrap cursor-pointer">
+          <a @click.prevent="smoothScrollTo('#Experience')" href="#Experience" class="px-3 py-2 text-sm font-medium text-gray-600 dark:text-gray-300 hover:text-primary-600 rounded-lg hover:bg-primary-50 dark:hover:bg-white/10 whitespace-nowrap cursor-pointer">
             Experience
           </a>
-          <a @click.prevent="smoothScrollTo('#Gallery')" href="#Gallery" class="px-3 py-2 text-sm font-medium text-gray-600 hover:text-primary-600 rounded-lg hover:bg-primary-50 whitespace-nowrap cursor-pointer">
+          <a @click.prevent="smoothScrollTo('#Gallery')" href="#Gallery" class="px-3 py-2 text-sm font-medium text-gray-600 dark:text-gray-300 hover:text-primary-600 rounded-lg hover:bg-primary-50 dark:hover:bg-white/10 whitespace-nowrap cursor-pointer">
             Gallery
           </a>
         </div>
       </nav>
 
-     <!-- Contact Me (right-aligned) -->
-      <div class="hidden lg:block">
+      <div class="flex items-center justify-end gap-2">
+        <button
+          type="button"
+          class="p-2 rounded-full text-gray-600 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-white/10 transition-colors duration-300"
+          :title="isDark ? 'Switch to light mode' : 'Switch to dark mode'"
+          :aria-label="isDark ? 'Switch to light mode' : 'Switch to dark mode'"
+          @click.stop="toggleTheme"
+        >
+          <i :class="['bi text-lg leading-none', isDark ? 'bi-sun' : 'bi-moon']"></i>
+        </button>
         <a
           @click.prevent="smoothScrollTo('#Contact')"
           href="#Contact"
-          class="bg-primary-600 text-white px-5 py-2 rounded-full hover:bg-primary-700 hover:shadow-lg hover:shadow-primary-600/30 active:scale-95 transition-all duration-300 text-sm font-medium whitespace-nowrap cursor-pointer"
+          class="hidden lg:inline-flex bg-primary-600 text-white px-5 py-2 rounded-full hover:bg-primary-700 hover:shadow-lg hover:shadow-primary-600/30 active:scale-95 transition-all duration-300 text-sm font-medium whitespace-nowrap cursor-pointer"
         >
           Contact Me
         </a>
+        <button
+          id="mobile-menu-btn"
+          class="lg:hidden p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-white/10 transition-colors duration-300"
+        >
+          <i class="bi bi-list text-2xl leading-none text-gray-700 dark:text-gray-200"></i>
+        </button>
       </div>
-
-      <button
-        id="mobile-menu-btn"
-        class="lg:hidden p-2 rounded-lg hover:bg-gray-100 transition-colors duration-300"
-      >
-        <svg class="w-6 h-6 text-gray-700" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
-        </svg>
-      </button>
     </div>
 
-    <div id="mobile-menu" class="lg:hidden hidden bg-[#FAF9F6] border-t border-gray-100">
+    <div id="mobile-menu" class="lg:hidden hidden bg-[#FAF9F6] dark:bg-[#0f1117] border-t border-gray-100 dark:border-white/10">
       <div class="px-6 py-4 space-y-4">
-        <a @click.prevent="smoothScrollTo('#hero')" href="#hero" class="block text-gray-700 hover:text-primary-600 font-medium transition-colors duration-300 cursor-pointer">Home</a>
-        <a @click.prevent="smoothScrollTo('#About')" href="#About" class="block text-gray-700 hover:text-primary-600 font-medium transition-colors duration-300 cursor-pointer">About</a>
-        <a @click.prevent="smoothScrollTo('#Skills')" href="#Skills" class="block text-gray-700 hover:text-primary-600 font-medium transition-colors duration-300 cursor-pointer">Skills</a>
-        <a @click.prevent="smoothScrollTo('#Projects')" href="#Projects" class="block text-gray-700 hover:text-primary-600 font-medium transition-colors duration-300 cursor-pointer">Projects</a>
-        <a @click.prevent="smoothScrollTo('#Experience')" href="#Experience" class="block text-gray-700 hover:text-primary-600 font-medium transition-colors duration-300 cursor-pointer">Experience</a>
-        <a @click.prevent="smoothScrollTo('#Gallery')" href="#Gallery" class="block text-gray-700 hover:text-primary-600 font-medium transition-colors duration-300 cursor-pointer">Gallery</a>
+        <a @click.prevent="smoothScrollTo('#hero')" href="#hero" class="block text-gray-700 dark:text-gray-200 hover:text-primary-600 font-medium transition-colors duration-300 cursor-pointer">Home</a>
+        <a @click.prevent="smoothScrollTo('#About')" href="#About" class="block text-gray-700 dark:text-gray-200 hover:text-primary-600 font-medium transition-colors duration-300 cursor-pointer">About</a>
+        <a @click.prevent="smoothScrollTo('#Skills')" href="#Skills" class="block text-gray-700 dark:text-gray-200 hover:text-primary-600 font-medium transition-colors duration-300 cursor-pointer">Skills</a>
+        <a @click.prevent="smoothScrollTo('#Projects')" href="#Projects" class="block text-gray-700 dark:text-gray-200 hover:text-primary-600 font-medium transition-colors duration-300 cursor-pointer">Projects</a>
+        <a @click.prevent="smoothScrollTo('#Experience')" href="#Experience" class="block text-gray-700 dark:text-gray-200 hover:text-primary-600 font-medium transition-colors duration-300 cursor-pointer">Experience</a>
+        <a @click.prevent="smoothScrollTo('#Gallery')" href="#Gallery" class="block text-gray-700 dark:text-gray-200 hover:text-primary-600 font-medium transition-colors duration-300 cursor-pointer">Gallery</a>
         <a @click.prevent="smoothScrollTo('#Contact')" href="#Contact" class="block bg-primary-600 text-white px-6 py-2 rounded-full hover:bg-primary-700 transition-colors duration-300 text-center cursor-pointer">Contact Me</a>
       </div>
     </div>
@@ -89,8 +94,10 @@
 import { ref, onMounted, onBeforeUnmount } from 'vue'
 import { useRouter } from 'vue-router'
 import logoUrl from '../assets/sirlass_logo.png'
+import { useTheme } from '../composables/useTheme'
 
 const router = useRouter()
+const { isDark, toggleTheme } = useTheme()
 const clickCount = ref(0)
 const showMessage = ref(false)
 const currentMessage = ref('')

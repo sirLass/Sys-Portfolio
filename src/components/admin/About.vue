@@ -27,6 +27,41 @@
       <!-- About Me Tab -->
       <div v-if="activeTab === 'about'" class="space-y-6">
         <div class="bg-[#f6f6f7]/50 p-6 rounded-xl border border-[#e3e5e7]">
+          <h4 class="text-sm font-semibold text-[#1a1b1c] mb-4">Section Headings</h4>
+          <p class="text-xs text-[#6d7175] mb-4">Controls the large overlay typography on the dark About section.</p>
+          <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-8">
+            <div>
+              <label for="sectionLabel" class="block text-sm font-medium text-[#1a1b1c] mb-2">Top Label</label>
+              <input
+                id="sectionLabel"
+                v-model="aboutData.sectionLabel"
+                type="text"
+                class="w-full px-4 py-2.5 text-sm text-[#1a1b1c] bg-white border border-[#c9cccf] rounded-md focus:outline-none focus:border-[var(--admin-primary)] focus:ring-2 focus:ring-[var(--admin-primary)]/20 transition-all placeholder:text-[#6d7175]"
+                placeholder="Portfolio"
+              />
+            </div>
+            <div>
+              <label for="mainHeading" class="block text-sm font-medium text-[#1a1b1c] mb-2">Main Title</label>
+              <input
+                id="mainHeading"
+                v-model="aboutData.mainHeading"
+                type="text"
+                class="w-full px-4 py-2.5 text-sm text-[#1a1b1c] bg-white border border-[#c9cccf] rounded-md focus:outline-none focus:border-[var(--admin-primary)] focus:ring-2 focus:ring-[var(--admin-primary)]/20 transition-all placeholder:text-[#6d7175]"
+                placeholder="ABOUT"
+              />
+            </div>
+            <div>
+              <label for="subheading" class="block text-sm font-medium text-[#1a1b1c] mb-2">Brand Name (after —)</label>
+              <input
+                id="subheading"
+                v-model="aboutData.subheading"
+                type="text"
+                class="w-full px-4 py-2.5 text-sm text-[#1a1b1c] bg-white border border-[#c9cccf] rounded-md focus:outline-none focus:border-[var(--admin-primary)] focus:ring-2 focus:ring-[var(--admin-primary)]/20 transition-all placeholder:text-[#6d7175]"
+                placeholder="sirLass"
+              />
+            </div>
+          </div>
+
           <div class="flex items-center justify-between mb-4">
             <h4 class="text-sm font-semibold text-[#1a1b1c]">Content Visibility</h4>
             <p class="text-xs text-[#6d7175]">Toggle visibility on public site</p>
@@ -163,17 +198,24 @@
         <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
           <!-- Image Box -->
           <div class="bg-white p-6 rounded-xl border border-[#e3e5e7] shadow-sm flex flex-col items-center">
-            <h4 class="text-sm font-bold text-[#1a1b1c] mb-4 self-start">Profile Image</h4>
+            <h4 class="text-sm font-bold text-[#1a1b1c] mb-1 self-start">About Hero Image</h4>
+            <p class="text-xs text-[#6d7175] mb-4 self-start">Portrait image split across three panels on the landing page.</p>
             <div 
-              class="relative group cursor-pointer w-48 h-48 rounded-2xl overflow-hidden border-2 border-[#c9cccf] bg-[#f6f6f7] transition-all hover:border-[var(--admin-primary)]"
+              class="relative group cursor-pointer w-40 h-56 rounded-2xl overflow-hidden border-2 border-[#c9cccf] bg-[#0a0a0a] transition-all hover:border-[var(--admin-primary)]"
               @click="triggerFileInput"
             >
               <img 
-                :src="aboutData.image || '/me.png'" 
+                :src="aboutData.image || ''" 
                 :alt="aboutData.name || 'About'"
-                class="w-full h-full object-cover"
+                class="w-full h-full object-cover grayscale"
                 @error="handleImageError"
               />
+              <div v-if="!aboutData.image" class="absolute inset-0 flex flex-col items-center justify-center text-white/40 p-4 text-center">
+                <svg class="w-8 h-8 mb-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                </svg>
+                <span class="text-[10px]">Upload portrait image</span>
+              </div>
               <div class="absolute inset-0 bg-black/40 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
                 <div class="p-3 bg-white rounded-full text-[var(--admin-primary)] shadow-lg">
                   <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -190,7 +232,7 @@
               class="hidden"
               @change="handleFileSelect"
             />
-            <p class="mt-4 text-xs text-[#6d7175] text-center">Click image to re-upload<br>Recommended: Square, max 5MB</p>
+            <p class="mt-4 text-xs text-[#6d7175] text-center">Click to upload or replace<br>Recommended: Portrait (2:3), max 5MB</p>
           </div>
 
           <!-- CV Box -->
@@ -302,7 +344,7 @@
     <div v-if="showCropperModal" class="fixed inset-0 z-[70] flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm">
       <div class="bg-white rounded-2xl shadow-2xl w-full max-w-3xl overflow-hidden animate-in fade-in zoom-in duration-200">
         <div class="p-4 border-b border-gray-100 flex items-center justify-between">
-          <h3 class="text-lg font-bold text-gray-900">Crop Profile Image</h3>
+          <h3 class="text-lg font-bold text-gray-900">Crop About Hero Image</h3>
           <button @click="cancelCrop" class="text-gray-400 hover:text-gray-600">
             <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
@@ -329,9 +371,9 @@
               <p class="text-xs font-medium text-gray-500 mb-3">Preview</p>
               <div 
                 ref="cropperPreview" 
-                class="w-32 h-32 rounded-xl overflow-hidden border-2 border-gray-300 shadow-sm bg-gray-100"
+                class="w-28 h-40 rounded-xl overflow-hidden border-2 border-gray-300 shadow-sm bg-gray-900"
               ></div>
-              <p class="mt-3 text-xs text-gray-400 text-center">400 x 400px</p>
+              <p class="mt-3 text-xs text-gray-400 text-center">800 × 1200px</p>
             </div>
           </div>
           <p class="mt-4 text-xs text-gray-500 text-center">Drag to move, scroll to zoom, or resize the crop area</p>
@@ -377,6 +419,9 @@ const tabs = [
 
 // About section data
 const aboutData = ref({
+  sectionLabel: '',
+  mainHeading: '',
+  subheading: '',
   paragraph1: '',
   paragraph2: '',
   name: '',
@@ -407,19 +452,22 @@ onMounted(() => {
 // --- Helpers ---
 const setDefaultValues = () => {
   aboutData.value = {
-    paragraph1: "As a passionate designer and full stack developer, I've developed the skills to build web apps, internal tools, and full web systems—even as an undergraduate.",
-    paragraph2: "My approach focuses on logical problem-solving, choosing solutions that suit each functionality while avoiding unnecessary complexity. With a background in both visual design and development, I bridge the gap between creativity and engineering to deliver polished, user-friendly digital experiences.",
+    sectionLabel: 'Portfolio',
+    mainHeading: 'ABOUT',
+    subheading: 'sirLass',
+    paragraph1: "Our dedication to craft reflects a deep respect for design history and its potential.",
+    paragraph2: "For years, we've been transforming ideas into timeless, functional digital experiences.",
     name: 'Brian Perez',
     email: 'perezbrian091598@gmail.com',
     location: 'Quezon Province, Philippines',
     status: 'Available for Remote Work',
     cvLink: '',
-    image: '/me.png'
+    image: ''
   }
 }
 
 const handleImageError = (event) => {
-  event.target.src = '/me.png'
+  event.target.style.display = 'none'
 }
 
 const triggerFileInput = () => {
@@ -461,7 +509,7 @@ const initCropper = () => {
   if (!cropperImage.value) return
   
   cropper = new Cropper(cropperImage.value, {
-    aspectRatio: 1,
+    aspectRatio: 2 / 3,
     viewMode: 1,
     dragMode: 'move',
     autoCropArea: 0.8,
@@ -487,8 +535,8 @@ const applyCrop = () => {
   if (!cropper) return
   
   const canvas = cropper.getCroppedCanvas({
-    width: 400,
-    height: 400,
+    width: 800,
+    height: 1200,
     fillColor: '#fff',
     imageSmoothingEnabled: true,
     imageSmoothingQuality: 'high',
@@ -576,6 +624,9 @@ const loadFromDatabase = async () => {
     if (data) {
       aboutId.value = data.id
       aboutData.value = {
+        sectionLabel: data.section_label || '',
+        mainHeading: data.main_heading || '',
+        subheading: data.subheading || '',
         paragraph1: data.Paragraph1 || '',
         paragraph2: data.Paragraph2 || '',
         name: data.name || '',
@@ -603,6 +654,9 @@ const saveToDatabase = async () => {
 
   try {
     const dbData = {
+      section_label: aboutData.value.sectionLabel,
+      main_heading: aboutData.value.mainHeading,
+      subheading: aboutData.value.subheading,
       Paragraph1: aboutData.value.paragraph1,
       Paragraph2: aboutData.value.paragraph2,
       name: aboutData.value.name,

@@ -4,6 +4,9 @@ import { useRoute } from 'vue-router'
 import { supabase } from './supabase'
 import LoadingScreen from './components/LoadingScreen.vue'
 import ChatBot from './components/ChatBot.vue'
+import { useTheme } from './composables/useTheme'
+
+useTheme()
 
 const currentPalette = ref({
   primary: '#008060',
@@ -78,7 +81,7 @@ onMounted(fetchTheme)
 
 <template>
   <LoadingScreen :style="themeVariables" />
-  <div :style="themeVariables" class="min-h-screen">
+  <div :style="themeVariables" class="min-h-screen bg-[#faf9f6] dark:bg-[#0f1117] transition-none">
     <router-view />
     <ChatBot v-if="showChatBot" />
   </div>

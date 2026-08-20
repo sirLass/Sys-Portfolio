@@ -81,7 +81,7 @@
     <CropModal
       v-if="cropModalOpen"
       :image="imageToCrop"
-      :aspect-ratio="cropperTargetField === 'image' ? 1 : 16 / 9"
+      :aspect-ratio="cropperTargetField === 'coverImage' ? 16 / 9 : NaN"
       @confirm="confirmCrop"
       @cancel="cancelCrop"
     />
@@ -91,6 +91,7 @@
 <script setup>
 import { ref, onMounted, inject, nextTick } from 'vue'
 import { supabase } from '../../supabase'
+import heroDefaults from '../../data/hero-defaults.json'
 import { useVisibility } from '../../composables/useVisibility'
 import Banner from './ui/Banner.vue'
 import HomeOverview from './HomeOverview.vue'
@@ -149,13 +150,21 @@ const saving = ref(false)
 const currentId = ref(null)
 
 const heroData = ref({
+  greeting: heroDefaults.greeting || "Hello, I'm",
   name: '',
   title: '',
   description: '',
   image: '',
+  hoverImage: '',
   coverImage: '',
   gradientPosition: 85,
   gradientOpacity: 80,
+  fontFamily: 'sans',
+  nameSize: 'xl',
+  fontWeight: 'bold',
+  textAlign: 'left',
+  titleSize: 'lg',
+  descSize: 'md',
   palette: PRESET_PALETTES[0]
 })
 
@@ -193,15 +202,30 @@ async function loadFromDb() {
     console.warn('Error loading gradient settings:', e)
   }
 
+  // Load saved local cache if any
+  let localData = {}
+  try {
+    const saved = localStorage.getItem('heroSectionData')
+    if (saved) localData = JSON.parse(saved)
+  } catch (_) {}
+
   if (!supabase) {
     heroData.value = {
-      name: 'Brian Perez',
-      title: 'Aspiring Full Stack Developer',
-      description: 'As a Aspiring Developer and UI/UX Designer, I craft solutions that are not only visually appealing but also intuitive and efficient — combining thoughtful design with clean, scalable code.',
-      image: '/me.png',
-      coverImage: 'https://images.unsplash.com/photo-1557683316-973673baf926?q=80&w=2000&auto=format&fit=crop',
+      greeting: localData.greeting || heroDefaults.greeting || "Hello, I'm",
+      name: localData.name || 'Brian Perez',
+      title: localData.title || 'Aspiring Full Stack Developer',
+      description: localData.description || 'As a Aspiring Developer and UI/UX Designer, I craft solutions that are not only visually appealing but also intuitive and efficient — combining thoughtful design with clean, scalable code.',
+      image: localData.image || '/me.png',
+      hoverImage: localData.hoverImage || '',
+      coverImage: localData.coverImage || 'https://images.unsplash.com/photo-1557683316-973673baf926?q=80&w=2000&auto=format&fit=crop',
       gradientPosition: gradientPos,
       gradientOpacity: gradientOpa,
+      fontFamily: localData.fontFamily || heroDefaults.fontFamily || 'sans',
+      nameSize: localData.nameSize || heroDefaults.nameSize || 'xl',
+      fontWeight: localData.fontWeight || heroDefaults.fontWeight || 'bold',
+      textAlign: localData.textAlign || heroDefaults.textAlign || 'left',
+      titleSize: localData.titleSize || heroDefaults.titleSize || 'lg',
+      descSize: localData.descSize || heroDefaults.descSize || 'md',
       palette: PRESET_PALETTES[0]
     }
     isLoadingInfo.value = false
@@ -219,17 +243,32 @@ async function loadFromDb() {
     if (error) throw error
     if (data) {
       currentId.value = data.id
+      const pal = data.palette
+        ? (typeof data.palette === 'string' ? JSON.parse(data.palette) : data.palette)
+        : PRESET_PALETTES[0]
+
+      if (!localStorage.getItem('heroGradientSettings')) {
+        if (pal?.gradientPosition != null) gradientPos = pal.gradientPosition
+        if (pal?.gradientOpacity != null) gradientOpa = pal.gradientOpacity
+      }
+
       heroData.value = {
+        greeting: pal?.greeting || localData.greeting || heroDefaults.greeting || "Hello, I'm",
         name: data.name ?? '',
         title: data.title ?? '',
         description: data.description ?? '',
         image: data.image || '/me.png',
+        hoverImage: pal?.hoverImage || localData.hoverImage || '',
         coverImage: data.cover_image || 'https://images.unsplash.com/photo-1557683316-973673baf926?q=80&w=2000&auto=format&fit=crop',
         gradientPosition: gradientPos,
         gradientOpacity: gradientOpa,
-        palette: data.palette
-          ? (typeof data.palette === 'string' ? JSON.parse(data.palette) : data.palette)
-          : PRESET_PALETTES[0]
+        fontFamily: pal?.fontFamily || localData.fontFamily || heroDefaults.fontFamily || 'sans',
+        nameSize: pal?.nameSize || localData.nameSize || heroDefaults.nameSize || 'xl',
+        fontWeight: pal?.fontWeight || localData.fontWeight || heroDefaults.fontWeight || 'bold',
+        textAlign: pal?.textAlign || localData.textAlign || heroDefaults.textAlign || 'left',
+        titleSize: pal?.titleSize || localData.titleSize || heroDefaults.titleSize || 'lg',
+        descSize: pal?.descSize || localData.descSize || heroDefaults.descSize || 'md',
+        palette: pal
       }
       return
     }
@@ -240,21 +279,40 @@ async function loadFromDb() {
   }
 
   heroData.value = {
-    name: 'Brian Perez',
-    title: 'Aspiring Full Stack Developer',
-    description: 'As a Aspiring Developer and UI/UX Designer, I craft solutions that are not only visually appealing but also intuitive and efficient — combining thoughtful design with clean, scalable code.',
-    image: '/me.png',
-    coverImage: 'https://images.unsplash.com/photo-1557683316-973673baf926?q=80&w=2000&auto=format&fit=crop',
+    greeting: localData.greeting || heroDefaults.greeting || "Hello, I'm",
+    name: localData.name || 'Brian Perez',
+    title: localData.title || 'Aspiring Full Stack Developer',
+    description: localData.description || 'As a Aspiring Developer and UI/UX Designer, I craft solutions that are not only visually appealing but also intuitive and efficient — combining thoughtful design with clean, scalable code.',
+    image: localData.image || '/me.png',
+    hoverImage: localData.hoverImage || '',
+    coverImage: localData.coverImage || 'https://images.unsplash.com/photo-1557683316-973673baf926?q=80&w=2000&auto=format&fit=crop',
     gradientPosition: gradientPos,
-    gradientOpacity: gradientOpa
+    gradientOpacity: gradientOpa,
+    fontFamily: localData.fontFamily || heroDefaults.fontFamily || 'sans',
+    nameSize: localData.nameSize || heroDefaults.nameSize || 'xl',
+    fontWeight: localData.fontWeight || heroDefaults.fontWeight || 'bold',
+    textAlign: localData.textAlign || heroDefaults.textAlign || 'left',
+    titleSize: localData.titleSize || heroDefaults.titleSize || 'lg',
+    descSize: localData.descSize || heroDefaults.descSize || 'md',
+    palette: PRESET_PALETTES[0]
   }
 }
 
 onMounted(loadFromDb)
 
 // ─── Image Handling ────────────────────────────────────────
-function handleImageUpload(event, field) {
-  const file = event.target.files?.[0]
+function handleImageUpload(payload, fieldArg) {
+  let file = null
+  let field = fieldArg || 'image'
+
+  if (payload?.event?.target?.files) {
+    file = payload.event.target.files[0]
+    field = payload.field || fieldArg || 'image'
+  } else if (payload?.target?.files) {
+    file = payload.target.files[0]
+    field = fieldArg || payload.field || 'image'
+  }
+
   if (!file) return
 
   if (!file.type.startsWith('image/')) {
@@ -271,35 +329,11 @@ function handleImageUpload(event, field) {
     imageToCrop.value = e.target.result
     cropperTargetField.value = field
     cropModalOpen.value = true
-
-    nextTick(() => {
-      setTimeout(() => {
-        const imgEl = imageElement.value
-        if (!imgEl) return
-
-        const initCropper = () => {
-          if (cropperInstance.value) cropperInstance.value.destroy()
-          cropperInstance.value = new Cropper(imgEl, {
-            aspectRatio: field === 'image' ? 1 : 16 / 9,
-            viewMode: 2,
-            autoCropArea: 1,
-            background: false
-          })
-        }
-
-        if (imgEl.complete && imgEl.naturalWidth > 0) {
-          initCropper()
-        } else {
-          imgEl.onload = initCropper
-        }
-      }, 50)
-    })
   }
   reader.onerror = () => {
     if (addToast) addToast('Error reading file. Please try again.', 'error')
   }
   reader.readAsDataURL(file)
-  event.target.value = ''
 }
 
 function handleCropRequest({ field, dataUrl }) {
@@ -310,8 +344,11 @@ function handleCropRequest({ field, dataUrl }) {
 
 function confirmCrop(canvas) {
   if (canvas) {
-    heroData.value[cropperTargetField.value] = canvas.toDataURL('image/jpeg', 0.8)
-    const photoType = cropperTargetField.value === 'image' ? 'Profile' : 'Cover'
+    const isTransparent = cropperTargetField.value === 'image' || cropperTargetField.value === 'hoverImage'
+    heroData.value[cropperTargetField.value] = isTransparent
+      ? canvas.toDataURL('image/png')
+      : canvas.toDataURL('image/jpeg', 0.85)
+    const photoType = cropperTargetField.value === 'image' ? 'Profile' : cropperTargetField.value === 'hoverImage' ? 'Hover Reveal' : 'Cover'
     if (addToast) addToast(`${photoType} photo updated locally. Remember to save changes.`, 'success')
   }
   cropModalOpen.value = false
@@ -328,10 +365,15 @@ async function handleSave() {
   showError.value = false
 
   // Save gradient settings to dedicated localStorage key
-  localStorage.setItem('heroGradientSettings', JSON.stringify({
+  const gradientObj = {
     position: heroData.value.gradientPosition ?? 85,
     opacity: heroData.value.gradientOpacity ?? 80
-  }))
+  }
+  localStorage.setItem('heroGradientSettings', JSON.stringify(gradientObj))
+
+  const currentPalette = typeof heroData.value.palette === 'object' && heroData.value.palette !== null
+    ? heroData.value.palette
+    : PRESET_PALETTES[0]
 
   const payload = {
     name: heroData.value.name,
@@ -339,17 +381,38 @@ async function handleSave() {
     description: heroData.value.description,
     image: heroData.value.image || '/me.png',
     cover_image: heroData.value.coverImage,
-    palette: heroData.value.palette,
+    palette: {
+      ...currentPalette,
+      gradientPosition: gradientObj.position,
+      gradientOpacity: gradientObj.opacity,
+      greeting: heroData.value.greeting || "Hello, I'm",
+      fontFamily: heroData.value.fontFamily || 'sans',
+      nameSize: heroData.value.nameSize || 'xl',
+      fontWeight: heroData.value.fontWeight || 'bold',
+      textAlign: heroData.value.textAlign || 'left',
+      titleSize: heroData.value.titleSize || 'lg',
+      descSize: heroData.value.descSize || 'md',
+      hoverImage: heroData.value.hoverImage || ''
+    },
     updated_at: new Date().toISOString()
   }
 
   localStorage.setItem('heroSectionData', JSON.stringify({
-    greeting: "Hello, I'm",
+    greeting: heroData.value.greeting || "Hello, I'm",
     name: payload.name,
     title: payload.title,
     description: payload.description,
     image: payload.image,
+    hoverImage: heroData.value.hoverImage || '',
     coverImage: payload.cover_image,
+    gradientPosition: gradientObj.position,
+    gradientOpacity: gradientObj.opacity,
+    fontFamily: heroData.value.fontFamily || 'sans',
+    nameSize: heroData.value.nameSize || 'xl',
+    fontWeight: heroData.value.fontWeight || 'bold',
+    textAlign: heroData.value.textAlign || 'left',
+    titleSize: heroData.value.titleSize || 'lg',
+    descSize: heroData.value.descSize || 'md',
     projectsCount: 12,
     githubReposCount: 24,
     socials: { facebook: 'https://facebook.com', twitter: 'https://twitter.com', instagram: 'https://instagram.com' }
