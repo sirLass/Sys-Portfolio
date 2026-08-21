@@ -41,23 +41,23 @@
         >
             <div 
                 v-if="isOpen" 
-                class="fixed inset-y-0 right-0 z-[120] w-[380px] md:w-[500px] bg-white opacity-100 shadow-[-30px_0_80px_rgba(0,0,0,0.4)] flex flex-col border-l border-gray-100"
+                class="fixed inset-y-0 right-0 z-[120] w-[380px] md:w-[500px] bg-white dark:bg-[#151821] opacity-100 shadow-[-30px_0_80px_rgba(0,0,0,0.4)] flex flex-col border-l border-gray-100 dark:border-white/10"
             >
                 <!-- Header Component -->
-                <div class="p-10 bg-[#FAF9F6] border-b border-gray-100">
+                <div class="p-10 bg-[#FAF9F6] dark:bg-[#0f1117] border-b border-gray-100 dark:border-white/10">
                     <div class="flex items-center justify-between mb-8">
                         <div class="flex items-center gap-4">
-                            <div class="w-12 h-12 bg-gray-900 rounded-2xl flex items-center justify-center shadow-2xl">
+                            <div class="w-12 h-12 bg-gray-900 dark:bg-[#1a1d27] rounded-2xl flex items-center justify-center shadow-2xl border border-transparent dark:border-white/10">
                                 <svg class="w-6 h-6 text-primary-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z" />
                                 </svg>
                             </div>
                             <div>
-                                <h3 class="text-xs font-black text-gray-900 uppercase tracking-[0.2em] italic">Systematic Assistant</h3>
+                                <h3 class="text-xs font-black text-gray-900 dark:text-gray-100 uppercase tracking-[0.2em] italic">Systematic Assistant</h3>
                                 <p class="text-[9px] font-bold text-gray-400 uppercase tracking-widest mt-1">Ready for Inquiry</p>
                             </div>
                         </div>
-                        <button @click="isOpen = false" class="p-3 text-gray-400 hover:text-gray-900 hover:bg-gray-100 rounded-xl transition-all">
+                        <button @click="isOpen = false" class="p-3 text-gray-400 hover:text-gray-900 dark:hover:text-gray-100 hover:bg-gray-100 dark:hover:bg-white/10 rounded-xl transition-all">
                             <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M6 18L18 6M6 6l12 12" />
                             </svg>
@@ -73,17 +73,17 @@
                                 'max-w-[90%] px-6 py-5 rounded-[2rem] text-[15px] leading-relaxed',
                                 msg.isUser 
                                 ? 'bg-primary-600 text-white rounded-tr-none font-bold shadow-xl shadow-primary-500/10 animate-in slide-in-from-right-2' 
-                                : 'bg-gray-50 text-gray-700 rounded-tl-none font-medium border border-gray-100 animate-in slide-in-from-left-2'
+                                : 'bg-gray-50 dark:bg-[#12141c] text-gray-700 dark:text-gray-300 rounded-tl-none font-medium border border-gray-100 dark:border-white/10 animate-in slide-in-from-left-2'
                             ]"
                         >
                             {{ msg.text }}
                         </div>
                     </div>
                     <div v-if="isTyping" class="flex justify-start">
-                        <div class="bg-gray-50 px-6 py-5 rounded-[2rem] rounded-tl-none border border-gray-100 flex gap-1.5 items-center">
-                            <span class="w-1.5 h-1.5 bg-gray-300 rounded-full animate-bounce"></span>
-                            <span class="w-1.5 h-1.5 bg-gray-300 rounded-full animate-bounce [animation-delay:0.2s]"></span>
-                            <span class="w-1.5 h-1.5 bg-gray-300 rounded-full animate-bounce [animation-delay:0.4s]"></span>
+                        <div class="bg-gray-50 dark:bg-[#12141c] px-6 py-5 rounded-[2rem] rounded-tl-none border border-gray-100 dark:border-white/10 flex gap-1.5 items-center">
+                            <span class="w-1.5 h-1.5 bg-gray-300 dark:bg-gray-500 rounded-full animate-bounce"></span>
+                            <span class="w-1.5 h-1.5 bg-gray-300 dark:bg-gray-500 rounded-full animate-bounce [animation-delay:0.2s]"></span>
+                            <span class="w-1.5 h-1.5 bg-gray-300 dark:bg-gray-500 rounded-full animate-bounce [animation-delay:0.4s]"></span>
                         </div>
                     </div>
                 </div>
@@ -96,7 +96,7 @@
                             v-model="userInput"
                             type="text" 
                             placeholder="Type your inquiry..."
-                            class="relative w-full px-8 py-6 bg-gray-50 border-none focus:bg-white focus:ring-4 focus:ring-primary-500/5 rounded-3xl transition-all duration-500 font-bold text-gray-900 text-sm"
+                            class="relative w-full px-8 py-6 bg-gray-50 dark:bg-[#12141c] border-none focus:bg-white dark:focus:bg-[#1a1d27] focus:ring-4 focus:ring-primary-500/5 rounded-3xl transition-all duration-500 font-bold text-gray-900 dark:text-gray-100 text-sm placeholder:text-gray-400"
                         >
                         <button 
                             type="submit"
@@ -108,7 +108,7 @@
                             </svg>
                         </button>
                     </form>
-                    <p class="text-[9px] font-black text-gray-300 uppercase tracking-[0.2em] mt-6 text-center">Powered by Systematic AI Node</p>
+                    <p class="text-[9px] font-black text-gray-300 dark:text-gray-500 uppercase tracking-[0.2em] mt-6 text-center">Powered by Systematic AI Node</p>
                 </div>
             </div>
         </Transition>

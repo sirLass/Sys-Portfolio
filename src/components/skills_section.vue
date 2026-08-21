@@ -466,24 +466,40 @@ onMounted(async () => {
   pointer-events: none;
   background: linear-gradient(
     to bottom,
-    white 0%,
+    #ffffff 0%,
     transparent 10%,
     transparent 90%,
-    white 100%
+    #ffffff 100%
   );
 }
 
-#Skills .bg-gray-50 {
-  background-color: #f9fafb;
+:global(html.dark) .relative.overflow-hidden::after {
+  background: linear-gradient(
+    to bottom,
+    #151821 0%,
+    transparent 10%,
+    transparent 90%,
+    #151821 100%
+  );
 }
 
 .bg-white .relative.overflow-hidden::after {
   background: linear-gradient(
     to bottom,
-    white 0%,
+    #ffffff 0%,
     transparent 15%,
     transparent 85%,
-    white 100%
+    #ffffff 100%
+  );
+}
+
+:global(html.dark) .bg-white .relative.overflow-hidden::after {
+  background: linear-gradient(
+    to bottom,
+    #151821 0%,
+    transparent 15%,
+    transparent 85%,
+    #151821 100%
   );
 }
 /* Hide scrollbar for Chrome, Safari and Opera */

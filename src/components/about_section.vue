@@ -2,7 +2,7 @@
   <section
     id="About"
     ref="sectionRef"
-    class="about-cast relative min-h-screen bg-[#0a0a0a] text-white overflow-hidden"
+    class="about-cast relative min-h-screen bg-[#0a0a0a] dark:bg-[#0f1117] text-white overflow-hidden"
     aria-label="About section"
   >
     <!-- Loading skeleton -->

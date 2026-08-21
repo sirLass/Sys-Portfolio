@@ -295,15 +295,49 @@ html.dark .landing-page {
   background-clip: text;
 }
 
-html.dark .landing-page .bg-white {
+/* Landing dark surfaces — keep section alternation without bright flash patches */
+html.dark .landing-page .bg-white,
+html.dark .landing-page .hover\:bg-white:hover,
+html.dark .landing-page .focus\:bg-white:focus,
+html.dark .landing-page .group:hover .group-hover\:bg-white {
   background-color: #151821;
 }
 
-html.dark .landing-page .bg-gray-50 {
+html.dark .landing-page .bg-white\/90 {
+  background-color: rgba(21, 24, 33, 0.9);
+}
+
+html.dark .landing-page .bg-white\/95 {
+  background-color: rgba(21, 24, 33, 0.95);
+}
+
+html.dark .landing-page .bg-gray-50,
+html.dark .landing-page .hover\:bg-gray-50:hover {
   background-color: #12141c;
 }
 
-html.dark .landing-page .text-gray-900 {
+html.dark .landing-page .bg-gray-50\/50 {
+  background-color: rgba(18, 20, 28, 0.5);
+}
+
+html.dark .landing-page .bg-gray-100,
+html.dark .landing-page .hover\:bg-gray-100:hover {
+  background-color: #1a1d27;
+}
+
+html.dark .landing-page .bg-gray-100\/50 {
+  background-color: rgba(26, 29, 39, 0.5);
+}
+
+html.dark .landing-page .bg-gray-200 {
+  background-color: #2a2d38;
+}
+
+html.dark .landing-page .text-gray-950,
+html.dark .landing-page .text-gray-900,
+html.dark .landing-page .text-gray-800,
+html.dark .landing-page .hover\:text-gray-950:hover,
+html.dark .landing-page .hover\:text-gray-900:hover {
   color: #f3f4f6;
 }
 
@@ -312,11 +346,80 @@ html.dark .landing-page .text-gray-600 {
   color: #d1d5db;
 }
 
-html.dark .landing-page .text-gray-500 {
+html.dark .landing-page .text-gray-500,
+html.dark .landing-page .text-gray-400 {
   color: #9ca3af;
 }
 
+html.dark .landing-page .text-gray-300 {
+  color: #d1d5db;
+}
+
+html.dark .landing-page .border-gray-50,
 html.dark .landing-page .border-gray-100,
-html.dark .landing-page .border-gray-200 {
+html.dark .landing-page .border-gray-200,
+html.dark .landing-page .hover\:border-gray-100:hover,
+html.dark .landing-page .border-gray-200\/50,
+html.dark .landing-page .border-gray-200\/20 {
   border-color: rgba(255, 255, 255, 0.1);
+}
+
+html.dark .landing-page .bg-gray-200\/60 {
+  background-color: rgba(255, 255, 255, 0.1);
+}
+
+html.dark .landing-page .divide-gray-100 > :not([hidden]) ~ :not([hidden]),
+html.dark .landing-page .border-gray-100\/10 {
+  border-color: rgba(255, 255, 255, 0.08);
+}
+
+/* Soft semantic surfaces that otherwise stay pastel in dark mode */
+html.dark .landing-page .bg-emerald-50 {
+  background-color: rgba(16, 185, 129, 0.12);
+}
+
+html.dark .landing-page .border-emerald-100 {
+  border-color: rgba(16, 185, 129, 0.25);
+}
+
+html.dark .landing-page .text-emerald-800 {
+  color: #a7f3d0;
+}
+
+html.dark .landing-page .text-emerald-600 {
+  color: #6ee7b7;
+}
+
+html.dark .landing-page .bg-rose-50 {
+  background-color: rgba(244, 63, 94, 0.12);
+}
+
+html.dark .landing-page .border-rose-100 {
+  border-color: rgba(244, 63, 94, 0.25);
+}
+
+html.dark .landing-page .text-rose-800 {
+  color: #fecdd3;
+}
+
+html.dark .landing-page .text-rose-600 {
+  color: #fda4af;
+}
+
+html.dark .landing-page .bg-red-50 {
+  background-color: rgba(239, 68, 68, 0.12);
+}
+
+html.dark .landing-page .border-red-50 {
+  border-color: rgba(239, 68, 68, 0.2);
+}
+
+html.dark .landing-page .to-indigo-50\/50 {
+  --tw-gradient-to: rgba(49, 46, 129, 0.35) var(--tw-gradient-to-position);
+}
+
+html.dark .landing-page .shadow-lg,
+html.dark .landing-page .shadow-xl,
+html.dark .landing-page .shadow-2xl {
+  --tw-shadow-color: rgba(0, 0, 0, 0.45);
 }

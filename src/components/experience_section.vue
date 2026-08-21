@@ -63,14 +63,14 @@
           
           <!-- Filter Toggle Buttons -->
           <div class="flex items-center justify-center">
-            <div class="inline-flex bg-gray-100 rounded-full p-1">
+            <div class="inline-flex bg-gray-100 dark:bg-[#1a1d27] rounded-full p-1">
               <button
                 @click="activeFilter = 'all'"
                 :class="[
                   'px-6 py-2 rounded-full text-sm font-medium transition-all duration-300',
                   activeFilter === 'all'
-                    ? 'bg-white text-primary-600 shadow-sm'
-                    : 'text-gray-600 hover:text-gray-900'
+                    ? 'bg-white dark:bg-[#151821] text-primary-600 shadow-sm'
+                    : 'text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-100'
                 ]"
               >
                 All
@@ -80,8 +80,8 @@
                 :class="[
                   'px-6 py-2 rounded-full text-sm font-medium transition-all duration-300',
                   activeFilter === 'educational'
-                    ? 'bg-white text-primary-600 shadow-sm'
-                    : 'text-gray-600 hover:text-gray-900'
+                    ? 'bg-white dark:bg-[#151821] text-primary-600 shadow-sm'
+                    : 'text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-100'
                 ]"
               >
                 Educational
@@ -91,8 +91,8 @@
                 :class="[
                   'px-6 py-2 rounded-full text-sm font-medium transition-all duration-300',
                   activeFilter === 'professional'
-                    ? 'bg-white text-primary-600 shadow-sm'
-                    : 'text-gray-600 hover:text-gray-900'
+                    ? 'bg-white dark:bg-[#151821] text-primary-600 shadow-sm'
+                    : 'text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-100'
                 ]"
               >
                 Professional

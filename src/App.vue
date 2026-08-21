@@ -6,7 +6,7 @@ import LoadingScreen from './components/LoadingScreen.vue'
 import ChatBot from './components/ChatBot.vue'
 import { useTheme } from './composables/useTheme'
 
-useTheme()
+const { isDark } = useTheme()
 
 const currentPalette = ref({
   primary: '#008060',
@@ -27,7 +27,8 @@ const themeVariables = computed(() => {
   const p = currentPalette.value.primary
   const s = currentPalette.value.secondary
   const a = currentPalette.value.accent
-  
+  const dark = isDark.value
+
   return {
     '--primary': p,
     '--secondary': s,
@@ -35,17 +36,38 @@ const themeVariables = computed(() => {
     '--primary-rgb': hexToRgb(p),
     '--secondary-rgb': hexToRgb(s),
     '--accent-rgb': hexToRgb(a),
-    '--primary-light': `color-mix(in srgb, ${p}, transparent 90%)`,
-    '--primary-50': `color-mix(in srgb, ${p}, white 95%)`,
-    '--primary-100': `color-mix(in srgb, ${p}, white 90%)`,
-    '--primary-200': `color-mix(in srgb, ${p}, white 80%)`,
-    '--primary-300': `color-mix(in srgb, ${p}, white 60%)`,
-    '--primary-400': `color-mix(in srgb, ${p}, white 40%)`,
+    '--primary-light': dark
+      ? `color-mix(in srgb, ${p}, transparent 85%)`
+      : `color-mix(in srgb, ${p}, transparent 90%)`,
+    // Dark mode: translucent primary tints instead of white-mixed pastels
+    '--primary-50': dark
+      ? `color-mix(in srgb, ${p}, transparent 88%)`
+      : `color-mix(in srgb, ${p}, white 95%)`,
+    '--primary-100': dark
+      ? `color-mix(in srgb, ${p}, transparent 78%)`
+      : `color-mix(in srgb, ${p}, white 90%)`,
+    '--primary-200': dark
+      ? `color-mix(in srgb, ${p}, transparent 65%)`
+      : `color-mix(in srgb, ${p}, white 80%)`,
+    '--primary-300': dark
+      ? `color-mix(in srgb, ${p}, white 25%)`
+      : `color-mix(in srgb, ${p}, white 60%)`,
+    '--primary-400': dark
+      ? `color-mix(in srgb, ${p}, white 15%)`
+      : `color-mix(in srgb, ${p}, white 40%)`,
     '--primary-500': p,
-    '--primary-600': `color-mix(in srgb, ${p}, black 10%)`,
-    '--primary-700': `color-mix(in srgb, ${p}, black 20%)`,
-    '--primary-800': `color-mix(in srgb, ${p}, black 30%)`,
-    '--primary-900': `color-mix(in srgb, ${p}, black 40%)`
+    '--primary-600': dark
+      ? `color-mix(in srgb, ${p}, white 8%)`
+      : `color-mix(in srgb, ${p}, black 10%)`,
+    '--primary-700': dark
+      ? `color-mix(in srgb, ${p}, white 28%)`
+      : `color-mix(in srgb, ${p}, black 20%)`,
+    '--primary-800': dark
+      ? `color-mix(in srgb, ${p}, white 18%)`
+      : `color-mix(in srgb, ${p}, black 30%)`,
+    '--primary-900': dark
+      ? `color-mix(in srgb, ${p}, black 35%)`
+      : `color-mix(in srgb, ${p}, black 40%)`
   }
 })
 

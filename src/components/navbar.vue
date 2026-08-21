@@ -51,15 +51,6 @@
       </nav>
 
       <div class="flex items-center justify-end gap-2">
-        <button
-          type="button"
-          class="p-2 rounded-full text-gray-600 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-white/10 transition-colors duration-300"
-          :title="isDark ? 'Switch to light mode' : 'Switch to dark mode'"
-          :aria-label="isDark ? 'Switch to light mode' : 'Switch to dark mode'"
-          @click.stop="toggleTheme"
-        >
-          <i :class="['bi text-lg leading-none', isDark ? 'bi-sun' : 'bi-moon']"></i>
-        </button>
         <a
           @click.prevent="smoothScrollTo('#Contact')"
           href="#Contact"
@@ -94,10 +85,8 @@
 import { ref, onMounted, onBeforeUnmount } from 'vue'
 import { useRouter } from 'vue-router'
 import logoUrl from '../assets/sirlass_logo.png'
-import { useTheme } from '../composables/useTheme'
 
 const router = useRouter()
-const { isDark, toggleTheme } = useTheme()
 const clickCount = ref(0)
 const showMessage = ref(false)
 const currentMessage = ref('')
