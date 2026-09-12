@@ -19,7 +19,8 @@ module.exports = {
         }
       },
       fontFamily: {
-        sans: ['Inter', 'system-ui', 'sans-serif']
+        sans: ['Inter', 'system-ui', 'sans-serif'],
+        serif: ['Newsreader', 'Playfair Display', 'Georgia', 'serif']
       },
       spacing: {
         18: '4.5rem',

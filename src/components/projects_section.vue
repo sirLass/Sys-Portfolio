@@ -1,33 +1,34 @@
 <template>
-    <section id="Projects" class="py-24 bg-white">
-        <div class="max-width-7xl mx-auto px-6">
+    <section id="Projects" class="py-24 bg-[#faf9f6] dark:bg-[#0f1117] transition-colors duration-300">
+        <div class="max-w-7xl mx-auto px-6">
             <!-- Loading State -->
             <div v-if="isLoading">
                 <div class="flex flex-col md:flex-row md:items-end justify-between gap-8 mb-16">
                     <div class="text-left max-w-2xl w-full">
-                        <div class="h-6 w-32 bg-gray-200 rounded animate-pulse mb-4"></div>
-                        <div class="h-12 w-64 bg-gray-200 rounded animate-pulse mb-6"></div>
-                        <div class="space-y-3">
-                            <div class="h-4 w-full bg-gray-200 rounded animate-pulse"></div>
-                            <div class="h-4 w-4/5 bg-gray-200 rounded animate-pulse"></div>
+                        <div class="h-4 w-28 bg-stone-200 dark:bg-stone-800 rounded animate-pulse mb-3"></div>
+                        <div class="h-10 w-72 bg-stone-200 dark:bg-stone-800 rounded animate-pulse mb-4"></div>
+                        <div class="space-y-2">
+                            <div class="h-4 w-full bg-stone-200 dark:bg-stone-800 rounded animate-pulse"></div>
+                            <div class="h-4 w-4/5 bg-stone-200 dark:bg-stone-800 rounded animate-pulse"></div>
                         </div>
                     </div>
                     <div class="flex items-center gap-3">
-                        <div class="w-14 h-14 bg-gray-200 rounded-2xl animate-pulse"></div>
-                        <div class="w-14 h-14 bg-gray-200 rounded-2xl animate-pulse"></div>
-                        <div class="h-10 w-px bg-gray-200 mx-2"></div>
-                        <div class="w-28 h-12 bg-gray-200 rounded-2xl animate-pulse"></div>
+                        <div class="w-10 h-10 rounded-full bg-stone-200 dark:bg-stone-800 animate-pulse"></div>
+                        <div class="w-10 h-10 rounded-full bg-stone-200 dark:bg-stone-800 animate-pulse"></div>
+                        <div class="w-24 h-8 rounded-full bg-stone-200 dark:bg-stone-800 animate-pulse"></div>
                     </div>
                 </div>
-                <div class="flex gap-8 pb-8">
-                    <div v-for="i in 3" :key="i" class="min-w-[320px] md:min-w-[400px] lg:min-w-[450px] flex-shrink-0 bg-white rounded-3xl shadow-xl overflow-hidden border border-gray-100 h-[400px]">
-                        <div class="h-64 bg-gray-200 animate-pulse"></div>
-                        <div class="p-6 space-y-3">
-                            <div class="h-6 w-40 bg-gray-200 rounded animate-pulse"></div>
-                            <div class="h-4 w-full bg-gray-200 rounded animate-pulse"></div>
-                            <div class="h-4 w-3/4 bg-gray-200 rounded animate-pulse"></div>
-                            <div class="flex gap-2 pt-2">
-                                <div v-for="j in 3" :key="j" class="h-6 w-16 bg-gray-200 rounded-full animate-pulse"></div>
+                <div class="flex gap-8 pb-8 overflow-hidden">
+                    <div v-for="i in 3" :key="i" class="w-[320px] sm:w-[380px] md:w-[420px] flex-shrink-0 bg-white dark:bg-[#151821] rounded-2xl border border-stone-200/70 dark:border-stone-800/80 overflow-hidden">
+                        <div class="h-64 bg-stone-100 dark:bg-stone-800/50 animate-pulse"></div>
+                        <div class="p-7 space-y-3">
+                            <div class="h-3 w-20 bg-stone-200 dark:bg-stone-800 rounded animate-pulse"></div>
+                            <div class="h-6 w-48 bg-stone-200 dark:bg-stone-800 rounded animate-pulse"></div>
+                            <div class="h-4 w-full bg-stone-100 dark:bg-stone-800/40 rounded animate-pulse"></div>
+                            <div class="h-4 w-3/4 bg-stone-100 dark:bg-stone-800/40 rounded animate-pulse"></div>
+                            <div class="pt-4 border-t border-stone-100 dark:border-stone-800/50 flex justify-between items-center">
+                                <div class="h-3 w-28 bg-stone-200 dark:bg-stone-800 rounded animate-pulse"></div>
+                                <div class="h-3 w-16 bg-stone-200 dark:bg-stone-800 rounded animate-pulse"></div>
                             </div>
                         </div>
                     </div>
@@ -36,411 +37,472 @@
 
             <!-- Error State -->
             <div v-else-if="hasError" class="text-center py-20 px-6">
-                <div class="max-w-md mx-auto bg-white rounded-[2rem] p-10 shadow-xl border border-red-50">
-                    <div class="w-16 h-16 bg-red-50 rounded-2xl flex items-center justify-center mx-auto mb-6">
-                        <svg class="w-8 h-8 text-red-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+                <div class="max-w-md mx-auto bg-white dark:bg-[#151821] rounded-2xl p-10 border border-stone-200 dark:border-stone-800 shadow-sm">
+                    <div class="w-12 h-12 bg-amber-50 dark:bg-amber-950/40 rounded-full flex items-center justify-center mx-auto mb-5">
+                        <svg class="w-6 h-6 text-amber-600 dark:text-amber-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.75" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
                         </svg>
                     </div>
-                    <h3 class="text-2xl font-bold text-gray-900 mb-2">Systems Offline</h3>
-                    <p class="text-gray-500 mb-8 leading-relaxed">We're having trouble connecting to the database. Please verify your environment configuration.</p>
+                    <h3 class="font-serif text-2xl font-normal text-stone-900 dark:text-stone-100 mb-2">Service unavailable</h3>
+                    <p class="text-stone-500 dark:text-stone-400 text-sm leading-relaxed">We could not load project records at this moment. Please check back shortly.</p>
                 </div>
             </div>
 
             <!-- Empty State -->
             <div v-else-if="!projectsData?.projects?.length" class="text-center py-20 px-6">
-                <div class="max-w-md mx-auto bg-gray-50/50 backdrop-blur-sm rounded-[2rem] p-10 border-2 border-dashed border-gray-200">
-                    <div class="w-16 h-16 bg-white rounded-2xl flex items-center justify-center mx-auto mb-6 shadow-sm">
-                        <svg class="w-8 h-8 text-gray-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
+                <div class="max-w-md mx-auto bg-white/60 dark:bg-[#151821]/60 rounded-2xl p-10 border border-dashed border-stone-300 dark:border-stone-800">
+                    <div class="w-12 h-12 bg-stone-100 dark:bg-stone-800 rounded-full flex items-center justify-center mx-auto mb-4 text-stone-400">
+                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.75" d="M12 4v16m8-8H4" />
                         </svg>
                     </div>
-                    <h3 class="text-xl font-bold text-gray-900 mb-2">No Projects Yet</h3>
-                    <p class="text-gray-500 mb-8 leading-relaxed">Ready to showcase your work? Add your first project through the admin dashboard.</p>
+                    <h3 class="font-serif text-2xl font-normal text-stone-900 dark:text-stone-100 mb-2">No projects published</h3>
+                    <p class="text-stone-500 dark:text-stone-400 text-sm leading-relaxed">Case studies and projects will appear here once added in the management console.</p>
                 </div>
             </div>
 
             <!-- Loaded Data -->
             <div v-else>
                 <!-- Section Header -->
-                <div v-if="!isHidden('projects', 'sectionLabel') || !isHidden('projects', 'mainHeading') || !isHidden('projects', 'description')" class="flex flex-col md:flex-row md:items-end justify-between gap-8 mb-16">
+                <div v-if="!isHidden('projects', 'sectionLabel') || !isHidden('projects', 'mainHeading') || !isHidden('projects', 'description')" class="flex flex-col md:flex-row md:items-end justify-between gap-8 mb-14">
                     <div class="text-left max-w-2xl">
-                        <p v-if="!isHidden('projects', 'sectionLabel')" class="text-primary-600 font-semibold text-lg mb-4">{{ projectsData.sectionLabel }}</p>
-                        <h2 v-if="!isHidden('projects', 'mainHeading')" class="text-4xl lg:text-5xl font-bold text-gray-900 mb-6">{{ projectsData.mainHeading }}</h2>
-                        <p v-if="!isHidden('projects', 'description')" class="text-xl text-gray-600 leading-relaxed">
+                        <p v-if="!isHidden('projects', 'sectionLabel')" class="text-primary-600 dark:text-primary-400 font-medium text-xs sm:text-sm tracking-[0.25em] uppercase mb-3">
+                            {{ projectsData.sectionLabel }}
+                        </p>
+                        <h2 v-if="!isHidden('projects', 'mainHeading')" class="font-serif text-3xl sm:text-4xl lg:text-5xl font-normal tracking-tight text-stone-900 dark:text-stone-100 mb-4 leading-tight">
+                            {{ projectsData.mainHeading }}
+                        </h2>
+                        <p v-if="!isHidden('projects', 'description')" class="text-stone-600 dark:text-stone-400 text-base sm:text-lg leading-relaxed font-light">
                             {{ projectsData.description }}
                         </p>
                     </div>
                 </div>
 
-                <!-- Project Type Toggle & Controls Row -->
-                <div class="flex flex-wrap justify-between items-center gap-6 mb-12 border-b border-gray-100 pb-6">
-                    <div class="flex items-center gap-2 p-1.5 bg-gray-50 rounded-2xl border border-gray-200/50">
+                <!-- Project Type Underline Tabs & Carousel Controls Row -->
+                <div class="flex flex-wrap justify-between items-center gap-6 mb-10 border-b border-stone-200 dark:border-stone-800/80 pb-4">
+                    <!-- Underline Tabs -->
+                    <div class="flex items-center gap-8">
                         <button 
                             @click="activeProjectType = 'major'"
                             :class="[
-                                'relative px-6 py-2.5 rounded-xl text-xs font-black uppercase tracking-[0.2em] transition-all duration-300 active:scale-95',
+                                'relative pb-4 text-sm tracking-wider uppercase transition-colors duration-200 cursor-pointer font-medium',
                                 activeProjectType === 'major' 
-                                    ? 'bg-gray-900 text-white shadow-lg' 
-                                    : 'text-gray-400 hover:text-gray-900'
+                                    ? 'text-stone-900 dark:text-stone-100 font-semibold' 
+                                    : 'text-stone-400 dark:text-stone-500 hover:text-stone-700 dark:hover:text-stone-300'
                             ]"
                         >
                             Major Projects
+                            <span 
+                                v-if="activeProjectType === 'major'" 
+                                class="absolute bottom-0 inset-x-0 h-[2px] bg-primary-600 dark:bg-primary-400 transition-all duration-300"
+                            ></span>
                         </button>
                         <button 
                             @click="activeProjectType = 'mini'"
                             :class="[
-                                'relative px-6 py-2.5 rounded-xl text-xs font-black uppercase tracking-[0.2em] transition-all duration-300 active:scale-95',
+                                'relative pb-4 text-sm tracking-wider uppercase transition-colors duration-200 cursor-pointer font-medium',
                                 activeProjectType === 'mini' 
-                                    ? 'bg-gray-900 text-white shadow-lg' 
-                                    : 'text-gray-400 hover:text-gray-900'
+                                    ? 'text-stone-900 dark:text-stone-100 font-semibold' 
+                                    : 'text-stone-400 dark:text-stone-500 hover:text-stone-700 dark:hover:text-stone-300'
                             ]"
                         >
                             Mini Projects
+                            <span 
+                                v-if="activeProjectType === 'mini'" 
+                                class="absolute bottom-0 inset-x-0 h-[2px] bg-primary-600 dark:bg-primary-400 transition-all duration-300"
+                            ></span>
                         </button>
                     </div>
 
                     <!-- Slide Controls & Auto Slide Toggle -->
                     <div class="flex items-center gap-4">
+                        <button 
+                            @click="toggleAutoSlide"
+                            :class="[
+                                'inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full text-xs font-medium transition-all duration-200 border cursor-pointer',
+                                isAutoSlide 
+                                    ? 'border-primary-500/40 text-primary-700 dark:text-primary-300 bg-primary-50/60 dark:bg-primary-950/30' 
+                                    : 'border-stone-200 dark:border-stone-800 text-stone-500 dark:text-stone-400 hover:text-stone-800 dark:hover:text-stone-200'
+                            ]"
+                            title="Toggle automatic slide progression"
+                        >
+                            <span 
+                                :class="[
+                                    'w-1.5 h-1.5 rounded-full transition-colors',
+                                    isAutoSlide ? 'bg-primary-600 dark:bg-primary-400 animate-pulse' : 'bg-stone-300 dark:bg-stone-600'
+                                ]"
+                            ></span>
+                            <span>{{ isAutoSlide ? 'Auto-play on' : 'Auto-play' }}</span>
+                        </button>
+
                         <div class="flex items-center gap-2" v-if="filteredProjects.length > 1">
                             <button 
                                 @click="scrollPrev"
-                                class="p-3 rounded-xl bg-gray-50 border border-gray-200 text-gray-500 hover:text-gray-950 hover:bg-white transition-all shadow-sm active:scale-95"
+                                class="w-9 h-9 rounded-full border border-stone-200 dark:border-stone-800 bg-white dark:bg-[#151821] text-stone-600 dark:text-stone-300 hover:border-stone-400 dark:hover:border-stone-600 hover:text-stone-950 dark:hover:text-white transition-all flex items-center justify-center cursor-pointer shadow-xs"
                                 title="Previous Project"
+                                aria-label="Previous project"
                             >
                                 <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M15 19l-7-7 7-7" />
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.75" d="M15 19l-7-7 7-7" />
                                 </svg>
                             </button>
                             <button 
                                 @click="scrollNext"
-                                class="p-3 rounded-xl bg-gray-50 border border-gray-200 text-gray-500 hover:text-gray-950 hover:bg-white transition-all shadow-sm active:scale-95"
+                                class="w-9 h-9 rounded-full border border-stone-200 dark:border-stone-800 bg-white dark:bg-[#151821] text-stone-600 dark:text-stone-300 hover:border-stone-400 dark:hover:border-stone-600 hover:text-stone-950 dark:hover:text-white transition-all flex items-center justify-center cursor-pointer shadow-xs"
                                 title="Next Project"
+                                aria-label="Next project"
                             >
                                 <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M9 5l7 7-7 7" />
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.75" d="M9 5l7 7-7 7" />
                                 </svg>
                             </button>
                         </div>
-                        <button 
-                            @click="toggleAutoSlide"
-                            :class="[
-                                'flex items-center gap-2 px-6 py-3 rounded-xl text-xs font-bold uppercase tracking-widest transition-all shadow-sm active:scale-95',
-                                isAutoSlide 
-                                    ? 'bg-primary-600 text-white shadow-lg shadow-primary-200' 
-                                    : 'bg-white text-gray-500 border border-gray-200'
-                            ]"
-                        >
-                            <div v-if="isAutoSlide" class="w-1.5 h-1.5 bg-white rounded-full animate-ping"></div>
-                            {{ isAutoSlide ? 'Auto: ON' : 'Auto: OFF' }}
-                        </button>
                     </div>
                 </div>
                 
-                <!-- Filtered Carousel -->
-                <div class="relative group/carousel px-4" v-if="filteredProjects.length > 0">
-                    <!-- Previous Button - Overlay -->
+                <!-- Filtered Carousel Track -->
+                <div class="relative group/carousel -mx-4 px-4" v-if="filteredProjects.length > 0">
+                    <!-- Subtle Previous Button Overlay on track hover -->
                     <button 
                         v-if="filteredProjects.length > 1"
                         @click="scrollPrev"
-                        class="hidden md:flex absolute left-4 top-1/2 -translate-y-1/2 p-4 rounded-2xl bg-white/90 backdrop-blur-md border border-gray-100 text-gray-400 hover:text-primary-600 hover:bg-white transition-all shadow-xl active:scale-95 z-20 opacity-0 group-hover/carousel:opacity-100"
+                        class="hidden md:flex absolute left-6 top-1/2 -translate-y-1/2 w-11 h-11 rounded-full bg-white/95 dark:bg-[#151821]/95 backdrop-blur-md border border-stone-200 dark:border-stone-700 text-stone-600 dark:text-stone-300 hover:text-primary-600 dark:hover:text-primary-400 hover:border-primary-400 transition-all shadow-md z-20 opacity-0 group-hover/carousel:opacity-100 items-center justify-center cursor-pointer"
                         title="Previous Project"
+                        aria-label="Previous project"
                     >
-                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.75" d="M15 19l-7-7 7-7" />
                         </svg>
                     </button>
 
                     <div 
                         ref="projectsScrollRef"
-                        class="flex items-start gap-8 overflow-x-auto scrollbar-hide snap-x snap-mandatory pb-4"
+                        class="flex items-stretch gap-8 overflow-x-auto scrollbar-hide snap-x snap-mandatory pb-6 pt-2"
                         :class="{ 'justify-center': filteredProjects.length === 1 }"
                         style="scrollbar-width: none; -ms-overflow-style: none;"
                         @mouseenter="stopAutoSlide"
                         @mouseleave="resumeAutoSlideIfOn"
                     >
-                        <div
+                        <article
                             v-for="(project, index) in filteredProjects"
                             :key="index"
-                            class="flex-none w-[300px] sm:w-[350px] md:w-[400px] lg:w-[450px] h-auto min-h-[450px] sm:min-h-[500px] snap-center group bg-white rounded-3xl shadow-xl overflow-hidden border border-gray-100"
+                            class="flex-none w-[320px] sm:w-[380px] md:w-[420px] lg:w-[450px] snap-center group bg-white dark:bg-[#151821] rounded-2xl border border-stone-200/80 dark:border-stone-800 overflow-hidden transition-all duration-300 hover:border-stone-300 dark:hover:border-stone-700 hover:shadow-lg dark:hover:shadow-black/40 flex flex-col"
                         >
-                             <div
-                                class="relative h-64 sm:h-80 flex-shrink-0 overflow-hidden bg-gray-950"
-                            >
-                                <!-- Live Website Scraping (High Precision Hero Preview) -->
+                            <!-- Card Hero Preview (Full-Bleed Image Frame) -->
+                            <div class="relative h-60 sm:h-72 flex-shrink-0 overflow-hidden bg-stone-100 dark:bg-stone-900 border-b border-stone-100 dark:border-stone-800/60">
+                                <!-- Live Website Screenshot Preview -->
                                 <div v-if="project.link && project.link !== '#' && project.link.startsWith('http')" class="absolute inset-0 z-[2]">
-                                    <!-- Sync Status Indicator -->
-                                    <div class="absolute top-4 left-1/2 -translate-x-1/2 z-30 opacity-0 group-hover:opacity-100 transition-opacity duration-500">
-                                        <div class="flex items-center gap-2 px-3 py-1.5 bg-green-500/20 backdrop-blur-md border border-green-500/30 rounded-full">
-                                            <div class="w-1.5 h-1.5 bg-green-500 rounded-full animate-pulse"></div>
-                                            <span class="text-[9px] font-black text-green-500 uppercase tracking-tighter">Live Scraping: Active</span>
+                                    <!-- Soft editorial photo-credit style hover label -->
+                                    <div class="absolute top-3.5 left-3.5 z-30 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                                        <div class="flex items-center gap-1.5 px-2.5 py-1 bg-stone-900/75 backdrop-blur-md rounded-md border border-white/10 text-stone-200">
+                                            <span class="w-1.5 h-1.5 bg-emerald-400 rounded-full animate-pulse"></span>
+                                            <span class="text-[10px] font-medium tracking-wider uppercase">Live preview</span>
                                         </div>
                                     </div>
                                     
-                                    <div class="absolute inset-0 bg-black/40 z-10 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
                                     <img 
                                         :src="`https://api.microlink.io/?url=${encodeURIComponent(project.link)}&screenshot=true&embed=screenshot.url&meta=false&waitFor=3500&viewport.width=1280&viewport.height=800`"
-                                        class="absolute inset-0 w-full h-full object-cover object-top group-hover:scale-105 transition-transform duration-[2000ms] ease-out"
-                                        alt="Live Scraping Preview"
+                                        class="absolute inset-0 w-full h-full object-cover object-top group-hover:scale-[1.03] transition-transform duration-700 ease-out"
+                                        alt="Project preview"
                                         loading="lazy"
                                         @error="(e) => (e.target.style.display = 'none')"
                                     />
-                                    <!-- Loading Skeleton / Shimmer -->
-                                    <div class="absolute inset-0 bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900 -z-10 flex items-center justify-center">
-                                        <div class="flex flex-col items-center gap-3">
-                                            <div class="w-10 h-10 border-2 border-primary-500/30 border-t-primary-500 rounded-full animate-spin"></div>
-                                            <span class="text-[10px] font-bold text-gray-500 uppercase tracking-widest">Accessing Real-Time Data...</span>
-                                        </div>
+                                    
+                                    <!-- Quiet Shimmer / Loading State -->
+                                    <div class="absolute inset-0 bg-stone-100 dark:bg-stone-900/90 -z-10 flex flex-col items-center justify-center gap-2.5">
+                                        <div class="w-6 h-6 border-2 border-stone-300 dark:border-stone-700 border-t-primary-600 dark:border-t-primary-400 rounded-full animate-spin"></div>
+                                        <span class="text-[11px] font-medium text-stone-400 dark:text-stone-500 tracking-wider">Preview loading…</span>
                                     </div>
                                 </div>
                                 
-                                <!-- No Link Watermark -->
+                                <!-- No Link Graphical Display -->
                                 <div v-if="!project.link || project.link === '#' || !project.link.startsWith('http')" class="absolute inset-0 flex items-center justify-center" :style="getGradientStyle(project.gradientFrom, project.gradientTo)">
-                                    <div class="text-center opacity-30">
-                                        <svg class="w-20 h-20 text-white mx-auto mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+                                    <div class="text-center opacity-40">
+                                        <svg class="w-14 h-14 text-white mx-auto mb-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.25" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10" />
                                         </svg>
-                                        <p class="text-[10px] font-black text-white uppercase tracking-[0.3em]">Module In Progress</p>
+                                        <p class="text-[10px] font-medium text-white uppercase tracking-[0.25em]">Concept in progress</p>
                                     </div>
                                 </div>
 
-                                <div class="absolute top-4 right-4 z-[25]">
-                                    <span class="bg-black/60 backdrop-blur-md text-white px-3 py-1.5 rounded-xl text-[9px] font-black uppercase tracking-widest border border-white/10 shadow-2xl">{{ project.category }}</span>
+                                <!-- Quiet Category Tag (Top Right) -->
+                                <div class="absolute top-3.5 right-3.5 z-[25]">
+                                    <span class="bg-white/90 dark:bg-stone-900/90 backdrop-blur-md text-stone-700 dark:text-stone-300 px-2.5 py-1 rounded-md text-[10px] font-medium uppercase tracking-wider border border-stone-200/70 dark:border-white/10 shadow-xs">
+                                        {{ project.category }}
+                                    </span>
                                 </div>
-                                <!-- Status Badge (Top Left) -->
-                                <div v-if="!project.link || project.link === '#'" class="absolute top-4 left-4 z-20">
-                                    <div class="flex items-center gap-2 px-3 py-1.5 bg-black/40 backdrop-blur-md border border-white/10 rounded-xl shadow-lg">
-                                        <span class="relative flex h-2 w-2">
-                                            <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-amber-400 opacity-75"></span>
-                                            <span class="relative inline-flex rounded-full h-2 w-2 bg-amber-500"></span>
-                                        </span>
-                                        <span class="text-[10px] font-black text-white uppercase tracking-[0.1em]">In Development</span>
+
+                                <!-- "In Development" quiet caption (Top Left if no external link) -->
+                                <div v-if="!project.link || project.link === '#'" class="absolute top-3.5 left-3.5 z-20">
+                                    <div class="flex items-center gap-1.5 px-2.5 py-1 bg-white/90 dark:bg-stone-900/90 backdrop-blur-md border border-stone-200/70 dark:border-white/10 rounded-md text-stone-700 dark:text-stone-300 shadow-xs">
+                                        <span class="w-1.5 h-1.5 rounded-full bg-amber-500"></span>
+                                        <span class="text-[10px] font-medium tracking-wide">In development</span>
                                     </div>
                                 </div>
                                 
-                                <!-- Floating Favicon (Original Size, No Zoom) -->
-                                <div class="absolute -bottom-6 left-6 w-12 h-12 bg-white rounded-2xl flex items-center justify-center shadow-xl border border-gray-50 z-30 group-hover:-translate-y-2 transition-transform duration-500">
+                                <!-- Floating Favicon (Quiet framed badge) -->
+                                <div class="absolute bottom-3 left-4 w-9 h-9 bg-white dark:bg-[#1e2230] rounded-lg flex items-center justify-center shadow-sm border border-stone-200/80 dark:border-stone-700 z-30 transition-transform duration-300 group-hover:scale-105">
                                     <img 
                                         :src="getFavicon(project.link)" 
-                                        class="w-6 h-6 object-contain"
+                                        class="w-4 h-4 object-contain"
                                         alt="Project icon"
                                         @error="(e) => (e.target.src = 'https://skillicons.dev/icons?i=js')"
                                     />
                                 </div>
                             </div>
-                            <div class="p-8 pt-10">
-                                <h3 class="text-xl font-bold text-gray-900 mb-3">{{ project.title }}</h3>
-                                <p class="text-gray-600 mb-4 leading-relaxed break-words whitespace-normal">{{ project.description?.slice(0, 60) }}{{ project.description?.length > 60 ? '.....' : '' }}</p>
-                                <div class="flex flex-wrap gap-2 mb-6">
+
+                            <!-- Card Caption Block -->
+                            <div class="p-7 flex flex-col flex-1 text-left">
+                                <!-- Eyebrow: index + category -->
+                                <div class="flex items-center gap-2 text-xs font-mono text-primary-600 dark:text-primary-400 tracking-wider uppercase mb-2">
+                                    <span>№ {{ String(index + 1).padStart(2, '0') }}</span>
+                                    <span>·</span>
+                                    <span class="font-sans text-[11px] font-medium tracking-widest text-stone-500 dark:text-stone-400">{{ project.category || 'CASE STUDY' }}</span>
+                                </div>
+
+                                <!-- Editorial Serif Title (Must retain h3 for selectProjectListener search) -->
+                                <h3 class="font-serif text-2xl font-normal text-stone-900 dark:text-stone-100 mb-2.5 leading-snug group-hover:text-primary-600 dark:group-hover:text-primary-400 transition-colors">
+                                    {{ project.title }}
+                                </h3>
+
+                                <!-- Description -->
+                                <p class="text-stone-600 dark:text-stone-400 text-sm leading-relaxed mb-5 line-clamp-2">
+                                    {{ project.description }}
+                                </p>
+
+                                <!-- Subdued Plain/Tag Tech Stack -->
+                                <div class="flex flex-wrap items-center gap-1.5 mb-6 mt-auto">
                                     <span
                                         v-for="(tech, techIndex) in project.technologies"
                                         :key="techIndex"
-                                        class="inline-flex items-center gap-1.5 bg-primary-50 text-primary-700 px-3 py-1 rounded-full text-xs font-semibold border border-primary-100/50 hover:bg-primary-100 transition-colors"
+                                        class="inline-flex items-center gap-1.5 px-2 py-0.5 rounded bg-stone-100 dark:bg-stone-800/80 text-stone-600 dark:text-stone-400 text-[11px] font-medium"
                                     >
                                         <img 
                                             :src="`https://skillicons.dev/icons?i=${getTechIcon(tech)}`" 
-                                            class="w-3.5 h-3.5 object-contain"
+                                            class="w-3 h-3 object-contain opacity-70"
                                             :alt="tech"
                                             @error="(e) => (e.target.style.display = 'none')"
                                         >
                                         {{ tech }}
                                     </span>
                                 </div>
-                                <button
-                                    @click="openModal(project)"
-                                    class="inline-flex items-center text-primary-600 hover:text-primary-700 font-bold group"
-                                >
-                                    View Details
-                                    <svg class="w-4 h-4 ml-2 group-hover:translate-x-1 transition-transform duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"></path>
-                                    </svg>
-                                </button>
+
+                                <!-- Editorial Text Link -->
+                                <div class="pt-4 border-t border-stone-100 dark:border-stone-800/80 flex items-center justify-between">
+                                    <button
+                                        @click="openModal(project)"
+                                        class="group/link inline-flex items-center gap-2 text-sm font-medium text-stone-900 dark:text-stone-100 hover:text-primary-600 dark:hover:text-primary-400 transition-colors cursor-pointer"
+                                    >
+                                        <span>Read the case study</span>
+                                        <svg class="w-4 h-4 text-stone-400 group-hover/link:text-primary-600 dark:group-hover/link:text-primary-400 group-hover/link:translate-x-1 transition-all duration-200" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.75" d="M14 5l7 7m0 0l-7 7m7-7H3"></path>
+                                        </svg>
+                                    </button>
+                                </div>
                             </div>
-                        </div>
+                        </article>
                     </div>
 
-                    <!-- Next Button - Overlay -->
+                    <!-- Subtle Next Button Overlay on track hover -->
                     <button 
                         v-if="filteredProjects.length > 1"
                         @click="scrollNext"
-                        class="hidden md:flex absolute right-4 top-1/2 -translate-y-1/2 p-4 rounded-2xl bg-white/90 backdrop-blur-md border border-gray-100 text-gray-400 hover:text-primary-600 hover:bg-white transition-all shadow-xl active:scale-95 z-20 opacity-0 group-hover/carousel:opacity-100"
+                        class="hidden md:flex absolute right-6 top-1/2 -translate-y-1/2 w-11 h-11 rounded-full bg-white/95 dark:bg-[#151821]/95 backdrop-blur-md border border-stone-200 dark:border-stone-700 text-stone-600 dark:text-stone-300 hover:text-primary-600 dark:hover:text-primary-400 hover:border-primary-400 transition-all shadow-md z-20 opacity-0 group-hover/carousel:opacity-100 items-center justify-center cursor-pointer"
                         title="Next Project"
+                        aria-label="Next project"
                     >
-                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.75" d="M9 5l7 7-7 7" />
                         </svg>
                     </button>
                 </div>
 
                 <!-- Empty Filter State -->
-                <div v-else class="text-center py-20 px-6 animate-in fade-in duration-500">
-                    <div class="max-w-md mx-auto bg-gray-50/50 backdrop-blur-sm rounded-[2rem] p-10 border-2 border-dashed border-gray-200">
-                        <div class="w-16 h-16 bg-white rounded-2xl flex items-center justify-center mx-auto mb-6 shadow-sm">
-                            <svg class="w-8 h-8 text-gray-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
+                <div v-else class="text-center py-20 px-6 animate-in fade-in duration-300">
+                    <div class="max-w-md mx-auto bg-white/70 dark:bg-[#151821]/70 rounded-2xl p-10 border border-dashed border-stone-300 dark:border-stone-800">
+                        <div class="w-12 h-12 bg-stone-100 dark:bg-stone-800 rounded-full flex items-center justify-center mx-auto mb-4 text-stone-400">
+                            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.75" d="M12 4v16m8-8H4" />
                             </svg>
                         </div>
-                        <h3 class="text-xl font-bold text-gray-900 mb-2">No {{ activeProjectType === 'major' ? 'Major' : 'Mini' }} Projects Yet</h3>
-                        <p class="text-gray-500 mb-8 leading-relaxed">Ready to showcase your work? Add your first {{ activeProjectType === 'major' ? 'major' : 'mini' }} project through the admin dashboard.</p>
+                        <h3 class="font-serif text-xl font-normal text-stone-900 dark:text-stone-100 mb-2">
+                            No {{ activeProjectType === 'major' ? 'Major' : 'Mini' }} projects yet
+                        </h3>
+                        <p class="text-stone-500 dark:text-stone-400 text-sm leading-relaxed">
+                            Projects under this category will be showcased here once updated.
+                        </p>
                     </div>
                 </div>
 
             </div> <!-- End of Loaded Data v-else -->
 
-                <!-- Project Detail Modal (Empty Shell) -->
-                <Transition
-                    enter-active-class="transition duration-300 ease-out"
-                    enter-from-class="opacity-0"
-                    enter-to-class="opacity-100"
-                    leave-active-class="transition duration-200 ease-in"
-                    leave-from-class="opacity-100"
-                    leave-to-class="opacity-0"
-                >
-                    <div v-if="selectedProject" class="fixed inset-0 z-[100] flex items-center justify-center p-4 sm:p-6 pb-20 sm:pb-6">
-                        <!-- Backdrop -->
-                        <div @click="closeModal" class="absolute inset-0 bg-gray-900/60 backdrop-blur-sm"></div>
-                        
-                        <!-- Modal Content Shell - Unified Clean Node -->
-                        <div 
-                            class="relative bg-white w-full max-w-5xl h-[90vh] md:h-[85vh] rounded-[2.5rem] overflow-hidden shadow-2xl animate-in fade-in zoom-in duration-300 flex flex-col"
-                        >
-                            <!-- Tab Navigation (Master Control) -->
-                            <div class="px-10 md:px-16 pt-12 pb-0 border-b border-gray-100 bg-white sticky top-0 z-50 flex items-center justify-between">
-                                <div class="flex gap-12">
-                                    <button 
-                                        @click="activeTab = 'description'"
-                                        :class="[
-                                            'pb-6 text-[11px] font-black uppercase tracking-[0.4em] transition-all border-b-2',
-                                            activeTab === 'description' ? 'border-primary-600 text-primary-600' : 'border-transparent text-gray-400 hover:text-gray-600'
-                                        ]"
-                                    >
-                                        Description
-                                    </button>
-                                    <button 
-                                        @click="activeTab = 'web'"
-                                        :class="[
-                                            'pb-6 text-[11px] font-black uppercase tracking-[0.4em] transition-all border-b-2',
-                                            activeTab === 'web' ? 'border-primary-600 text-primary-600' : 'border-transparent text-gray-400 hover:text-gray-600'
-                                        ]"
-                                    >
-                                        Web Display
-                                    </button>
-                                </div>
-                                
+            <!-- Project Detail Modal (Editorial Spread) -->
+            <Transition
+                enter-active-class="transition duration-300 ease-out"
+                enter-from-class="opacity-0"
+                enter-to-class="opacity-100"
+                leave-active-class="transition duration-200 ease-in"
+                leave-from-class="opacity-100"
+                leave-to-class="opacity-0"
+            >
+                <div v-if="selectedProject" class="fixed inset-0 z-[100] flex items-center justify-center p-4 sm:p-6 md:p-8">
+                    <!-- Backdrop -->
+                    <div @click="closeModal" class="absolute inset-0 bg-stone-950/60 backdrop-blur-sm transition-opacity"></div>
+                    
+                    <!-- Modal Content Container -->
+                    <div 
+                        class="relative bg-white dark:bg-[#141721] w-full max-w-4xl max-h-[90vh] md:max-h-[85vh] rounded-2xl overflow-hidden shadow-2xl border border-stone-200/80 dark:border-stone-800 flex flex-col animate-in fade-in zoom-in-95 duration-200"
+                    >
+                        <!-- Modal Header & Tab Navigation -->
+                        <div class="px-8 md:px-12 pt-8 pb-0 border-b border-stone-200 dark:border-stone-800/80 bg-white dark:bg-[#141721] sticky top-0 z-50 flex items-center justify-between">
+                            <div class="flex gap-8">
                                 <button 
-                                    @click="closeModal"
-                                    class="pb-6 p-2 text-gray-400 hover:text-gray-900 transition-all"
+                                    @click="activeTab = 'description'"
+                                    :class="[
+                                        'pb-4 text-xs font-medium uppercase tracking-[0.2em] transition-colors border-b-2 cursor-pointer',
+                                        activeTab === 'description' 
+                                            ? 'border-primary-600 dark:border-primary-400 text-stone-900 dark:text-stone-100 font-semibold' 
+                                            : 'border-transparent text-stone-400 dark:text-stone-500 hover:text-stone-700 dark:hover:text-stone-300'
+                                    ]"
                                 >
-                                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M6 18L18 6M6 6l12 12" />
-                                    </svg>
+                                    Overview
+                                </button>
+                                <button 
+                                    @click="activeTab = 'web'"
+                                    :class="[
+                                        'pb-4 text-xs font-medium uppercase tracking-[0.2em] transition-colors border-b-2 cursor-pointer',
+                                        activeTab === 'web' 
+                                            ? 'border-primary-600 dark:border-primary-400 text-stone-900 dark:text-stone-100 font-semibold' 
+                                            : 'border-transparent text-stone-400 dark:text-stone-500 hover:text-stone-700 dark:hover:text-stone-300'
+                                    ]"
+                                >
+                                    Live Preview
                                 </button>
                             </div>
+                            
+                            <button 
+                                @click="closeModal"
+                                class="pb-4 text-stone-400 hover:text-stone-900 dark:hover:text-white transition-colors cursor-pointer"
+                                aria-label="Close modal"
+                            >
+                                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.75" d="M6 18L18 6M6 6l12 12" />
+                                </svg>
+                            </button>
+                        </div>
 
-                            <div class="flex-1 overflow-y-auto">
-                                <!-- TAB: Description Content -->
-                                <div v-if="activeTab === 'description'" class="p-10 md:p-16 text-left animate-in fade-in slide-in-from-left-5 duration-500">
-                                    <div class="max-w-4xl">
-                                        <header class="mb-16">
-                                            <h2 class="text-5xl md:text-7xl font-black text-gray-900 leading-[1.05] tracking-tighter mb-8 italic uppercase">{{ selectedProject.title }}</h2>
-                                            <div class="flex items-center gap-4">
-                                                <span class="w-12 h-[2px] bg-primary-500"></span>
-                                                <h4 class="text-[12px] font-black text-primary-500 uppercase tracking-[0.5em]">Insight & Execution</h4>
-                                            </div>
-                                        </header>
+                        <!-- Modal Scrollable Body -->
+                        <div class="flex-1 overflow-y-auto">
+                            <!-- TAB: Description / Editorial Spread -->
+                            <div v-if="activeTab === 'description'" class="p-8 md:p-12 text-left animate-in fade-in duration-300">
+                                <div class="max-w-3xl">
+                                    <!-- Eyebrow & Headline -->
+                                    <header class="mb-10">
+                                        <div class="flex items-center gap-3 mb-3 text-xs font-mono uppercase tracking-widest text-primary-600 dark:text-primary-400">
+                                            <span>Case Study</span>
+                                            <span>·</span>
+                                            <span class="text-stone-500 dark:text-stone-400 font-sans font-medium">{{ selectedProject.category }}</span>
+                                        </div>
+                                        <h2 class="font-serif text-3xl sm:text-4xl md:text-5xl font-normal text-stone-900 dark:text-stone-100 leading-tight tracking-tight">
+                                            {{ selectedProject.title }}
+                                        </h2>
+                                    </header>
 
-                                        <div class="space-y-20">
-                                            <!-- Main Description Text -->
-                                            <div class="max-w-3xl">
-                                                <p class="text-gray-600 leading-relaxed text-xl font-medium whitespace-pre-line">
-                                                    {{ selectedProject.description }}
-                                                </p>
-                                            </div>
+                                    <div class="space-y-12">
+                                        <!-- Main Description Text -->
+                                        <div>
+                                            <h4 class="text-xs font-semibold text-stone-400 dark:text-stone-500 uppercase tracking-widest mb-4">Summary</h4>
+                                            <p class="text-stone-700 dark:text-stone-300 leading-relaxed text-base sm:text-lg font-light whitespace-pre-line max-w-2xl">
+                                                {{ selectedProject.description }}
+                                            </p>
+                                        </div>
 
-                                            <!-- Technology Section -->
-                                            <div>
-                                                <h4 class="text-[11px] font-black text-gray-400 uppercase tracking-[0.4em] mb-10">System Infrastructure</h4>
-                                                <div class="flex flex-wrap gap-4">
-                                                    <div 
-                                                        v-for="(tech, techIndex) in selectedProject.technologies" 
-                                                        :key="techIndex"
-                                                        class="flex items-center gap-5 px-8 py-5 bg-gray-50 border border-gray-100 rounded-2xl hover:bg-white hover:shadow-2xl hover:border-transparent transition-all duration-300 group"
+                                        <!-- Technology Section -->
+                                        <div>
+                                            <h4 class="text-xs font-semibold text-stone-400 dark:text-stone-500 uppercase tracking-widest mb-4">Technologies Used</h4>
+                                            <div class="flex flex-wrap gap-2.5">
+                                                <div 
+                                                    v-for="(tech, techIndex) in selectedProject.technologies" 
+                                                    :key="techIndex"
+                                                    class="inline-flex items-center gap-2 px-3.5 py-2 bg-stone-50 dark:bg-stone-800/60 border border-stone-200/80 dark:border-stone-700/60 rounded-lg text-xs font-medium text-stone-700 dark:text-stone-300"
+                                                >
+                                                    <img 
+                                                        :src="`https://skillicons.dev/icons?i=${getTechIcon(tech)}`" 
+                                                        class="w-4 h-4 object-contain opacity-80"
+                                                        :alt="tech"
+                                                        @error="(e) => (e.target.style.display = 'none')"
                                                     >
-                                                        <img 
-                                                            :src="`https://skillicons.dev/icons?i=${getTechIcon(tech)}`" 
-                                                            class="w-10 h-10 object-contain grayscale group-hover:grayscale-0 transition-all duration-500"
-                                                            :alt="tech"
-                                                        >
-                                                        <span class="text-[13px] font-black text-gray-900 tracking-tight">{{ tech }}</span>
-                                                    </div>
+                                                    <span>{{ tech }}</span>
                                                 </div>
                                             </div>
+                                        </div>
 
-                                            <!-- Final Action -->
-                                            <div class="pt-10 border-t border-gray-100">
-                                                <a 
-                                                    v-if="selectedProject.link"
-                                                    :href="selectedProject.link"
-                                                    target="_blank"
-                                                    class="inline-flex items-center justify-center gap-6 px-14 py-6 bg-gray-900 hover:bg-black text-white rounded-2xl font-black shadow-2xl transition-all active:scale-95 text-[11px] uppercase tracking-[0.3em]"
-                                                >
-                                                    Explore Reality
-                                                    <svg class="w-5 h-5 text-primary-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
-                                                    </svg>
-                                                </a>
-                                            </div>
+                                        <!-- Final Action -->
+                                        <div class="pt-8 border-t border-stone-200 dark:border-stone-800/80" v-if="selectedProject.link && selectedProject.link !== '#'">
+                                            <a 
+                                                :href="selectedProject.link"
+                                                target="_blank"
+                                                rel="noopener noreferrer"
+                                                class="group inline-flex items-center gap-2 text-sm font-medium text-primary-600 dark:text-primary-400 hover:text-primary-700 dark:hover:text-primary-300 transition-colors"
+                                            >
+                                                <span>Visit the live site</span>
+                                                <svg class="w-4 h-4 group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.75" d="M14 5l7 7m0 0l-7 7m7-7H3" />
+                                                </svg>
+                                            </a>
                                         </div>
                                     </div>
                                 </div>
+                            </div>
 
-                                <!-- TAB: Web Display Content -->
-                                <div v-else-if="activeTab === 'web'" class="h-full flex flex-col animate-in fade-in zoom-in-95 duration-500">
-                                    <div v-if="selectedProject.link && selectedProject.link !== '#'" class="flex-1 p-6 md:p-12">
-                                        <!-- Desktop Simulator Frame -->
-                                        <div class="h-full bg-gray-950 rounded-[2.5rem] overflow-hidden shadow-2xl border border-gray-800 flex flex-col">
-                                            <!-- Browser Chrome -->
-                                            <div class="bg-gray-900 px-8 py-5 flex items-center justify-between border-b border-gray-800">
-                                                <div class="flex gap-2.5">
-                                                    <div class="w-3.5 h-3.5 bg-red-500 rounded-full"></div>
-                                                    <div class="w-3.5 h-3.5 bg-amber-500 rounded-full"></div>
-                                                    <div class="w-3.5 h-3.5 bg-green-500 rounded-full"></div>
-                                                </div>
-                                                <div class="flex-1 max-w-xl mx-auto bg-black/40 rounded-xl px-4 py-2 flex items-center gap-3 border border-white/5">
-                                                    <div class="w-1.5 h-1.5 rounded-full bg-green-500 animate-pulse"></div>
-                                                    <span class="text-[10px] text-gray-500 font-bold tracking-widest uppercase truncate">{{ selectedProject.link }}</span>
-                                                </div>
-                                                <div class="w-20"></div>
-                                            </div>
-                                            <!-- Scraping Stage -->
-                                            <div class="flex-1 relative bg-gray-900">
-                                                <img 
-                                                    :src="`https://api.microlink.io/?url=${encodeURIComponent(selectedProject.link)}&screenshot=true&embed=screenshot.url&viewport.width=1920&viewport.height=1080&waitFor=4000`"
-                                                    class="w-full h-full object-cover object-top"
-                                                    alt="Live Project Scrap"
-                                                />
-                                                <!-- Loading State -->
-                                                <div class="absolute inset-0 bg-gray-950 flex flex-col items-center justify-center -z-10 gap-6">
-                                                    <div class="w-16 h-16 border-4 border-primary-500/20 border-t-primary-500 rounded-full animate-spin"></div>
-                                                    <span class="text-[11px] font-black text-gray-500 uppercase tracking-[0.4em]">Fetching Live Node...</span>
-                                                </div>
-                                            </div>
+                            <!-- TAB: Web Display / Refined Browser Simulator -->
+                            <div v-else-if="activeTab === 'web'" class="h-full flex flex-col p-6 sm:p-8 animate-in fade-in duration-300 min-h-[500px]">
+                                <div v-if="selectedProject.link && selectedProject.link !== '#'" class="flex-1 flex flex-col rounded-xl overflow-hidden border border-stone-200 dark:border-stone-800 shadow-sm bg-stone-50 dark:bg-stone-900">
+                                    <!-- Refined Lightened Browser Chrome -->
+                                    <div class="bg-stone-100 dark:bg-stone-900/90 px-5 py-3 flex items-center justify-between border-b border-stone-200 dark:border-stone-800">
+                                        <div class="flex gap-2">
+                                            <div class="w-3 h-3 bg-red-400/80 rounded-full"></div>
+                                            <div class="w-3 h-3 bg-amber-400/80 rounded-full"></div>
+                                            <div class="w-3 h-3 bg-emerald-400/80 rounded-full"></div>
                                         </div>
-                                    </div>
-                                    <div v-else class="flex-1 flex flex-col items-center justify-center p-20 text-center">
-                                        <div class="w-24 h-24 bg-gray-100 rounded-full flex items-center justify-center mb-8 border border-gray-200">
-                                            <svg class="w-10 h-10 text-gray-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M13 10V3L4 14h7v7l9-11h-7z" />
+                                        <div class="flex-1 max-w-md mx-4 bg-white dark:bg-stone-800 rounded-md px-3 py-1 flex items-center gap-2 border border-stone-200/80 dark:border-stone-700">
+                                            <svg class="w-3 h-3 text-stone-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
                                             </svg>
+                                            <span class="text-xs text-stone-500 dark:text-stone-400 font-mono truncate">{{ selectedProject.link }}</span>
                                         </div>
-                                        <h3 class="text-3xl font-black text-gray-900 mb-4 tracking-tighter uppercase">Local Instance Only</h3>
-                                        <p class="text-gray-500 max-w-sm font-medium">This architectural module hasn't been deployed to a public node yet. The live scrap is currently unavailable.</p>
+                                        <div class="w-10"></div>
                                     </div>
+                                    
+                                    <!-- Live Screenshot Frame -->
+                                    <div class="flex-1 relative bg-stone-100 dark:bg-stone-950 min-h-[400px]">
+                                        <img 
+                                            :src="`https://api.microlink.io/?url=${encodeURIComponent(selectedProject.link)}&screenshot=true&embed=screenshot.url&viewport.width=1920&viewport.height=1080&waitFor=4000`"
+                                            class="w-full h-full object-cover object-top"
+                                            alt="Live project preview"
+                                            loading="lazy"
+                                        />
+                                        <!-- Shimmer Loading -->
+                                        <div class="absolute inset-0 bg-stone-100 dark:bg-stone-900 flex flex-col items-center justify-center -z-10 gap-3">
+                                            <div class="w-8 h-8 border-2 border-stone-300 dark:border-stone-700 border-t-primary-600 dark:border-t-primary-400 rounded-full animate-spin"></div>
+                                            <span class="text-xs font-medium text-stone-500 dark:text-stone-400 tracking-wider">Loading preview…</span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div v-else class="flex-1 flex flex-col items-center justify-center p-12 text-center">
+                                    <div class="w-14 h-14 bg-stone-100 dark:bg-stone-800 rounded-full flex items-center justify-center mb-4 text-stone-400">
+                                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.75" d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1" />
+                                        </svg>
+                                    </div>
+                                    <h3 class="font-serif text-2xl font-normal text-stone-900 dark:text-stone-100 mb-2">Live preview unavailable</h3>
+                                    <p class="text-stone-500 dark:text-stone-400 max-w-sm text-sm leading-relaxed">This project has not been deployed to a public URL yet.</p>
                                 </div>
                             </div>
                         </div>
                     </div>
-                </Transition>
+                </div>
+            </Transition>
         </div>
     </section>
 </template>
