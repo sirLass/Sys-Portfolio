@@ -202,7 +202,7 @@
                   <td class="px-6 py-4 text-right space-x-2">
                     <button
                       type="button"
-                      @click="openModal(index)"
+                      @click="openModal(originalIndex(experience))"
                       class="p-2 text-[#2c6ecb] hover:bg-[#ebf5fe] rounded-md transition-all"
                       title="Edit"
                     >
@@ -212,7 +212,7 @@
                     </button>
                     <button
                       type="button"
-                      @click="removeExperience(index)"
+                      @click="removeExperience(originalIndex(experience))"
                       class="p-2 text-[#d72c0d] hover:bg-[#fff4f4] rounded-md transition-all"
                       title="Remove"
                     >
@@ -273,9 +273,36 @@
         
         <!-- Modal Body -->
         <div class="p-8 space-y-8 max-h-[75vh] overflow-y-auto">
+          <!-- Step indicator -->
+          <div class="flex items-center gap-2 mb-6">
+            <template v-for="(stepLabel, idx) in STEP_LABELS" :key="stepLabel">
+              <div class="flex items-center gap-2">
+                <span
+                  class="flex h-6 w-6 shrink-0 items-center justify-center rounded-full text-[11px] font-semibold transition-colors"
+                  :class="modalStep > idx + 1
+                    ? 'bg-[var(--admin-primary-light)] text-[var(--admin-primary)]'
+                    : modalStep === idx + 1
+                      ? 'bg-[var(--admin-primary)] text-white'
+                      : 'bg-[#e3e5e7] text-[#6d7175]'"
+                >
+                  {{ modalStep > idx + 1 ? '✓' : idx + 1 }}
+                </span>
+                <span
+                  class="text-xs whitespace-nowrap"
+                  :class="modalStep === idx + 1 ? 'text-[#1a1b1c] font-semibold' : 'text-[#6d7175]'"
+                >{{ stepLabel }}</span>
+              </div>
+              <div
+                v-if="idx < STEP_LABELS.length - 1"
+                class="h-px flex-1 transition-colors"
+                :class="modalStep > idx + 1 ? 'bg-[var(--admin-primary)]' : 'bg-[#e3e5e7]'"
+              ></div>
+            </template>
+          </div>
+
           <!-- Category & Date Range & Title Layer -->
           <div class="space-y-6">
-            <div class="text-center mb-6">
+            <div v-show="modalStep === 1" class="text-center mb-6">
               <label class="block text-sm font-medium text-[#1a1b1c] mb-2">Category</label>
               <div class="flex justify-center">
                 <select 
@@ -288,28 +315,52 @@
               </div>
             </div>
 
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+            <div v-show="modalStep === 1" class="grid grid-cols-1 md:grid-cols-2 gap-8">
               <div class="space-y-4">
                 <label class="block text-sm font-medium text-[#1a1b1c] text-center">Date Range</label>
-                <input
-                  v-model="currentExperience.dateRange"
-                  type="text"
-                  class="w-full px-4 py-2.5 text-sm bg-white border border-[#c9cccf] rounded-md focus:outline-none focus:border-[var(--admin-primary)] focus:ring-2 focus:ring-[var(--admin-primary)]/20 transition-all"
-                  placeholder="e.g., 2025 - Present"
-                />
+                <div class="space-y-3">
+                  <input
+                    v-model="dateStart"
+                    type="date"
+                    aria-label="Start date"
+                    @change="composeDateRange"
+                    class="w-full px-4 py-2.5 text-sm bg-white border border-[#c9cccf] rounded-md focus:outline-none focus:border-[var(--admin-primary)] focus:ring-2 focus:ring-[var(--admin-primary)]/20 transition-all"
+                  />
+                  <div class="flex items-center gap-3">
+                    <input
+                      v-model="dateEnd"
+                      type="date"
+                      aria-label="End date"
+                      :disabled="!dateStart || dateOngoing"
+                      @change="composeDateRange"
+                      class="min-w-0 flex-1 px-4 py-2.5 text-sm bg-white border border-[#c9cccf] rounded-md focus:outline-none focus:border-[var(--admin-primary)] focus:ring-2 focus:ring-[var(--admin-primary)]/20 transition-all disabled:bg-[#f6f6f7] disabled:text-[#6d7175] disabled:cursor-not-allowed"
+                    />
+                    <label class="flex items-center gap-2 text-sm text-[#1a1b1c] whitespace-nowrap cursor-pointer select-none">
+                      <input
+                        v-model="dateOngoing"
+                        type="checkbox"
+                        :disabled="!dateStart"
+                        @change="onOngoingToggle"
+                        class="w-4 h-4 accent-[var(--admin-primary)] cursor-pointer"
+                      />
+                      Present
+                    </label>
+                  </div>
+                </div>
               </div>
               <div class="space-y-4">
                 <label class="block text-sm font-medium text-[#1a1b1c] text-center">Title</label>
                 <input
                   v-model="currentExperience.title"
                   type="text"
+                  @keyup.enter="goModalNextStep"
                   class="w-full px-4 py-2.5 text-sm bg-white border border-[#c9cccf] rounded-md focus:outline-none focus:border-[var(--admin-primary)] focus:ring-2 focus:ring-[var(--admin-primary)]/20 transition-all"
                   placeholder="e.g., Senior Developer"
                 />
               </div>
             </div>
 
-            <div class="space-y-4">
+            <div v-show="modalStep === 2" class="space-y-4">
               <label class="block text-sm font-medium text-[#1a1b1c] text-center">Subtitle</label>
               <input
                 v-model="currentExperience.subtitle"
@@ -319,7 +370,7 @@
               />
             </div>
 
-            <div class="space-y-4">
+            <div v-show="modalStep === 2" class="space-y-4">
               <label class="block text-sm font-medium text-[#1a1b1c] text-center">Description</label>
               <textarea
                 v-model="currentExperience.description"
@@ -329,7 +380,7 @@
               ></textarea>
             </div>
 
-            <div class="space-y-4">
+            <div v-show="modalStep === 3" class="space-y-4">
               <label class="block text-sm font-medium text-[#1a1b1c] text-center">Bullet Points</label>
               <div class="space-y-3">
                 <div v-for="(point, pIdx) in currentExperience.bulletPoints" :key="pIdx" class="flex items-center gap-4">
@@ -369,19 +420,43 @@
         </div>
 
         <!-- Modal Footer -->
-        <div class="px-8 py-5 border-t border-[#c9cccf] bg-[#f6f6f7] flex items-center justify-end gap-3">
+        <div class="px-8 py-5 border-t border-[#c9cccf] bg-[#f6f6f7] flex items-center justify-between gap-3">
           <button
-            @click="closeModal"
-            class="px-5 py-2.5 text-sm font-medium text-[#1a1b1c] hover:bg-white rounded-md border border-[#c9cccf] transition-all"
+            v-if="modalStep > 1"
+            @click="goModalPrevStep"
+            class="inline-flex items-center gap-1.5 px-4 py-2.5 text-sm font-medium text-[#1a1b1c] hover:bg-white rounded-md border border-[#c9cccf] transition-all"
           >
-            Cancel
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M15 19l-7-7 7-7" />
+            </svg>
+            Back
           </button>
-          <button
-            @click="saveTimelineItem"
-            class="px-8 py-2.5 text-sm font-medium text-white bg-[var(--admin-primary)] rounded-md hover:bg-[var(--admin-secondary)] transition-all shadow-sm"
-          >
-            {{ editingIndex !== null ? 'Update Timeline' : 'Add to Timeline' }}
-          </button>
+          <span v-else></span>
+          <div class="flex items-center gap-3">
+            <button
+              @click="closeModal"
+              class="px-5 py-2.5 text-sm font-medium text-[#1a1b1c] hover:bg-white rounded-md border border-[#c9cccf] transition-all"
+            >
+              Cancel
+            </button>
+            <button
+              v-if="modalStep < STEP_LABELS.length"
+              @click="goModalNextStep"
+              class="inline-flex items-center gap-1.5 px-8 py-2.5 text-sm font-medium text-white bg-[var(--admin-primary)] rounded-md hover:bg-[var(--admin-secondary)] transition-all shadow-sm"
+            >
+              Next
+              <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7" />
+              </svg>
+            </button>
+            <button
+              v-else
+              @click="saveTimelineItem"
+              class="px-8 py-2.5 text-sm font-medium text-white bg-[var(--admin-primary)] rounded-md hover:bg-[var(--admin-secondary)] transition-all shadow-sm"
+            >
+              {{ editingIndex !== null ? 'Update Timeline' : 'Add to Timeline' }}
+            </button>
+          </div>
         </div>
       </div>
     </div>
@@ -427,11 +502,40 @@ watch(activeFilter, (newValue) => {
   experienceData.value.activeFilter = newValue
 })
 
+// Start date parsed from the dateRange string ("Jan 15, 2023 - ...", "2024 - 2025", "2025 - Present", ISO)
+const startDateFromRange = (range) => {
+  if (!range) return null
+  const startPart = String(range).split(/\s+[–-]\s+/)[0].trim()
+  let d = new Date(startPart)
+  if (isNaN(d.getTime())) {
+    const year = startPart.match(/\d{4}/)
+    if (year) d = new Date(year[0])
+  }
+  return isNaN(d.getTime()) ? null : d
+}
+
+// Current -> past (newest first); entries without a parseable date still go last
+const sortByDateDesc = (a, b) => {
+  const da = startDateFromRange(a.dateRange)
+  const db = startDateFromRange(b.dateRange)
+  if (!da && !db) return 0
+  if (!da) return 1
+  if (!db) return -1
+  return db - da
+}
+
 const filteredExperiences = computed(() => {
   if (!experienceData.value.experiences) return []
-  if (activeFilter.value === 'all') return experienceData.value.experiences
-  return experienceData.value.experiences.filter(exp => exp.type === activeFilter.value)
+  const list = activeFilter.value === 'all'
+    ? [...experienceData.value.experiences]
+    : experienceData.value.experiences.filter(exp => exp.type === activeFilter.value)
+  return list.sort(sortByDateDesc)
 })
+
+// The table renders filteredExperiences, but edit/remove must target the position
+// in the FULL experiences array — resolve it via the object reference, never the
+// filtered row index (that opened/deleted the wrong entry when a filter was active).
+const originalIndex = (experience) => experienceData.value.experiences.indexOf(experience)
 
 // Load data from localStorage on mount
 onMounted(() => {
@@ -522,6 +626,99 @@ const loadFromStorage = () => {
   }
 }
 
+// Date Range calendar pickers (native month/day/year inputs)
+const dateStart = ref('')
+const dateEnd = ref('')
+const dateOngoing = ref(false)
+
+const dateToISO = (d) =>
+  `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`
+
+const formatPickerDate = (iso) => {
+  const d = new Date(`${iso}T00:00:00`)
+  if (isNaN(d.getTime())) return ''
+  return d.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })
+}
+
+// Fill the calendar inputs from an existing dateRange string
+// ("2024 - 2025", "2025 - Present", "2023-05-01 - 2024-06-01", "Jan 15, 2023 - ...")
+const parseDateRangeToPicker = (range) => {
+  dateStart.value = ''
+  dateEnd.value = ''
+  dateOngoing.value = false
+  if (!range) return
+
+  const isos = range.match(/\d{4}-\d{2}-\d{2}/g)
+  if (isos && isos.length) {
+    dateStart.value = isos[0]
+    if (isos.length > 1) {
+      dateEnd.value = isos[1]
+    } else {
+      dateOngoing.value = /present|now|ongoing|current/i.test(range)
+    }
+    return
+  }
+
+  const yearOnly = range.match(/^\s*(\d{4})\s*[–-]\s*(\d{4}|present|now|ongoing|current)?\s*$/i)
+  if (yearOnly) {
+    dateStart.value = `${yearOnly[1]}-01-01`
+    if (yearOnly[2] && /^\d{4}$/.test(yearOnly[2])) {
+      dateEnd.value = `${yearOnly[2]}-01-01`
+    } else {
+      dateOngoing.value = true
+    }
+    return
+  }
+
+  const parts = range.split(/\s*[–-]\s*/)
+  const start = new Date(parts[0].trim())
+  if (!isNaN(start.getTime())) {
+    dateStart.value = dateToISO(start)
+    if (parts.length > 1 && parts[1]) {
+      const end = new Date(parts[1].trim())
+      if (!isNaN(end.getTime())) {
+        dateEnd.value = dateToISO(end)
+      } else {
+        dateOngoing.value = /present|now|ongoing|current/i.test(parts[1])
+      }
+    }
+  }
+}
+
+// Keep the stored dateRange string in sync with the calendar inputs
+const composeDateRange = () => {
+  if (!dateStart.value) {
+    currentExperience.value.dateRange = ''
+    return
+  }
+  const start = formatPickerDate(dateStart.value)
+  const end = dateOngoing.value
+    ? 'Present'
+    : (dateEnd.value ? formatPickerDate(dateEnd.value) : '')
+  currentExperience.value.dateRange = end ? `${start} - ${end}` : start
+}
+
+const onOngoingToggle = () => {
+  if (dateOngoing.value) dateEnd.value = ''
+  composeDateRange()
+}
+
+// Multi-step modal navigation
+const STEP_LABELS = ['Basics', 'Details', 'Bullet Points']
+const modalStep = ref(1)
+
+const goModalNextStep = () => {
+  if (modalStep.value === 1 && !(currentExperience.value.title || '').trim()) {
+    if (addToast) addToast('Please add a title for this experience', 'error')
+    return
+  }
+  if (modalStep.value < STEP_LABELS.length) modalStep.value++
+}
+
+const goModalPrevStep = () => {
+  if (modalStep.value > 1) modalStep.value--
+}
+
 // Modal Actions
 const openModal = (index = null) => {
   if (index !== null) {
@@ -538,6 +735,8 @@ const openModal = (index = null) => {
       bulletPoints: ['']
     }
   }
+  parseDateRangeToPicker(currentExperience.value.dateRange)
+  modalStep.value = 1
   showModal.value = true
 }
 

@@ -151,7 +151,7 @@
                   ></div>
                 </div>
 
-                <!-- Date (left pill) -->
+                <!-- Date (left pill) — month & year only, day hidden -->
                 <div class="hidden sm:block w-36 flex-shrink-0">
                   <span
                     class="inline-block px-3 py-1 rounded-full text-xs transition-colors duration-200"
@@ -159,13 +159,19 @@
                       ? 'bg-primary-50 dark:bg-primary-950/50 text-primary-700 dark:text-primary-300 font-semibold'
                       : 'text-gray-500 dark:text-gray-400 bg-gray-100/80 dark:bg-white/5 font-medium'"
                   >
-                    {{ exp.dateRange || exp.duration }}
+                    {{ formatMonthYear(exp.dateRange) || exp.duration }}
                   </span>
+                  <p
+                    v-if="exp.type === 'professional' && monthsWorkedLabel(exp.dateRange)"
+                    class="mt-1 text-[10px] font-medium text-gray-400 dark:text-gray-500"
+                  >
+                    {{ monthsWorkedLabel(exp.dateRange) }}
+                  </p>
                 </div>
 
                 <!-- Title & Company / Subtitle (stacked) -->
                 <div class="flex-1 min-w-0 pr-2">
-                  <!-- Mobile date pill if screen is small -->
+                  <!-- Mobile date (month & year) + type badge if screen is small -->
                   <div class="sm:hidden mb-1 flex items-center gap-2 flex-wrap">
                     <span
                       class="inline-block px-2 py-0.5 rounded-full text-[11px] font-medium"
@@ -173,7 +179,7 @@
                         ? 'bg-primary-50 dark:bg-primary-950/50 text-primary-700 dark:text-primary-300 font-semibold'
                         : 'text-gray-500 dark:text-gray-400 bg-gray-100 dark:bg-white/5'"
                     >
-                      {{ exp.dateRange || exp.duration }}
+                      {{ formatMonthYear(exp.dateRange) || exp.duration }}
                     </span>
                     <span
                       v-if="exp.type"
@@ -183,6 +189,12 @@
                         : 'bg-blue-50 dark:bg-blue-950/30 text-blue-700 dark:text-blue-400'"
                     >
                       {{ exp.type }}
+                    </span>
+                    <span
+                      v-if="exp.type === 'professional' && monthsWorkedLabel(exp.dateRange)"
+                      class="text-[10px] font-medium px-2 py-0.2 rounded-full bg-gray-100 dark:bg-white/5 text-gray-500 dark:text-gray-400"
+                    >
+                      {{ monthsWorkedLabel(exp.dateRange) }}
                     </span>
                   </div>
 
@@ -304,10 +316,79 @@ const activeFilter = ref('all') // 'all', 'educational', 'professional'
 const openIndex = ref(0)
 const lastOpenedExp = ref(null)
 
+// Display helper: drop the day, keep month + year
+// ("Jan 15, 2023 - Jun 20, 2025" -> "Jan 2023 - Jun 2025", "2024 - 2025" unchanged, "Present" kept)
+const formatMonthYearPart = (part) => {
+  const p = part.trim()
+  if (!p) return p
+  if (/^(present|now|ongoing|current)$/i.test(p)) return p
+  if (/^\d{4}$/.test(p)) return p
+  const d = new Date(p)
+  if (isNaN(d.getTime())) return p
+  return d.toLocaleDateString('en-US', { month: 'short', year: 'numeric' })
+}
+
+const formatMonthYear = (range) => {
+  if (!range) return ''
+  return String(range).split(/\s+[–-]\s+/).map(formatMonthYearPart).join(' - ')
+}
+
+// Loose parse of a single date piece ("Jun 20, 2025", "2024", "2024-06-01", "Present" -> now)
+const parseDateLoose = (part) => {
+  const p = String(part).trim()
+  if (!p) return null
+  if (/^(present|now|ongoing|current)$/i.test(p)) return new Date()
+  let d = new Date(p)
+  if (isNaN(d.getTime())) {
+    const y = p.match(/\d{4}/)
+    if (y) d = new Date(y[0])
+  }
+  return isNaN(d.getTime()) ? null : d
+}
+
+// Full months worked from dateRange (start -> end, or -> today when ongoing).
+// Shown for professional entries only: "Jan 15, 2023 - Jun 20, 2025" -> "29 months"
+const monthsWorkedLabel = (range) => {
+  if (!range) return null
+  const parts = String(range).split(/\s+[–-]\s+/)
+  const start = parseDateLoose(parts[0])
+  if (!start) return null
+  const end = parts[1] ? parseDateLoose(parts[1]) : new Date()
+  if (!end || end < start) return null
+  let months = (end.getFullYear() - start.getFullYear()) * 12 + (end.getMonth() - start.getMonth())
+  if (end.getDate() < start.getDate()) months--
+  if (months < 1) return null
+  return months === 1 ? '1 month' : `${months} months`
+}
+
+// Start date parsed from the dateRange string ("Jan 15, 2023 - ...", "2024 - 2025", "2025 - Present", ISO)
+const startDateFromRange = (range) => {
+  if (!range) return null
+  const startPart = String(range).split(/\s+[–-]\s+/)[0].trim()
+  let d = new Date(startPart)
+  if (isNaN(d.getTime())) {
+    const year = startPart.match(/\d{4}/)
+    if (year) d = new Date(year[0])
+  }
+  return isNaN(d.getTime()) ? null : d
+}
+
+// Current -> past (newest first); entries without a parseable date still go last
+const sortByDateDesc = (a, b) => {
+  const da = startDateFromRange(a.dateRange)
+  const db = startDateFromRange(b.dateRange)
+  if (!da && !db) return 0
+  if (!da) return 1
+  if (!db) return -1
+  return db - da
+}
+
 const filteredExperiences = computed(() => {
   if (!experienceData.value?.experiences) return []
-  if (activeFilter.value === 'all') return experienceData.value.experiences
-  return experienceData.value.experiences.filter(exp => exp.type === activeFilter.value)
+  const list = activeFilter.value === 'all'
+    ? [...experienceData.value.experiences]
+    : experienceData.value.experiences.filter(exp => exp.type === activeFilter.value)
+  return list.sort(sortByDateDesc)
 })
 
 const toggleEntry = (index) => {

@@ -134,29 +134,6 @@
                             ></span>
                             <span>{{ isAutoSlide ? 'Auto-play on' : 'Auto-play' }}</span>
                         </button>
-
-                        <div class="flex items-center gap-2" v-if="filteredProjects.length > 1">
-                            <button 
-                                @click="scrollPrev"
-                                class="w-9 h-9 rounded-full border border-stone-200 dark:border-stone-800 bg-white dark:bg-[#151821] text-stone-600 dark:text-stone-300 hover:border-stone-400 dark:hover:border-stone-600 hover:text-stone-950 dark:hover:text-white transition-all flex items-center justify-center cursor-pointer shadow-xs"
-                                title="Previous Project"
-                                aria-label="Previous project"
-                            >
-                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.75" d="M15 19l-7-7 7-7" />
-                                </svg>
-                            </button>
-                            <button 
-                                @click="scrollNext"
-                                class="w-9 h-9 rounded-full border border-stone-200 dark:border-stone-800 bg-white dark:bg-[#151821] text-stone-600 dark:text-stone-300 hover:border-stone-400 dark:hover:border-stone-600 hover:text-stone-950 dark:hover:text-white transition-all flex items-center justify-center cursor-pointer shadow-xs"
-                                title="Next Project"
-                                aria-label="Next project"
-                            >
-                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.75" d="M9 5l7 7-7 7" />
-                                </svg>
-                            </button>
-                        </div>
                     </div>
                 </div>
                 
@@ -534,6 +511,17 @@ const filteredProjects = computed(() => {
   })
 })
 
+// Display-only migration: legacy category values -> new names
+const CATEGORY_LABEL_MIGRATIONS = { 'Web App': 'Web Application', 'Web System': 'Desktop Application' }
+
+const migrateCategoryLabels = () => {
+  if (!projectsData.value?.projects) return
+  for (const project of projectsData.value.projects) {
+    const mapped = CATEGORY_LABEL_MIGRATIONS[project.category]
+    if (mapped) project.category = mapped
+  }
+}
+
 const openModal = (project) => {
     selectedProject.value = project
     activeTab.value = 'description'
@@ -701,6 +689,7 @@ onMounted(async () => {
         description: data.description || '',
         projects: data.projects || []
       }
+      migrateCategoryLabels()
       isLoading.value = false
       if (isAutoSlide.value && projectsData.value?.projects?.length > 0) {
         startAutoSlide()
@@ -736,6 +725,7 @@ const loadFromLocalStorage = () => {
     // The template will handle the empty projects list by showing the empty state.
     hasError.value = false 
   }
+  migrateCategoryLabels()
   isLoading.value = false
   if (isAutoSlide.value && projectsData.value?.projects?.length > 0) {
     startAutoSlide()

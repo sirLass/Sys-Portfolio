@@ -56,7 +56,7 @@
           href="#Contact"
           class="hidden lg:inline-flex bg-primary-600 text-white px-5 py-2 rounded-full hover:bg-primary-700 hover:shadow-lg hover:shadow-primary-600/30 active:scale-95 transition-all duration-300 text-sm font-medium whitespace-nowrap cursor-pointer"
         >
-          Contact Me
+          Hire Me
         </a>
         <button
           id="mobile-menu-btn"
@@ -75,7 +75,7 @@
         <a @click.prevent="smoothScrollTo('#Projects')" href="#Projects" class="block text-gray-700 dark:text-gray-200 hover:text-primary-600 font-medium transition-colors duration-300 cursor-pointer">Projects</a>
         <a @click.prevent="smoothScrollTo('#Experience')" href="#Experience" class="block text-gray-700 dark:text-gray-200 hover:text-primary-600 font-medium transition-colors duration-300 cursor-pointer">Experience</a>
         <a @click.prevent="smoothScrollTo('#Gallery')" href="#Gallery" class="block text-gray-700 dark:text-gray-200 hover:text-primary-600 font-medium transition-colors duration-300 cursor-pointer">Gallery</a>
-        <a @click.prevent="smoothScrollTo('#Contact')" href="#Contact" class="block bg-primary-600 text-white px-6 py-2 rounded-full hover:bg-primary-700 transition-colors duration-300 text-center cursor-pointer">Contact Me</a>
+        <a @click.prevent="smoothScrollTo('#Contact')" href="#Contact" class="block bg-primary-600 text-white px-6 py-2 rounded-full hover:bg-primary-700 transition-colors duration-300 text-center cursor-pointer">Hire Me</a>
       </div>
     </div>
   </header>

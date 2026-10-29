@@ -109,7 +109,7 @@
             <div class="border-t border-gray-800 pt-8">
                 <div class="flex flex-col md:flex-row justify-between items-center">
                     <div class="text-sm text-gray-400 mb-4 md:mb-0">
-                        © 2025 SirP-rezDev. All rights reserved. Built with passion and code.
+                        © 2025 sirLass. All rights reserved. Built with passion and code.
                     </div>
                     <div class="flex items-center space-x-2 text-sm text-gray-400">
                         <span>Developed by</span>

@@ -39,6 +39,7 @@
             <table class="w-full">
               <thead class="bg-[#f6f6f7]">
                 <tr>
+                  <th class="px-2 py-3 w-8"></th>
                   <th class="px-4 py-3 text-left text-xs font-semibold text-[#6d7175] uppercase tracking-wider">Project</th>
                   <th class="px-4 py-3 text-left text-xs font-semibold text-[#6d7175] uppercase tracking-wider">Type</th>
                   <th class="px-4 py-3 text-left text-xs font-semibold text-[#6d7175] uppercase tracking-wider">Category</th>
@@ -47,8 +48,29 @@
                   <th class="px-4 py-3 text-right text-xs font-semibold text-[#6d7175] uppercase tracking-wider">Actions</th>
                 </tr>
               </thead>
-              <tbody class="divide-y divide-[#e3e5e7]">
-                <tr v-for="(project, index) in projectsData.projects" :key="index" class="hover:bg-[#f6f6f7] transition-colors">
+              <tbody class="divide-y divide-[#e3e5e7]" :class="{ 'select-none': dragFromIndex !== null }">
+                <tr
+                  v-for="(project, index) in projectsData.projects"
+                  :key="index"
+                  draggable="true"
+                  class="hover:bg-[#f6f6f7] transition-colors cursor-move"
+                  :class="{
+                    'opacity-40': dragFromIndex === index,
+                    'bg-[var(--admin-primary-light)] shadow-[inset_0_2px_0_0_var(--admin-primary)]': dragOverIndex === index && dragFromIndex !== index
+                  }"
+                  @dragstart="startDrag(index, $event)"
+                  @dragover.prevent="onRowDragOver(index, $event)"
+                  @dragleave="onRowDragLeave(index, $event)"
+                  @drop.prevent="dropOnRow(index)"
+                  @dragend="endDrag"
+                >
+                  <td class="px-2 py-4 text-[#c9cccf]">
+                    <svg class="w-4 h-4 cursor-grab active:cursor-grabbing" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                      <circle cx="9" cy="6" r="1.5" /><circle cx="15" cy="6" r="1.5" />
+                      <circle cx="9" cy="12" r="1.5" /><circle cx="15" cy="12" r="1.5" />
+                      <circle cx="9" cy="18" r="1.5" /><circle cx="15" cy="18" r="1.5" />
+                    </svg>
+                  </td>
                   <td class="px-4 py-4">
                     <div class="flex items-center gap-3">
                       <div 
@@ -143,11 +165,40 @@
         </div>
         
         <div class="p-6 space-y-6">
-          <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+          <!-- Step indicator -->
+          <div class="flex items-center gap-2 mb-6">
+            <template v-for="(stepLabel, idx) in ADD_STEP_LABELS" :key="stepLabel">
+              <div class="flex items-center gap-2">
+                <span
+                  class="flex h-6 w-6 shrink-0 items-center justify-center rounded-full text-[11px] font-semibold transition-colors"
+                  :class="addStep > idx + 1
+                    ? 'bg-[var(--admin-primary-light)] text-[var(--admin-primary)]'
+                    : addStep === idx + 1
+                      ? 'bg-[var(--admin-primary)] text-white'
+                      : 'bg-[#e3e5e7] text-[#6d7175]'"
+                >
+                  {{ addStep > idx + 1 ? '✓' : idx + 1 }}
+                </span>
+                <span
+                  class="text-xs whitespace-nowrap"
+                  :class="addStep === idx + 1 ? 'text-[#1a1b1c] font-semibold' : 'text-[#6d7175]'"
+                >{{ stepLabel }}</span>
+              </div>
+              <div
+                v-if="idx < ADD_STEP_LABELS.length - 1"
+                class="h-px flex-1 transition-colors"
+                :class="addStep > idx + 1 ? 'bg-[var(--admin-primary)]' : 'bg-[#e3e5e7]'"
+              ></div>
+            </template>
+          </div>
+
+          <!-- Step 1: Title, Project Type, Category -->
+          <div v-show="addStep === 1" class="space-y-4">
             <div>
               <label class="block text-sm font-medium text-[#1a1b1c] mb-2">Title</label>
               <input
                 v-model="newProject.title"
+                @keyup.enter="goNextStep('new')"
                 type="text"
                 class="w-full px-4 py-2.5 text-sm text-[#1a1b1c] bg-white border border-[#c9cccf] rounded-md focus:outline-none focus:border-[var(--admin-primary)] focus:ring-2 focus:ring-[var(--admin-primary)]/20 transition-all font-outfit"
                 placeholder="Project Title"
@@ -170,12 +221,15 @@
                 class="w-full px-4 py-2.5 text-sm text-[#1a1b1c] bg-white border border-[#c9cccf] rounded-md focus:outline-none focus:border-[var(--admin-primary)] focus:ring-2 focus:ring-[var(--admin-primary)]/20 transition-all font-outfit cursor-pointer"
               >
                 <option value="" disabled>Select category</option>
-                <option value="Web App">Web App</option>
-                <option value="Web System">Web System</option>
+                <option value="Web Application">Web Application</option>
+                <option value="Desktop Application">Desktop Application</option>
+                <option value="Open Source">Open Source</option>
               </select>
             </div>
           </div>
 
+          <!-- Step 2: Description, Project Link, Technologies -->
+          <div v-show="addStep === 2" class="space-y-6">
           <div>
             <label class="block text-sm font-medium text-[#1a1b1c] mb-2">Description</label>
             <textarea
@@ -209,15 +263,28 @@
             <label class="block text-sm font-medium text-[#1a1b1c] mb-2">Technologies</label>
             <div class="space-y-3">
               <div class="relative w-full">
-                <input
-                  v-model="techSearchQuery"
-                  type="text"
-                  class="w-full px-4 py-2.5 text-sm text-[#1a1b1c] bg-white border border-[#c9cccf] rounded-md focus:outline-none focus:border-[var(--admin-primary)] focus:ring-2 focus:ring-[var(--admin-primary)]/20 transition-all font-outfit"
-                  placeholder="Search or add technology (e.g. Next.js, Django)"
-                  @keyup.enter="handleTechAdd('new')"
-                />
-                <!-- Suggestions Dropdown -->
-                <div v-if="suggestedTechs.length > 0 && techSearchQuery" class="absolute z-50 left-0 right-0 mt-1 bg-white border border-[#e3e5e7] rounded-md shadow-lg overflow-hidden animate-in fade-in slide-in-from-top-2 duration-200">
+                <div class="flex w-full items-stretch gap-2">
+                  <input
+                    v-model="techSearchQuery"
+                    type="text"
+                    class="min-w-0 flex-1 px-4 py-2.5 text-sm text-[#1a1b1c] bg-white border border-[#c9cccf] rounded-md focus:outline-none focus:border-[var(--admin-primary)] focus:ring-2 focus:ring-[var(--admin-primary)]/20 transition-all font-outfit"
+                    placeholder="Search or add technology (e.g. Next.js, Django)"
+                    @keyup.enter="handleTechAdd('new')"
+                  />
+                  <button
+                    type="button"
+                    :disabled="!techSearchQuery.trim()"
+                    @click="handleTechAdd('new')"
+                    class="shrink-0 inline-flex items-center gap-1 self-stretch px-3.5 rounded-md bg-[var(--admin-primary)] text-white text-sm font-medium hover:opacity-90 transition-opacity disabled:opacity-40 disabled:cursor-not-allowed focus:outline-none focus:ring-2 focus:ring-[var(--admin-primary)]/20"
+                  >
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2" aria-hidden="true">
+                      <path stroke-linecap="round" stroke-linejoin="round" d="M12 4v16m8-8H4" />
+                    </svg>
+                    Add
+                  </button>
+                </div>
+                <!-- Suggestions Dropdown: matches + always a row for custom text -->
+                <div v-if="techSearchQuery.trim()" class="absolute z-50 left-0 right-0 top-full mt-1 bg-white border border-[#e3e5e7] rounded-md shadow-lg overflow-hidden animate-in fade-in slide-in-from-top-2 duration-200">
                   <button
                     v-for="tech in suggestedTechs"
                     :key="tech.name"
@@ -227,6 +294,16 @@
                   >
                     <img :src="`https://skillicons.dev/icons?i=${tech.icon}`" class="w-5 h-5 object-contain" @error="(e) => (e.target.style.display = 'none')">
                     <span class="text-[#1a1b1c]">{{ tech.name }}</span>
+                  </button>
+                  <button
+                    v-if="!exactTechMatch"
+                    type="button"
+                    @click="handleTechAdd('new')"
+                    :class="{ 'border-t border-[#e3e5e7]': suggestedTechs.length > 0 }"
+                    class="w-full px-4 py-2 text-left text-sm hover:bg-[#f6f6f7] flex items-center gap-3 transition-colors"
+                  >
+                    <span class="w-5 h-5 inline-flex items-center justify-center text-sm text-[#6d7175]" aria-hidden="true">+</span>
+                    <span class="text-[#1a1b1c]">Add “{{ techSearchQuery.trim() }}”</span>
                   </button>
                 </div>
               </div>
@@ -251,14 +328,15 @@
                 <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
                 </svg>
-                Tip: Press Enter to add custom technology
+                Tip: Press Enter or click Add to add any technology
               </p>
             </div>
           </div>
+          </div>
 
 
-          <!-- Project Gallery -->
-          <div>
+          <!-- Step 3: Project Gallery (Documentation) -->
+          <div v-show="addStep === 3">
             <label class="block text-sm font-medium text-[#1a1b1c] mb-3">Project Gallery (Documentation)</label>
             <div class="space-y-4">
               <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-3">
@@ -307,21 +385,47 @@
           </div>
         </div>
 
-        <div class="px-6 py-4 border-t border-[#c9cccf] flex items-center justify-end gap-3">
+        <div class="px-6 py-4 border-t border-[#c9cccf] flex items-center justify-between gap-3">
           <button
+            v-if="addStep > 1"
             type="button"
-            @click="isAddingProject = false"
-            class="px-4 py-2 text-sm font-medium text-[#1a1b1c] hover:text-[var(--admin-primary)] transition-colors"
+            @click="goPrevStep('new')"
+            class="inline-flex items-center gap-1.5 px-3 py-2 text-sm font-medium text-[#1a1b1c] hover:text-[var(--admin-primary)] transition-colors"
           >
-            Cancel
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M15 19l-7-7 7-7" />
+            </svg>
+            Back
           </button>
-          <button
-            type="button"
-            @click="confirmAddProject"
-            class="px-6 py-2.5 text-sm font-medium text-white bg-[var(--admin-primary)] rounded-md hover:bg-[var(--admin-secondary)] transition-all shadow-sm"
-          >
-            Create Project
-          </button>
+          <span v-else></span>
+          <div class="flex items-center gap-3">
+            <button
+              type="button"
+              @click="isAddingProject = false"
+              class="px-4 py-2 text-sm font-medium text-[#1a1b1c] hover:text-[var(--admin-primary)] transition-colors"
+            >
+              Cancel
+            </button>
+            <button
+              v-if="addStep < ADD_STEP_LABELS.length"
+              type="button"
+              @click="goNextStep('new')"
+              class="inline-flex items-center gap-1.5 px-6 py-2.5 text-sm font-medium text-white bg-[var(--admin-primary)] rounded-md hover:bg-[var(--admin-secondary)] transition-all shadow-sm"
+            >
+              Next
+              <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7" />
+              </svg>
+            </button>
+            <button
+              v-else
+              type="button"
+              @click="confirmAddProject"
+              class="px-6 py-2.5 text-sm font-medium text-white bg-[var(--admin-primary)] rounded-md hover:bg-[var(--admin-secondary)] transition-all shadow-sm"
+            >
+              Create Project
+            </button>
+          </div>
         </div>
       </div>
     </div>
@@ -339,12 +443,41 @@
         </div>
         
         <div class="p-6 space-y-6" v-if="editingProject !== null">
-          <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+          <!-- Step indicator -->
+          <div class="flex items-center gap-2 mb-6">
+            <template v-for="(stepLabel, idx) in ADD_STEP_LABELS" :key="stepLabel">
+              <div class="flex items-center gap-2">
+                <span
+                  class="flex h-6 w-6 shrink-0 items-center justify-center rounded-full text-[11px] font-semibold transition-colors"
+                  :class="editStep > idx + 1
+                    ? 'bg-[var(--admin-primary-light)] text-[var(--admin-primary)]'
+                    : editStep === idx + 1
+                      ? 'bg-[var(--admin-primary)] text-white'
+                      : 'bg-[#e3e5e7] text-[#6d7175]'"
+                >
+                  {{ editStep > idx + 1 ? '✓' : idx + 1 }}
+                </span>
+                <span
+                  class="text-xs whitespace-nowrap"
+                  :class="editStep === idx + 1 ? 'text-[#1a1b1c] font-semibold' : 'text-[#6d7175]'"
+                >{{ stepLabel }}</span>
+              </div>
+              <div
+                v-if="idx < ADD_STEP_LABELS.length - 1"
+                class="h-px flex-1 transition-colors"
+                :class="editStep > idx + 1 ? 'bg-[var(--admin-primary)]' : 'bg-[#e3e5e7]'"
+              ></div>
+            </template>
+          </div>
+
+          <!-- Step 1: Title, Project Type, Category -->
+          <div v-show="editStep === 1" class="space-y-4">
             <div>
               <label class="block text-sm font-medium text-[#1a1b1c] mb-2">Title</label>
               <input
                 v-model="projectsData.projects[editingProject].title"
                 type="text"
+                @keyup.enter="goNextStep('edit')"
                 class="w-full px-4 py-2.5 text-sm text-[#1a1b1c] bg-white border border-[#c9cccf] rounded-md focus:outline-none focus:border-[var(--admin-primary)] focus:ring-2 focus:ring-[var(--admin-primary)]/20 transition-all font-outfit"
                 placeholder="Project Title"
               />
@@ -366,12 +499,15 @@
                 class="w-full px-4 py-2.5 text-sm text-[#1a1b1c] bg-white border border-[#c9cccf] rounded-md focus:outline-none focus:border-[var(--admin-primary)] focus:ring-2 focus:ring-[var(--admin-primary)]/20 transition-all font-outfit cursor-pointer"
               >
                 <option value="" disabled>Select category</option>
-                <option value="Web App">Web App</option>
-                <option value="Web System">Web System</option>
+                <option value="Web Application">Web Application</option>
+                <option value="Desktop Application">Desktop Application</option>
+                <option value="Open Source">Open Source</option>
               </select>
             </div>
           </div>
 
+          <!-- Step 2: Description, Project Link, Technologies -->
+          <div v-show="editStep === 2" class="space-y-6">
           <div>
             <label class="block text-sm font-medium text-[#1a1b1c] mb-2">Description</label>
             <textarea
@@ -405,15 +541,28 @@
             <label class="block text-sm font-medium text-[#1a1b1c] mb-2">Technologies</label>
             <div class="space-y-3">
               <div class="relative w-full">
-                <input
-                  v-model="techSearchQuery"
-                  type="text"
-                  class="w-full px-4 py-2.5 text-sm text-[#1a1b1c] bg-white border border-[#c9cccf] rounded-md focus:outline-none focus:border-[var(--admin-primary)] focus:ring-2 focus:ring-[var(--admin-primary)]/20 transition-all font-outfit"
-                  placeholder="Search or add technology"
-                  @keyup.enter="handleTechAdd('edit')"
-                />
-                <!-- Suggestions Dropdown -->
-                <div v-if="suggestedTechs.length > 0 && techSearchQuery" class="absolute z-50 left-0 right-0 mt-1 bg-white border border-[#e3e5e7] rounded-md shadow-lg overflow-hidden animate-in fade-in slide-in-from-top-2 duration-200">
+                <div class="flex w-full items-stretch gap-2">
+                  <input
+                    v-model="techSearchQuery"
+                    type="text"
+                    class="min-w-0 flex-1 px-4 py-2.5 text-sm text-[#1a1b1c] bg-white border border-[#c9cccf] rounded-md focus:outline-none focus:border-[var(--admin-primary)] focus:ring-2 focus:ring-[var(--admin-primary)]/20 transition-all font-outfit"
+                    placeholder="Search or add technology"
+                    @keyup.enter="handleTechAdd('edit')"
+                  />
+                  <button
+                    type="button"
+                    :disabled="!techSearchQuery.trim()"
+                    @click="handleTechAdd('edit')"
+                    class="shrink-0 inline-flex items-center gap-1 self-stretch px-3.5 rounded-md bg-[var(--admin-primary)] text-white text-sm font-medium hover:opacity-90 transition-opacity disabled:opacity-40 disabled:cursor-not-allowed focus:outline-none focus:ring-2 focus:ring-[var(--admin-primary)]/20"
+                  >
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2" aria-hidden="true">
+                      <path stroke-linecap="round" stroke-linejoin="round" d="M12 4v16m8-8H4" />
+                    </svg>
+                    Add
+                  </button>
+                </div>
+                <!-- Suggestions Dropdown: matches + always a row for custom text -->
+                <div v-if="techSearchQuery.trim()" class="absolute z-50 left-0 right-0 top-full mt-1 bg-white border border-[#e3e5e7] rounded-md shadow-lg overflow-hidden animate-in fade-in slide-in-from-top-2 duration-200">
                   <button
                     v-for="tech in suggestedTechs"
                     :key="tech.name"
@@ -423,6 +572,16 @@
                   >
                     <img :src="`https://skillicons.dev/icons?i=${tech.icon}`" class="w-5 h-5 object-contain" @error="(e) => (e.target.style.display = 'none')">
                     <span class="text-[#1a1b1c]">{{ tech.name }}</span>
+                  </button>
+                  <button
+                    v-if="!exactTechMatch"
+                    type="button"
+                    @click="handleTechAdd('edit')"
+                    :class="{ 'border-t border-[#e3e5e7]': suggestedTechs.length > 0 }"
+                    class="w-full px-4 py-2 text-left text-sm hover:bg-[#f6f6f7] flex items-center gap-3 transition-colors"
+                  >
+                    <span class="w-5 h-5 inline-flex items-center justify-center text-sm text-[#6d7175]" aria-hidden="true">+</span>
+                    <span class="text-[#1a1b1c]">Add “{{ techSearchQuery.trim() }}”</span>
                   </button>
                 </div>
               </div>
@@ -442,12 +601,20 @@
                   </button>
                 </span>
               </div>
+
+              <p v-if="techSearchQuery" class="text-[10px] text-[#6d7175] flex items-center gap-1">
+                <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                </svg>
+                Tip: Press Enter or click Add to add any technology
+              </p>
             </div>
+          </div>
           </div>
 
 
-          <!-- Project Gallery (Edit) -->
-          <div v-if="editingProject !== null">
+          <!-- Step 3: Project Gallery (Documentation) -->
+          <div v-show="editStep === 3">
             <label class="block text-sm font-medium text-[#1a1b1c] mb-3">Project Gallery (Documentation)</label>
             <div class="space-y-4">
               <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-3">
@@ -493,21 +660,47 @@
           </div>
         </div>
 
-        <div class="px-6 py-4 border-t border-[#c9cccf] flex items-center justify-end gap-3">
+        <div class="px-6 py-4 border-t border-[#c9cccf] flex items-center justify-between gap-3">
           <button
+            v-if="editStep > 1"
             type="button"
-            @click="editingProject = null"
-            class="px-4 py-2 text-sm font-medium text-[#1a1b1c] hover:text-[var(--admin-primary)] transition-colors"
+            @click="goPrevStep('edit')"
+            class="inline-flex items-center gap-1.5 px-3 py-2 text-sm font-medium text-[#1a1b1c] hover:text-[var(--admin-primary)] transition-colors"
           >
-            Cancel
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M15 19l-7-7 7-7" />
+            </svg>
+            Back
           </button>
-          <button
-            type="button"
-            @click="handleEditDone"
-            class="px-6 py-2.5 text-sm font-medium text-white bg-[var(--admin-primary)] rounded-md hover:bg-[var(--admin-secondary)] transition-all shadow-sm"
-          >
-            Done
-          </button>
+          <span v-else></span>
+          <div class="flex items-center gap-3">
+            <button
+              type="button"
+              @click="editingProject = null"
+              class="px-4 py-2 text-sm font-medium text-[#1a1b1c] hover:text-[var(--admin-primary)] transition-colors"
+            >
+              Cancel
+            </button>
+            <button
+              v-if="editStep < ADD_STEP_LABELS.length"
+              type="button"
+              @click="goNextStep('edit')"
+              class="inline-flex items-center gap-1.5 px-6 py-2.5 text-sm font-medium text-white bg-[var(--admin-primary)] rounded-md hover:bg-[var(--admin-secondary)] transition-all shadow-sm"
+            >
+              Next
+              <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7" />
+              </svg>
+            </button>
+            <button
+              v-else
+              type="button"
+              @click="handleEditDone"
+              class="px-6 py-2.5 text-sm font-medium text-white bg-[var(--admin-primary)] rounded-md hover:bg-[var(--admin-secondary)] transition-all shadow-sm"
+            >
+              Done
+            </button>
+          </div>
         </div>
       </div>
     </div>
@@ -600,9 +793,17 @@ const suggestedTechs = computed(() => {
   ).slice(0, 5)
 })
 
+// Exact case-insensitive match against the built-in list (null for custom text)
+const exactTechMatch = computed(() => {
+  const query = techSearchQuery.value.toLowerCase().trim()
+  if (!query) return null
+  return COMMON_TECHS.find((tech) => tech.name.toLowerCase() === query) || null
+})
+
 // Load data from localStorage on mount
-onMounted(() => {
-  loadFromDatabase()
+onMounted(async () => {
+  await loadFromDatabase()
+  await migrateProjectCategories()
 })
 
 const loadFromDatabase = async () => {
@@ -652,6 +853,38 @@ const loadFromStorage = () => {
     projectsData.value = {
       projects: []
     }
+  }
+}
+
+// One-time migration: legacy category values -> new names, persisted silently
+const CATEGORY_MIGRATIONS = { 'Web App': 'Web Application', 'Web System': 'Desktop Application' }
+
+const migrateProjectCategories = async () => {
+  const projects = projectsData.value?.projects || []
+  let changed = false
+  for (const project of projects) {
+    const mapped = CATEGORY_MIGRATIONS[project.category]
+    if (mapped) {
+      project.category = mapped
+      changed = true
+    }
+  }
+  if (!changed) return
+
+  try {
+    if (isSupabaseConfigured()) {
+      const dbData = { projects, updated_at: new Date().toISOString() }
+      if (projectsId.value) {
+        await supabase.from('projects').update(dbData).eq('id', projectsId.value)
+      } else {
+        const { data } = await supabase.from('projects').insert(dbData).select().single()
+        if (data) projectsId.value = data.id
+      }
+    }
+    localStorage.setItem('projectsSectionData', JSON.stringify(projectsData.value))
+    console.info('Migrated legacy project categories to new names')
+  } catch (err) {
+    console.error('Category migration failed:', err)
   }
 }
 
@@ -742,6 +975,65 @@ const getRandomGradient = () => {
   return { from, to }
 }
 
+const ADD_STEP_LABELS = ['Basics', 'Details', 'Gallery']
+const addStep = ref(1)
+const editStep = ref(1)
+
+// Drag & drop reordering of the projects table (order is what the public carousel shows)
+const dragFromIndex = ref(null)
+const dragOverIndex = ref(null)
+
+const startDrag = (index, event) => {
+  dragFromIndex.value = index
+  if (event.dataTransfer) {
+    event.dataTransfer.effectAllowed = 'move'
+    event.dataTransfer.setData('text/plain', String(index))
+  }
+}
+
+const onRowDragOver = (index, event) => {
+  dragOverIndex.value = index
+  if (event.dataTransfer) event.dataTransfer.dropEffect = 'move'
+}
+
+const onRowDragLeave = (index, event) => {
+  if (!event.currentTarget.contains(event.relatedTarget)) {
+    dragOverIndex.value = null
+  }
+}
+
+const dropOnRow = async (index) => {
+  const from = dragFromIndex.value
+  endDrag()
+  if (from === null || from === index) return
+  const list = projectsData.value.projects
+  const [moved] = list.splice(from, 1)
+  list.splice(index, 0, moved)
+  await handleSave()
+}
+
+const endDrag = () => {
+  dragFromIndex.value = null
+  dragOverIndex.value = null
+}
+
+const goNextStep = (mode = 'new') => {
+  const step = mode === 'edit' ? editStep : addStep
+  const title = mode === 'edit'
+    ? projectsData.value.projects[editingProject.value]?.title
+    : newProject.value.title
+  if (step.value === 1 && !(title || '').trim()) {
+    if (addToast) addToast('Please enter a project title', 'error')
+    return
+  }
+  if (step.value < ADD_STEP_LABELS.length) step.value++
+}
+
+const goPrevStep = (mode = 'new') => {
+  const step = mode === 'edit' ? editStep : addStep
+  if (step.value > 1) step.value--
+}
+
 const openAddModal = () => {
   const randomColors = getRandomGradient()
   newProject.value = {
@@ -755,6 +1047,8 @@ const openAddModal = () => {
     gradientFrom: randomColors.from,
     gradientTo: randomColors.to
   }
+  techSearchQuery.value = ''
+  addStep.value = 1
   isAddingProject.value = true
 }
 
@@ -769,33 +1063,48 @@ const confirmAddProject = async () => {
 }
 
 const handleTechAdd = (mode) => {
-  const value = techSearchQuery.value.trim()
-  if (!value) return
+  const raw = techSearchQuery.value.trim()
+  if (!raw) return
+
+  // Canonical name when it case-insensitively matches a known tech;
+  // otherwise add exactly what was typed — any custom value is allowed.
+  const match = COMMON_TECHS.find((tech) => tech.name.toLowerCase() === raw.toLowerCase())
+  const value = match ? match.name : raw
+  const isDuplicate = (list) =>
+    Array.isArray(list) && list.some((t) => String(t).toLowerCase() === value.toLowerCase())
 
   if (mode === 'new') {
-    if (!newProject.value.technologies.includes(value)) {
+    if (!isDuplicate(newProject.value.technologies)) {
       newProject.value.technologies.push(value)
     }
   } else if (mode === 'edit' && editingProject.value !== null) {
-    if (!projectsData.value.projects[editingProject.value].technologies) {
-      projectsData.value.projects[editingProject.value].technologies = []
+    const project = projectsData.value.projects[editingProject.value]
+    if (!project.technologies) {
+      project.technologies = []
     }
-    if (!projectsData.value.projects[editingProject.value].technologies.includes(value)) {
-      projectsData.value.projects[editingProject.value].technologies.push(value)
+    if (!isDuplicate(project.technologies)) {
+      project.technologies.push(value)
     }
   }
   techSearchQuery.value = ''
 }
 
 const selectSuggestedTech = (tech, mode) => {
+  const addUnique = (list) => {
+    if (!Array.isArray(list)) return
+    if (!list.some((t) => String(t).toLowerCase() === tech.name.toLowerCase())) {
+      list.push(tech.name)
+    }
+  }
+
   if (mode === 'new') {
-    if (!newProject.value.technologies.includes(tech.name)) {
-      newProject.value.technologies.push(tech.name)
-    }
+    addUnique(newProject.value.technologies)
   } else if (mode === 'edit' && editingProject.value !== null) {
-    if (!projectsData.value.projects[editingProject.value].technologies.includes(tech.name)) {
-      projectsData.value.projects[editingProject.value].technologies.push(tech.name)
+    const project = projectsData.value.projects[editingProject.value]
+    if (!project.technologies) {
+      project.technologies = []
     }
+    addUnique(project.technologies)
   }
   techSearchQuery.value = ''
 }
@@ -812,6 +1121,8 @@ const editProject = async (index) => {
   if (!projectsData.value.projects[index].projectType) {
     projectsData.value.projects[index].projectType = 'major'
   }
+  techSearchQuery.value = ''
+  editStep.value = 1
   await nextTick()
   if (editTechInput.value) {
     editTechInput.value.focus()
