@@ -4,14 +4,15 @@
         <button 
             v-if="!isOpen"
             @click="isOpen = !isOpen"
-            class="fixed right-0 top-1/2 -translate-y-1/2 z-[110] w-12 h-32 bg-gray-900 flex flex-col items-center justify-center gap-4 rounded-l-2xl shadow-[-10px_0_30px_rgba(0,0,0,0.3)] hover:w-14 transition-all duration-500 group border-l border-y border-white/10"
+            aria-label="Open Assistant"
+            class="fixed bottom-8 right-8 z-[110] flex items-center gap-3 h-14 w-14 pl-3 overflow-hidden bg-[#0a0a0a] dark:bg-[#0f1117] text-white rounded-sm shadow-[0_10px_35px_rgba(0,0,0,0.45)] hover:bg-black dark:hover:bg-[#151821] hover:w-[170px] hover:-translate-y-0.5 transition-all duration-300 ease-out group border border-white/10"
         >
-            <div class="flex flex-col items-center gap-2 transform group-hover:scale-110 transition-transform text-primary-400">
+            <span class="flex items-center justify-center w-8 h-8 flex-shrink-0 rounded-sm bg-white/10 text-white/75 group-hover:text-white transition-all duration-300 group-hover:scale-110 group-hover:-rotate-6">
                 <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z" />
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z" />
                 </svg>
-            </div>
-            <span class="[writing-mode:vertical-lr] text-[10px] font-black text-white uppercase tracking-[0.4em] rotate-180">Assistant</span>
+            </span>
+            <span class="text-[10px] font-medium text-white uppercase tracking-[0.3em] whitespace-nowrap opacity-0 -translate-x-3 group-hover:opacity-100 group-hover:translate-x-0 transition-all duration-300 delay-100">Assistant</span>
         </button>
 
         <!-- High-Focus Backdrop Overlay -->
@@ -26,7 +27,7 @@
             <div 
                 v-if="isOpen" 
                 @click="isOpen = false"
-                class="fixed inset-0 z-[115] bg-gray-900/60 backdrop-blur-xl overflow-hidden"
+                class="fixed inset-0 z-[115] bg-black/70 backdrop-blur-md overflow-hidden"
             ></div>
         </Transition>
 
@@ -41,74 +42,80 @@
         >
             <div 
                 v-if="isOpen" 
-                class="fixed inset-y-0 right-0 z-[120] w-[380px] md:w-[500px] bg-white dark:bg-[#151821] opacity-100 shadow-[-30px_0_80px_rgba(0,0,0,0.4)] flex flex-col border-l border-gray-100 dark:border-white/10"
+                class="chat-panel fixed inset-y-0 right-0 z-[120] w-[380px] md:w-[500px] bg-[#0a0a0a] dark:bg-[#0f1117] text-white opacity-100 shadow-[-30px_0_80px_rgba(0,0,0,0.6)] flex flex-col border-l border-white/10"
             >
                 <!-- Header Component -->
-                <div class="p-10 bg-[#FAF9F6] dark:bg-[#0f1117] border-b border-gray-100 dark:border-white/10">
-                    <div class="flex items-center justify-between mb-8">
+                <div class="px-8 pt-8 pb-7 border-b border-white/10">
+                    <div class="flex items-center justify-between">
                         <div class="flex items-center gap-4">
-                            <div class="w-12 h-12 bg-gray-900 dark:bg-[#1a1d27] rounded-2xl flex items-center justify-center shadow-2xl border border-transparent dark:border-white/10">
-                                <svg class="w-6 h-6 text-primary-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z" />
+                            <div class="w-11 h-11 flex items-center justify-center bg-white/5 border border-white/10">
+                                <svg class="w-5 h-5 text-white/80" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z" />
                                 </svg>
                             </div>
                             <div>
-                                <h3 class="text-xs font-black text-gray-900 dark:text-gray-100 uppercase tracking-[0.2em] italic">Systematic Assistant</h3>
-                                <p class="text-[9px] font-bold text-gray-400 uppercase tracking-widest mt-1">Ready for Inquiry</p>
+                                <h3 class="editorial-title text-sm md:text-base text-white leading-none">Systematic Assistant</h3>
+                                <p class="text-[9px] font-medium text-white/40 uppercase tracking-[0.3em] mt-2">Ready for Inquiry</p>
                             </div>
                         </div>
-                        <button @click="isOpen = false" class="p-3 text-gray-400 hover:text-gray-900 dark:hover:text-gray-100 hover:bg-gray-100 dark:hover:bg-white/10 rounded-xl transition-all">
+                        <button @click="isOpen = false" aria-label="Close assistant" class="p-2.5 -m-1 text-white/40 hover:text-white hover:bg-white/5 transition-colors duration-300">
                             <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M6 18L18 6M6 6l12 12" />
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M6 18L18 6M6 6l12 12" />
                             </svg>
                         </button>
                     </div>
                 </div>
 
                 <!-- Chat Canvas -->
-                <div class="flex-1 overflow-y-auto p-10 space-y-8 scroll-smooth" ref="messageContainer">
-                    <div v-for="(msg, index) in messages" :key="index" :class="['flex', msg.isUser ? 'justify-end' : 'justify-start']">
-                        <div 
-                            :class="[
-                                'max-w-[90%] px-6 py-5 rounded-[2rem] text-[15px] leading-relaxed',
-                                msg.isUser 
-                                ? 'bg-primary-600 text-white rounded-tr-none font-bold shadow-xl shadow-primary-500/10 animate-in slide-in-from-right-2' 
-                                : 'bg-gray-50 dark:bg-[#12141c] text-gray-700 dark:text-gray-300 rounded-tl-none font-medium border border-gray-100 dark:border-white/10 animate-in slide-in-from-left-2'
-                            ]"
+                <div class="chat-scroll flex-1 overflow-y-auto px-8 py-8 space-y-7 scroll-smooth" ref="messageContainer">
+                    <div v-for="(msg, index) in messages" :key="index" :class="['msg-in flex', msg.isUser ? 'justify-end' : 'justify-start']">
+                        <!-- User message: sharp monochrome block -->
+                        <div
+                            v-if="msg.isUser"
+                            class="max-w-[85%] px-5 py-3.5 bg-white/[0.06] border border-white/10 rounded-sm text-sm leading-relaxed text-white/90"
                         >
                             {{ msg.text }}
                         </div>
+                        <!-- Assistant message: hairline rule + light text (About motif) -->
+                        <div v-else class="max-w-[92%] border-l border-white/70 pl-5">
+                            <p class="text-[9px] font-medium uppercase tracking-[0.35em] text-white/40 mb-2">Assistant</p>
+                            <p class="text-sm font-light leading-relaxed text-white/75 whitespace-pre-line">{{ msg.text }}</p>
+                        </div>
                     </div>
                     <div v-if="isTyping" class="flex justify-start">
-                        <div class="bg-gray-50 dark:bg-[#12141c] px-6 py-5 rounded-[2rem] rounded-tl-none border border-gray-100 dark:border-white/10 flex gap-1.5 items-center">
-                            <span class="w-1.5 h-1.5 bg-gray-300 dark:bg-gray-500 rounded-full animate-bounce"></span>
-                            <span class="w-1.5 h-1.5 bg-gray-300 dark:bg-gray-500 rounded-full animate-bounce [animation-delay:0.2s]"></span>
-                            <span class="w-1.5 h-1.5 bg-gray-300 dark:bg-gray-500 rounded-full animate-bounce [animation-delay:0.4s]"></span>
+                        <div class="border-l border-white/70 pl-5">
+                            <p class="text-[9px] font-medium uppercase tracking-[0.35em] text-white/40 mb-2">Assistant</p>
+                            <div class="flex gap-1.5 items-center py-1">
+                                <span class="w-1.5 h-1.5 bg-white/50 rounded-full animate-bounce"></span>
+                                <span class="w-1.5 h-1.5 bg-white/50 rounded-full animate-bounce [animation-delay:0.2s]"></span>
+                                <span class="w-1.5 h-1.5 bg-white/50 rounded-full animate-bounce [animation-delay:0.4s]"></span>
+                            </div>
                         </div>
                     </div>
                 </div>
 
                 <!-- Input Interface -->
-                <div class="p-10 pt-0">
-                    <form @submit.prevent="sendMessage" class="relative group">
-                        <div class="absolute inset-0 bg-primary-500/5 rounded-3xl blur-xl opacity-0 group-focus-within:opacity-100 transition-opacity"></div>
+                <div class="px-8 py-7 border-t border-white/10">
+                    <form @submit.prevent="sendMessage" class="flex items-stretch gap-2">
                         <input 
                             v-model="userInput"
                             type="text" 
                             placeholder="Type your inquiry..."
-                            class="relative w-full px-8 py-6 bg-gray-50 dark:bg-[#12141c] border-none focus:bg-white dark:focus:bg-[#1a1d27] focus:ring-4 focus:ring-primary-500/5 rounded-3xl transition-all duration-500 font-bold text-gray-900 dark:text-gray-100 text-sm placeholder:text-gray-400"
+                            aria-label="Message"
+                            class="flex-1 min-w-0 px-5 py-4 bg-white/5 border border-white/10 rounded-sm text-sm font-light text-white placeholder:text-white/35 focus:outline-none focus:border-white/70 focus:bg-white/[0.07] transition-all duration-300"
                         >
                         <button 
                             type="submit"
                             :disabled="!userInput.trim() || isTyping"
-                            class="absolute right-3 top-3 bottom-3 px-6 bg-gray-900 text-white rounded-2xl flex items-center justify-center hover:bg-black transition-all active:scale-95 disabled:opacity-20"
+                            aria-label="Send message"
+                            class="px-5 bg-white text-[#0a0a0a] rounded-sm flex items-center justify-center hover:bg-white/80 transition-all duration-300 active:scale-95 disabled:opacity-30"
                         >
                             <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M17 8l4 4m0 0l-4 4m4-4H3" />
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3" />
                             </svg>
                         </button>
                     </form>
-                    <p class="text-[9px] font-black text-gray-300 dark:text-gray-500 uppercase tracking-[0.2em] mt-6 text-center">Powered by Systematic AI Node</p>
+                    <p class="text-[9px] font-medium text-white/30 uppercase tracking-[0.3em] mt-5 text-center">Powered by Tulips Engine</p>
                 </div>
             </div>
         </Transition>
@@ -139,68 +146,6 @@ const knowledgeBase = {
         about: "The About Section provides more insight into Brian's background, journey, and what drives him as a developer.",
         experience: "Check out the Experience Section to see Brian's professional timeline and career journey."
     },
-    faq: [
-        {
-            keywords: ["who", "name", "brian", "owner", "developer", "about you", "about him", "sino", "ikaw", "siya"],
-            answer: "Brian Perez A.K.A sirLass is a Full-Stack Software Developer who specializes in building modern, responsive web applications. He combines thoughtful UI/UX design with clean, scalable code to deliver premium digital experiences."
-        },
-        {
-            keywords: ["skill", "tech", "technology", "stack", "know", "tools", "framework", "language", "alam", "expertise"],
-            answer: "Brian has a diverse skill set! For a complete and detailed breakdown of all his technical skills and proficiencies, I'd recommend checking out the Skills Section of this portfolio — it's all laid out there with proficiency levels."
-        },
-        {
-            keywords: ["project", "work", "portfolio", "build", "made", "gawa", "ginawa", "created"],
-            answer: "Brian has worked on some impressive projects! You can explore all of them in the Projects Section below — each one highlights different technologies and problem-solving approaches. Give it a scroll!"
-        },
-        {
-            keywords: ["contact", "hire", "reach", "email", "message", "connect", "talk", "makipag"],
-            answer: "Great question! You can reach sirLass through the Contact Section at the bottom of this page. There's a form you can fill out, and he'll get back to you as soon as possible."
-        },
-        {
-            keywords: ["built with", "what tech", "portfolio tech", "how was this", "made with", "frontend", "backend", "database", "vue", "supabase", "postgresql"],
-            answer: "This portfolio is built with a modern tech stack: Vue.js (Vue 3) for the frontend, Tailwind CSS for styling, Supabase as the backend service, and PostgreSQL as the database. The project is currently under ongoing development with new features being added regularly."
-        },
-        {
-            keywords: ["status", "ongoing", "finished", "complete", "done", "update"],
-            answer: "This portfolio is currently under ongoing development! Brian is continuously improving and adding new features to make the experience even better. Stay tuned for more updates."
-        },
-        {
-            keywords: ["hello", "hi", "hey", "kumusta", "musta", "good morning", "good afternoon", "good evening", "yo", "sup"],
-            answer: "Hey there! 👋 Welcome to sirLass's portfolio. I'm the Systematic Assistant — feel free to ask me anything about Brian, his skills, projects, or how to get in touch!"
-        },
-        {
-            keywords: ["thank", "thanks", "salamat", "appreciate"],
-            answer: "You're welcome! If you have any more questions about sirLass or his work, don't hesitate to ask. Enjoy exploring the portfolio! 😊"
-        },
-        {
-            keywords: ["experience", "work history", "career", "job", "trabaho"],
-            answer: "sirLass's professional journey is outlined in the Experience Section of this portfolio. Scroll down to see his career timeline and the roles he's held!"
-        }
-    ]
-}
-
-// ─── Fallback: Match user input against knowledge base ───────────────
-const getFallbackResponse = (userText) => {
-    const input = userText.toLowerCase()
-
-    // Check FAQ entries for keyword matches
-    let bestMatch = null
-    let bestScore = 0
-
-    for (const entry of knowledgeBase.faq) {
-        const score = entry.keywords.filter(kw => input.includes(kw)).length
-        if (score > bestScore) {
-            bestScore = score
-            bestMatch = entry
-        }
-    }
-
-    if (bestMatch && bestScore > 0) {
-        return bestMatch.answer
-    }
-
-    // Generic fallback if no keywords matched at all
-    return `Thanks for your question! While I'm having a bit of trouble connecting to my AI engine right now, here's what I can tell you: Brian Perez is a ${knowledgeBase.owner.role} who builds modern web apps with Vue.js, Supabase, and PostgreSQL. Feel free to explore the Skills, Projects, and Contact sections of this portfolio for more details — or try asking me again in a moment!`
 }
 
 // ─── Component State ─────────────────────────────────────────────────
@@ -266,53 +211,48 @@ const sendMessage = async () => {
     isTyping.value = true
 
     try {
-        const systemInstructionContent = buildSystemPrompt()
+        // Groq (OpenAI-compatible): system prompt + full conversation history
+        const chatMessages = [
+            { role: 'system', content: buildSystemPrompt() },
+            ...messages.value.slice(1, -1).map(m => ({
+                role: m.isUser ? 'user' : 'assistant',
+                content: m.text
+            })),
+            { role: 'user', content: userText }
+        ];
 
-        // Format history for Gemini (alternating user/model)
-        const history = messages.value.slice(1, -1).map(m => ({
-            role: m.isUser ? "user" : "model",
-            parts: [{ text: m.text }]
-        }));
-
-        const apiKey = import.meta.env.VITE_GEMINI_API_KEY;
-        const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${apiKey}`, {
+        const apiKey = import.meta.env.VITE_GROQ_API_KEY;
+        const response = await fetch('https://api.groq.com/openai/v1/chat/completions', {
             method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${apiKey}`
+            },
             body: JSON.stringify({
-                contents: [
-                    {
-                        role: "user",
-                        parts: [{ 
-                            text: `${systemInstructionContent}\n\nExisting Conversation Context:\n${messages.value.slice(1, -1).map(m => (m.isUser ? 'User: ' : 'AI: ') + m.text).join('\n')}\n\nCurrent User Message: ${userText}` 
-                        }]
-                    }
-                ],
-                generationConfig: {
-                    temperature: 0.8,
-                    maxOutputTokens: 1000,
-                }
+                model: 'qwen/qwen3.8-27b',
+                messages: chatMessages,
+                temperature: 0.8,
+                max_tokens: 1024
             })
         });
 
         const data = await response.json();
-        
+
         if (data.error) {
-            console.error("Gemini API Error details:", data.error);
+            console.error("Groq API Error details:", data.error);
             throw new Error(data.error.message);
         }
 
-        if (data.candidates && data.candidates[0] && data.candidates[0].content) {
-            const aiResponse = data.candidates[0].content.parts[0].text;
+        const aiResponse = data.choices?.[0]?.message?.content?.trim();
+        if (aiResponse) {
             messages.value.push({ text: aiResponse, isUser: false });
         } else {
             console.error("Unexpected API Response format:", data);
             throw new Error("Invalid response format");
         }
     } catch (error) {
-        console.error("AI Error (falling back to knowledge base):", error);
-        // Use the smart fallback instead of a generic error
-        const fallbackAnswer = getFallbackResponse(userText)
-        messages.value.push({ text: fallbackAnswer, isUser: false });
+        console.error("Groq API Error:", error);
+        messages.value.push({ text: "⚠️ I couldn't reach the AI engine right now. Please try again in a moment.", isUser: false });
     } finally {
         isTyping.value = false
         scrollToBottom()
@@ -325,18 +265,52 @@ watch(isOpen, (newVal) => {
 </script>
 
 <style scoped>
-/* Optional: Custom scrollbar for better aesthetics */
-div::-webkit-scrollbar {
+/* Editorial type system (mirrors about_section.vue) */
+.chat-panel {
+    font-family: Inter, system-ui, -apple-system, sans-serif;
+}
+
+.editorial-title {
+    font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+    font-weight: 300;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+}
+
+/* Message entrance: subtle opacity fade like the About corner elements */
+.msg-in {
+    animation: msgIn 0.3s ease-out both;
+}
+
+@keyframes msgIn {
+    from {
+        opacity: 0;
+        transform: translateY(6px);
+    }
+    to {
+        opacity: 1;
+        transform: none;
+    }
+}
+
+/* Dark-surface scrollbar */
+.chat-scroll::-webkit-scrollbar {
     width: 6px;
 }
-div::-webkit-scrollbar-track {
+.chat-scroll::-webkit-scrollbar-track {
     background: transparent;
 }
-div::-webkit-scrollbar-thumb {
-    background: #e5e7eb;
+.chat-scroll::-webkit-scrollbar-thumb {
+    background: rgba(255, 255, 255, 0.18);
     border-radius: 10px;
 }
-div::-webkit-scrollbar-thumb:hover {
-    background: #d1d5db;
+.chat-scroll::-webkit-scrollbar-thumb:hover {
+    background: rgba(255, 255, 255, 0.4);
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .msg-in {
+        animation: none !important;
+    }
 }
 </style>

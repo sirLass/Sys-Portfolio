@@ -122,17 +122,48 @@
             </div>
         </div>
         
-        <!-- Back to Top Button -->
-        <div class="fixed bottom-8 right-8 z-50">
-            <a href="#hero" class="w-14 h-14 bg-primary-600 text-white rounded-full flex items-center justify-center hover:bg-primary-700 transition-all duration-300 shadow-lg hover:shadow-xl transform hover:scale-110 group">
-                <svg class="w-6 h-6 group-hover:-translate-y-1 transition-transform duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 10l7-7m0 0l7 7m-7-7v18"></path>
-                </svg>
-            </a>
-        </div>
+        <!-- Back to Top Button — right edge, appears only when scrolling stops -->
+        <Transition
+            enter-active-class="transition duration-300 ease-out"
+            enter-from-class="opacity-0 translate-x-6"
+            enter-to-class="opacity-100 translate-x-0"
+            leave-active-class="transition duration-200 ease-in"
+            leave-from-class="opacity-100 translate-x-0"
+            leave-to-class="opacity-0 translate-x-6"
+        >
+            <div v-if="isIdle" class="fixed right-0 top-1/2 -translate-y-1/2 z-50">
+                <a href="#hero" aria-label="Back to top" class="w-14 h-14 bg-primary-600 text-white rounded-l-2xl rounded-r-none flex items-center justify-center hover:bg-primary-700 transition-all duration-300 shadow-[-10px_0_30px_rgba(0,0,0,0.25)] group border-y border-l border-white/10">
+                    <svg class="w-6 h-6 group-hover:-translate-y-1 transition-transform duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 10l7-7m0 0l7 7m-7-7v18"></path>
+                    </svg>
+                </a>
+            </div>
+        </Transition>
     </footer>
 </template>
 
 <script setup>
+import { ref, onMounted, onBeforeUnmount } from 'vue'
 import logoUrl from '../assets/sirlass_logo.png'
+
+// Back-to-top visibility: hidden while scrolling, shown once scrolling stops (idle)
+const isIdle = ref(true)
+let idleTimer = null
+
+const handleScroll = () => {
+    isIdle.value = false
+    clearTimeout(idleTimer)
+    idleTimer = setTimeout(() => {
+        isIdle.value = true
+    }, 250)
+}
+
+onMounted(() => {
+    window.addEventListener('scroll', handleScroll, { passive: true })
+})
+
+onBeforeUnmount(() => {
+    window.removeEventListener('scroll', handleScroll)
+    clearTimeout(idleTimer)
+})
 </script>
