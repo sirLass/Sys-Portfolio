@@ -76,10 +76,10 @@
                         >
                             {{ msg.text }}
                         </div>
-                        <!-- Assistant message: hairline rule + light text (About motif) -->
+                        <!-- Assistant message: hairline rule + rendered Markdown (About motif) -->
                         <div v-else class="max-w-[92%] border-l border-white/70 pl-5">
                             <p class="text-[9px] font-medium uppercase tracking-[0.35em] text-white/40 mb-2">Assistant</p>
-                            <p class="text-sm font-light leading-relaxed text-white/75 whitespace-pre-line">{{ msg.text }}</p>
+                            <div class="msg-markdown text-sm font-light leading-relaxed text-white/75" v-html="renderMarkdown(msg.text)"></div>
                         </div>
                     </div>
                     <div v-if="isTyping" class="flex justify-start">
@@ -124,6 +124,32 @@
 
 <script setup>
 import { ref, watch, nextTick } from 'vue'
+import { marked } from 'marked'
+import DOMPurify from 'dompurify'
+
+// ─── Markdown rendering for AI replies (user messages stay plain) ────
+marked.setOptions({ gfm: true, breaks: true })
+
+// Force any link the model emits to open safely in a new tab
+// (DOMPurify instantiates fully only where a real window exists — always the case in this SPA)
+if (typeof DOMPurify.addHook === 'function') {
+    DOMPurify.addHook('afterSanitizeAttributes', (node) => {
+        if (node.tagName === 'A') {
+            node.setAttribute('target', '_blank')
+            node.setAttribute('rel', 'noopener noreferrer')
+        }
+    })
+}
+
+const escapeHtml = (s) => s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
+
+const renderMarkdown = (text) => {
+    const raw = String(text ?? '')
+    const html = marked.parse(raw)
+    // Sanitized HTML when the sanitizer is live; escaped plain text as the safe degraded path
+    if (typeof DOMPurify.sanitize !== 'function') return escapeHtml(raw)
+    return DOMPurify.sanitize(html)
+}
 
 // ─── JSON Knowledge Base ─────────────────────────────────────────────
 const knowledgeBase = {
@@ -195,6 +221,7 @@ const buildSystemPrompt = () => {
         - Your persona is professional, sharp, and helpful.
         - LANGUAGE: If the user speaks Tagalog, reply in Tagalog. If English, stay English.
         - Be conversational but concise.
+        - FORMAT: reply in Markdown — **bold**, bullet lists, ### subheadings, inline code, and fenced code blocks when useful, so answers are easy to scan.
         - Always direct users to the relevant portfolio section when appropriate.
         - Never make up information about Brian that isn't provided above.
     `
@@ -291,6 +318,133 @@ watch(isOpen, (newVal) => {
         opacity: 1;
         transform: none;
     }
+}
+
+/* Markdown content (AI replies) — dark editorial treatment */
+.msg-markdown {
+    overflow-wrap: break-word;
+}
+.msg-markdown :deep(p) {
+    margin: 0.625rem 0;
+}
+.msg-markdown :deep(p:first-child) {
+    margin-top: 0;
+}
+.msg-markdown :deep(p:last-child) {
+    margin-bottom: 0;
+}
+.msg-markdown :deep(ul),
+.msg-markdown :deep(ol) {
+    margin: 0.625rem 0;
+    padding-left: 1.375rem;
+}
+.msg-markdown :deep(ul) {
+    list-style: disc;
+}
+.msg-markdown :deep(ol) {
+    list-style: decimal;
+}
+.msg-markdown :deep(li) {
+    margin: 0.3rem 0;
+}
+.msg-markdown :deep(li::marker) {
+    color: rgba(255, 255, 255, 0.5);
+}
+.msg-markdown :deep(strong) {
+    font-weight: 600;
+    color: rgba(255, 255, 255, 0.95);
+}
+.msg-markdown :deep(em) {
+    font-style: italic;
+}
+.msg-markdown :deep(a) {
+    color: rgba(255, 255, 255, 0.85);
+    text-decoration: underline;
+    text-underline-offset: 2px;
+    transition: color 0.3s;
+}
+.msg-markdown :deep(a:hover) {
+    color: #fff;
+}
+.msg-markdown :deep(code) {
+    font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+    font-size: 0.85em;
+    background: rgba(255, 255, 255, 0.08);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 2px;
+    padding: 0.1rem 0.35rem;
+}
+.msg-markdown :deep(pre) {
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 2px;
+    padding: 0.875rem;
+    margin: 0.75rem 0;
+    overflow-x: auto;
+}
+.msg-markdown :deep(pre code) {
+    background: none;
+    border: none;
+    padding: 0;
+    font-size: 0.8125rem;
+}
+.msg-markdown :deep(blockquote) {
+    border-left: 2px solid rgba(255, 255, 255, 0.35);
+    padding-left: 0.875rem;
+    margin: 0.75rem 0;
+    color: rgba(255, 255, 255, 0.6);
+}
+.msg-markdown :deep(h1),
+.msg-markdown :deep(h2),
+.msg-markdown :deep(h3),
+.msg-markdown :deep(h4),
+.msg-markdown :deep(h5),
+.msg-markdown :deep(h6) {
+    font-weight: 500;
+    font-size: 0.875rem;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: rgba(255, 255, 255, 0.95);
+    margin: 1rem 0 0.5rem;
+}
+.msg-markdown :deep(h1:first-child),
+.msg-markdown :deep(h2:first-child),
+.msg-markdown :deep(h3:first-child),
+.msg-markdown :deep(h4:first-child),
+.msg-markdown :deep(h5:first-child),
+.msg-markdown :deep(h6:first-child) {
+    margin-top: 0;
+}
+.msg-markdown :deep(hr) {
+    border: 0;
+    border-top: 1px solid rgba(255, 255, 255, 0.15);
+    margin: 1rem 0;
+}
+.msg-markdown :deep(table) {
+    width: 100%;
+    border-collapse: collapse;
+    display: block;
+    overflow-x: auto;
+    margin: 0.75rem 0;
+    font-size: 0.8125rem;
+}
+.msg-markdown :deep(th),
+.msg-markdown :deep(td) {
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    padding: 0.4rem 0.7rem;
+    text-align: left;
+}
+.msg-markdown :deep(th) {
+    background: rgba(255, 255, 255, 0.06);
+    font-weight: 500;
+}
+.msg-markdown :deep(img) {
+    max-width: 100%;
+    border-radius: 2px;
+}
+.msg-markdown :deep(input[type='checkbox']) {
+    accent-color: #fff;
+    margin-right: 0.4rem;
 }
 
 /* Dark-surface scrollbar */
